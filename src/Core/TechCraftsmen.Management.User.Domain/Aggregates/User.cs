@@ -1,6 +1,7 @@
 ﻿using TechCraftsmen.Core.Data;
 using TechCraftsmen.Core.Output;
 using TechCraftsmen.Core.Validation;
+using TechCraftsmen.Management.User.Domain.Enums;
 
 namespace TechCraftsmen.Management.User.Domain.Aggregates;
 
@@ -41,10 +42,12 @@ public class User : Entity
             .ToProcessOutput();
     }
 
-    public ProcessOutput CanRegister()
+    public ProcessOutput CanRegister(int authenticatedRoleId)
     {
-        // TODO
-        throw new NotImplementedException();
+        return Condition.Create
+            .If(authenticatedRoleId == (int)Roles.Admin || RoleId == (int)Roles.Regular)
+            .FailsWith($"Only admins can register a user with {GetRoleName()} role")
+            .ToProcessOutput();
     }
 
     public ProcessOutput CanUpdate()
@@ -52,5 +55,12 @@ public class User : Entity
         return Condition.Create
             .If(Active).FailsWith("Can't update inactive user")
             .ToProcessOutput();
+    }
+
+    public string GetRoleName()
+    {
+        var role = (Roles)RoleId;
+
+        return role.ToString();
     }
 }
