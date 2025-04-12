@@ -25,6 +25,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Management.User.Data", "Infrastructure\TechCraftsmen.Management.User.Data\TechCraftsmen.Management.User.Data.csproj", "{DA8A7D6E-9EA8-4A73-BBA9-30A0E90431E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Management.User.Dto", "Core\TechCraftsmen.Management.User.Dto\TechCraftsmen.Management.User.Dto.csproj", "{5589D764-17A3-41B6-A7AC-07FB8F3CF522}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{DA8A7D6E-9EA8-4A73-BBA9-30A0E90431E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA8A7D6E-9EA8-4A73-BBA9-30A0E90431E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA8A7D6E-9EA8-4A73-BBA9-30A0E90431E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5589D764-17A3-41B6-A7AC-07FB8F3CF522}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5589D764-17A3-41B6-A7AC-07FB8F3CF522}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5589D764-17A3-41B6-A7AC-07FB8F3CF522}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5589D764-17A3-41B6-A7AC-07FB8F3CF522}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{02775870-CC31-4E8E-A491-C59D6323BEFC} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
@@ -78,5 +84,6 @@ Global
 		{B33C430A-A930-473A-B1FD-36C45234E601} = {67152A6D-D1CE-495B-8A78-F638A4D791C2}
 		{0CD5A3DF-675B-411B-BD9B-5B66BAB6A01B} = {BD973C5A-84F6-4A05-8B05-0292FD017C37}
 		{DA8A7D6E-9EA8-4A73-BBA9-30A0E90431E9} = {879F5F95-443B-4E9D-B3AD-FA7F8921470F}
+		{5589D764-17A3-41B6-A7AC-07FB8F3CF522} = {67152A6D-D1CE-495B-8A78-F638A4D791C2}
 	EndGlobalSection
 EndGlobal

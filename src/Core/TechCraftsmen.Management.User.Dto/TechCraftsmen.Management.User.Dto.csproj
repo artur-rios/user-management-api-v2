@@ -7,10 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\core\src\TechCraftsmen.Core.Data\TechCraftsmen.Core.Data.csproj" />
-      <ProjectReference Include="..\..\..\core\src\TechCraftsmen.Core.WebApi\TechCraftsmen.Core.WebApi.csproj" />
       <ProjectReference Include="..\TechCraftsmen.Management.User.Domain\TechCraftsmen.Management.User.Domain.csproj" />
-      <ProjectReference Include="..\TechCraftsmen.Management.User.Dto\TechCraftsmen.Management.User.Dto.csproj" />
     </ItemGroup>
 
 </Project>
