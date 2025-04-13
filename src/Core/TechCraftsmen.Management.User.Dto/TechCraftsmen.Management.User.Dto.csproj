@@ -7,7 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\core\src\TechCraftsmen.Core.Extensions\TechCraftsmen.Core.Extensions.csproj" />
       <ProjectReference Include="..\TechCraftsmen.Management.User.Domain\TechCraftsmen.Management.User.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="11.11.0" />
     </ItemGroup>
 
 </Project>

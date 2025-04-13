@@ -2,6 +2,7 @@
 using TechCraftsmen.Core.Output;
 using TechCraftsmen.Core.WebApi;
 using TechCraftsmen.Core.WebApi.Security.Middleware;
+using TechCraftsmen.Management.User.WebApi.DependencyInjection;
 
 namespace TechCraftsmen.Management.User.WebApi;
 
@@ -17,6 +18,11 @@ public class Program
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        
+        builder.Services.AddRelationalContext(builder.Configuration.GetSection("ConnectionStrings"));
+        builder.Services.AddModelValidators();
+        builder.Services.AddRelationalRepositories();
+        builder.Services.AddServices();
 
         builder.Services.Configure<ApiBehaviorOptions>(options =>
         {

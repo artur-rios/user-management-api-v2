@@ -86,14 +86,14 @@ public class UserService(
         
         if (currentUser is null)
         {
-            return new DataOutput<UserDto?>(default, ["User not found"], false);
+            return new DataOutput<UserDto?>(null, ["User not found"], false);
         }
         
         var canUpdate = currentUser.CanUpdate();
 
         if (!canUpdate.Success)
         {
-            return new DataOutput<UserDto?>(default, canUpdate.Errors.ToArray(), false);
+            return new DataOutput<UserDto?>(null, canUpdate.Errors.ToArray(), false);
         }
         
         var user = userDto.ToEntity();

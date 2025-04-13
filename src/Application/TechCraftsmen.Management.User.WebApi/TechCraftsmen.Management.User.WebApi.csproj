@@ -7,16 +7,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="DependencyInjection\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\core\src\TechCraftsmen.Core.Output\TechCraftsmen.Core.Output.csproj" />
       <ProjectReference Include="..\..\..\core\src\TechCraftsmen.Core.WebApi\TechCraftsmen.Core.WebApi.csproj" />
+      <ProjectReference Include="..\..\Core\TechCraftsmen.Management.User.Dto\TechCraftsmen.Management.User.Dto.csproj" />
+      <ProjectReference Include="..\..\Core\TechCraftsmen.Management.User.Services\TechCraftsmen.Management.User.Services.csproj" />
+      <ProjectReference Include="..\..\Infrastructure\TechCraftsmen.Management.User.Data\TechCraftsmen.Management.User.Data.csproj" />
     </ItemGroup>
 
 </Project>
