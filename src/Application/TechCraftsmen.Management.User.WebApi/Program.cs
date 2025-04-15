@@ -11,10 +11,15 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        
+        var appSettings = $"appsettings.api.{builder.Environment.EnvironmentName}.json";
+
+        builder.Configuration.AddJsonFile(appSettings, optional: false, reloadOnChange: false);
 
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         builder.Services.AddControllers();
+        builder.Services.AddLogging();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
