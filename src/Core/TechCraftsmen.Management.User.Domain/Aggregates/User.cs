@@ -46,7 +46,7 @@ public class User : Entity
     {
         return Condition.Create
             .If(authenticatedRoleId == (int)Roles.Admin || RoleId == (int)Roles.Regular)
-            .FailsWith($"Only admins can register a user with {GetRoleName()} role")
+            .FailsWith($"Only admins can register a user with {((Roles)RoleId).ToString()} role")
             .ToProcessOutput();
     }
 
@@ -55,12 +55,5 @@ public class User : Entity
         return Condition.Create
             .If(Active).FailsWith("Can't update inactive user")
             .ToProcessOutput();
-    }
-
-    public string GetRoleName()
-    {
-        var role = (Roles)RoleId;
-
-        return role.ToString();
     }
 }
