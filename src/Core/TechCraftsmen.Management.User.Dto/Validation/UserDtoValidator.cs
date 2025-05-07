@@ -1,13 +1,12 @@
 ﻿using FluentValidation;
 using TechCraftsmen.Core.Extensions;
+using TechCraftsmen.Management.User.Domain;
 using TechCraftsmen.Management.User.Domain.Enums;
 
 namespace TechCraftsmen.Management.User.Dto.Validation;
 
 public class UserDtoValidator : AbstractValidator<UserDto>
 {
-    private const int MinimumPasswordLength = 8;
-    
     public UserDtoValidator()
     {
         RuleFor(user => user.Name).NotEmpty();
@@ -23,11 +22,11 @@ public class UserDtoValidator : AbstractValidator<UserDto>
             var isValid = password.HasNumber()
                           && password.HasLowerChar()
                           && password.HasUpperChar()
-                          && password.Length >= MinimumPasswordLength;
+                          && password.Length >= Constants.MinimumPasswordLength;
             
             if (!isValid)
             {
-                context.AddFailure($"Password must contain at least {MinimumPasswordLength} characters, a number, a lower char and an upper char");
+                context.AddFailure($"Password must contain at least {Constants.MinimumPasswordLength} characters, a number, a lower char and an upper char");
             }
         });
         RuleFor(user => user.RoleId).Custom((roleId, context) =>

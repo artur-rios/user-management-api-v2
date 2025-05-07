@@ -80,11 +80,23 @@ public class UserServiceTests
         Assert.Equal("E-mail already registered", result.Messages.First());
         Assert.False(result.Success);
     }
+    
+    [Unit]
+    public void Should_NotCreateAdminUser_When_AuthenticatedUserIsNotAdmin()
+    {
+        var dto = UserMock.New.WithRole(Roles.Admin).Generate().ToDtoWithPassword();
+        
+        var result = _userService.CreateUser(dto);
+        
+        Assert.Equal(0, result.Data);
+        Assert.Equal($"Only admins can register a user with {Roles.Admin.ToString()} role", result.Messages.First());
+        Assert.False(result.Success);
+    }
 
     [Unit]
     public void Should_CreateUser_And_ReturnId_ForValidDto()
     {
-        var dto = UserMock.New.Generate().ToDtoWithPassword();
+        var dto = UserMock.New.WithRole(Roles.Regular).Generate().ToDtoWithPassword();
         
         var result = _userService.CreateUser(dto);
         
