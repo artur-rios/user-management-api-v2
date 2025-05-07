@@ -22,6 +22,13 @@ public class UserMock
     }
 
     public static UserMock New => new();
+    
+    public UserMock WithId(int id)
+    {
+        _userFaker.RuleFor(x => x.Id, id);
+
+        return this;
+    }
 
     public UserMock WithEmail(string email)
     {

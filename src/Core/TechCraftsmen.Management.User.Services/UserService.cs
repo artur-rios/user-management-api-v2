@@ -61,7 +61,7 @@ public class UserService(
     {
         var user = userRepository.GetById(id);
         
-        var message = user is null ? "User found" : "User not found";
+        var message = user is null ? "User not found" : "User found";
         
         return new DataOutput<UserDto>(user?.ToDto(), [message], user is not null);
     }
@@ -102,7 +102,7 @@ public class UserService(
         
         userRepository.Update(user);
 
-        return new DataOutput<UserDto?>(currentUser.ToDto(), ["User updated with success"], true);
+        return new DataOutput<UserDto?>(user.ToDto(), ["User updated with success"], true);
     }
 
     public ProcessOutput ActivateUser(int id)
@@ -124,7 +124,7 @@ public class UserService(
         user.Active = true;
         userRepository.Update(user);
         
-        return new ProcessOutput(["User activated with success"]);
+        return new ProcessOutput();
     }
     
     public ProcessOutput DeactivateUser(int id)
@@ -146,7 +146,7 @@ public class UserService(
         user.Active = false;
         userRepository.Update(user);
         
-        return new ProcessOutput(["User deactivated with success"]);
+        return new ProcessOutput();
     }
     
     public ProcessOutput DeleteUser(int id)
@@ -167,7 +167,7 @@ public class UserService(
         
         userRepository.Delete(id);
         
-        return new ProcessOutput(["User deleted with success"]);
+        return new ProcessOutput();
     }
     
     private static void MergeUser(Domain.Aggregates.User source, Domain.Aggregates.User target, bool mergeStatus = true)
