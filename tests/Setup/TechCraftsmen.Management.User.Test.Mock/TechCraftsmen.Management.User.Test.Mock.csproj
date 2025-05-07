@@ -13,6 +13,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\core\src\TechCraftsmen.Core.WebApi\TechCraftsmen.Core.WebApi.csproj" />
       <ProjectReference Include="..\..\..\src\Core\TechCraftsmen.Management.User.Domain\TechCraftsmen.Management.User.Domain.csproj" />
+      <ProjectReference Include="..\..\..\src\Core\TechCraftsmen.Management.User.Dto\TechCraftsmen.Management.User.Dto.csproj" />
     </ItemGroup>
 
 </Project>

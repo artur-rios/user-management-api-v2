@@ -31,7 +31,7 @@ public class UserService(
         
         if (userSearch.Any())
         {
-            return new DataOutput<int>(default, ["E-mail already registered"], false);
+            return new DataOutput<int>(0, ["E-mail already registered"], false);
         }
         
         var user = userDto.ToEntity();
@@ -44,7 +44,7 @@ public class UserService(
 
         if (!canRegister.Success)
         {
-            return new DataOutput<int>(default, canRegister.Errors.ToArray(), false);
+            return new DataOutput<int>(0, canRegister.Errors.ToArray(), false);
         }
         
         var hash = new Hash(userDto.Password);

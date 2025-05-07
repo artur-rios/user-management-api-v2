@@ -61,4 +61,28 @@ public class UserServiceTests
         Assert.Equal("Email should be valid", result.Messages.First());
         Assert.False(result.Success);
     }
+
+    [Unit]
+    public void Should_ReturnNotAllowedError_When_ForAlreadyRegisteredEmail()
+    {
+        var dto = UserMock.New.WithEmail(ActiveEmail).Generate().ToDtoWithPassword();
+        
+        var result = _userService.CreateUser(dto);
+        
+        Assert.Equal(0, result.Data);
+        Assert.Equal("E-mail already registered", result.Messages.First());
+        Assert.False(result.Success);
+    }
+
+    [Unit]
+    public void Should_CreateUser_And_ReturnId_ForValidDto()
+    {
+        var dto = UserMock.New.Generate().ToDtoWithPassword();
+        
+        var result = _userService.CreateUser(dto);
+        
+        Assert.True(result.Data > 0);
+        Assert.Equal("User created with success", result.Messages.First());
+        Assert.True(result.Success);
+    }
 }
