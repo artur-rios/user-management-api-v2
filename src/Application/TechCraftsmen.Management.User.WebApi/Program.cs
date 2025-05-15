@@ -25,6 +25,7 @@ public class Program
         builder.Services.AddSwaggerGen();
         
         builder.Services.AddRelationalContext(builder.Configuration.GetSection("ConnectionStrings"));
+        builder.Services.AddJwtTokenConfiguration(builder.Configuration.GetSection("AuthenticationTokenSettings"));
         builder.Services.AddModelValidators();
         builder.Services.AddRelationalRepositories();
         builder.Services.AddServices();

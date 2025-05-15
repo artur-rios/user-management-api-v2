@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using TechCraftsmen.Core.Validation;
 using TechCraftsmen.Core.WebApi.Security.Records;
 using TechCraftsmen.Core.WebApi.Security.Validation;
 using TechCraftsmen.Management.User.Dto;
@@ -12,5 +13,6 @@ public static class ModelValidationConfiguration
     {
         services.AddScoped<IValidator<Credentials>, CredentialsValidator>();
         services.AddScoped<IValidator<UserDto>, UserDtoValidator>();
+        services.AddScoped<IValidator<JwtTokenConfiguration>, JwtTokenConfigurationValidator>();
     }
 }
