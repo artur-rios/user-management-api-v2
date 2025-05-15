@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Core.Extensio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Core.Output", "..\core\src\TechCraftsmen.Core.Output\TechCraftsmen.Core.Output.csproj", "{B1D6A8E2-B5AA-4CF7-88A4-26D2D635ED38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Core.Validation", "..\core\src\TechCraftsmen.Core.Validation\TechCraftsmen.Core.Validation.csproj", "{8C757C05-11E7-44EA-8ECD-C00D24E23CA0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Core.WebApi", "..\core\src\TechCraftsmen.Core.WebApi\TechCraftsmen.Core.WebApi.csproj", "{A73C37A8-30D7-495F-8EB0-EC21C593FE95}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{67152A6D-D1CE-495B-8A78-F638A4D791C2}"
@@ -44,6 +42,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{54F0AB5D-B1B7-4AA1-B3F5-52244E1CE4C6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Management.User.WebApi.Tests", "TechCraftsmen.Management.User.WebApi.Tests\TechCraftsmen.Management.User.WebApi.Tests.csproj", "{16CCAC7D-F621-47BC-8E81-7A1DA26123A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Core.Util", "..\core\src\TechCraftsmen.Core.Util\TechCraftsmen.Core.Util.csproj", "{4B659D0D-25E5-4AA2-B4E4-6A0CEE4D56BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Core.Security", "..\core\src\TechCraftsmen.Core.Security\TechCraftsmen.Core.Security.csproj", "{0FC1C5DB-19D3-48FB-8828-534E4DDCC108}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Core.Environment", "..\core\src\TechCraftsmen.Core.Environment\TechCraftsmen.Core.Environment.csproj", "{2469B6DC-AB41-4A06-8888-A7303E9E4C84}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +115,18 @@ Global
 		{16CCAC7D-F621-47BC-8E81-7A1DA26123A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16CCAC7D-F621-47BC-8E81-7A1DA26123A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16CCAC7D-F621-47BC-8E81-7A1DA26123A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B659D0D-25E5-4AA2-B4E4-6A0CEE4D56BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B659D0D-25E5-4AA2-B4E4-6A0CEE4D56BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B659D0D-25E5-4AA2-B4E4-6A0CEE4D56BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B659D0D-25E5-4AA2-B4E4-6A0CEE4D56BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FC1C5DB-19D3-48FB-8828-534E4DDCC108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FC1C5DB-19D3-48FB-8828-534E4DDCC108}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FC1C5DB-19D3-48FB-8828-534E4DDCC108}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FC1C5DB-19D3-48FB-8828-534E4DDCC108}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2469B6DC-AB41-4A06-8888-A7303E9E4C84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2469B6DC-AB41-4A06-8888-A7303E9E4C84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2469B6DC-AB41-4A06-8888-A7303E9E4C84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2469B6DC-AB41-4A06-8888-A7303E9E4C84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{02775870-CC31-4E8E-A491-C59D6323BEFC} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
@@ -131,5 +147,8 @@ Global
 		{A25B2ADE-5022-4090-9A82-867AD7D6DEF9} = {C1262FBB-7DCB-422A-BB92-013CEBA9FCD1}
 		{54F0AB5D-B1B7-4AA1-B3F5-52244E1CE4C6} = {846E19DD-DFDB-45C5-9079-73545D781C3D}
 		{16CCAC7D-F621-47BC-8E81-7A1DA26123A9} = {54F0AB5D-B1B7-4AA1-B3F5-52244E1CE4C6}
+		{4B659D0D-25E5-4AA2-B4E4-6A0CEE4D56BF} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
+		{0FC1C5DB-19D3-48FB-8828-534E4DDCC108} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
+		{2469B6DC-AB41-4A06-8888-A7303E9E4C84} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
 	EndGlobalSection
 EndGlobal

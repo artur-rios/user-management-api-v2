@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using TechCraftsmen.Core.Data;
 using TechCraftsmen.Core.Extensions;
 using TechCraftsmen.Core.Output;
-using TechCraftsmen.Core.Validation;
+using TechCraftsmen.Core.Util.Hash;
 using TechCraftsmen.Core.WebApi.Security.Records;
 using TechCraftsmen.Management.User.Domain.Filters;
 using TechCraftsmen.Management.User.Dto;
@@ -47,7 +47,7 @@ public class UserService(
             return new DataOutput<int>(0, canRegister.Errors.ToArray(), false);
         }
         
-        var hash = new Hash(userDto.Password);
+        var hash = Hash.NewFromText(userDto.Password);
         
         user.Password = hash.Value;
         user.Salt = hash.Salt;

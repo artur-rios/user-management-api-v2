@@ -9,7 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\core\src\TechCraftsmen.Core.Data\TechCraftsmen.Core.Data.csproj" />
       <ProjectReference Include="..\..\..\core\src\TechCraftsmen.Core.Output\TechCraftsmen.Core.Output.csproj" />
-      <ProjectReference Include="..\..\..\core\src\TechCraftsmen.Core.Validation\TechCraftsmen.Core.Validation.csproj" />
+      <ProjectReference Include="..\..\..\core\src\TechCraftsmen.Core.Util\TechCraftsmen.Core.Util.csproj" />
     </ItemGroup>
 
 </Project>

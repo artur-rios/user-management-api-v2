@@ -1,6 +1,6 @@
 ﻿using TechCraftsmen.Core.Data;
 using TechCraftsmen.Core.Output;
-using TechCraftsmen.Core.Validation;
+using TechCraftsmen.Core.Util.Condition;
 using TechCraftsmen.Management.User.Domain.Enums;
 
 namespace TechCraftsmen.Management.User.Domain.Aggregates;

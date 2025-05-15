@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using TechCraftsmen.Core.Validation;
+using TechCraftsmen.Core.Util;
 using TechCraftsmen.Core.WebApi.Security.Records;
 using TechCraftsmen.Core.WebApi.Security.Validation;
 using TechCraftsmen.Management.User.Dto;

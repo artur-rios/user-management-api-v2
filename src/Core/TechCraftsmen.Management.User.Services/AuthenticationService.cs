@@ -3,7 +3,8 @@ using Microsoft.Extensions.Options;
 using TechCraftsmen.Core.Data;
 using TechCraftsmen.Core.Extensions;
 using TechCraftsmen.Core.Output;
-using TechCraftsmen.Core.Validation;
+using TechCraftsmen.Core.Util;
+using TechCraftsmen.Core.Util.Hash;
 using TechCraftsmen.Core.WebApi.Security.Interfaces;
 using TechCraftsmen.Core.WebApi.Security.Records;
 using TechCraftsmen.Management.User.Domain.Filters;
@@ -44,8 +45,8 @@ public class AuthenticationService : IAuthenticationService
         {
             return new DataOutput<Authentication>(null, ["Invalid credentials"], false);
         }
-        
-        var passwordHash = new Hash(user.Password, user.Salt);
+
+        var passwordHash = Hash.NewFromBytes(value: user.Password, salt: user.Salt);
         
         if (!passwordHash.TextMatches(credentials.Password))
         {

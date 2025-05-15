@@ -1,12 +1,13 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
+using TechCraftsmen.Core.Environment;
 using TechCraftsmen.Core.Test;
 using TechCraftsmen.Core.Test.Attributes;
 using TechCraftsmen.Core.WebApi;
 
 namespace TechCraftsmen.Management.User.WebApi.Tests;
 
-public class HealthCheckTests(string environment = "local") : WebApiTest<Program>(environment)
+public class HealthCheckTests(EnvironmentType environment = EnvironmentType.Local) : WebApiTest<Program>(environment)
 {
     private const string HealthCheckRoute = "/HealthCheck";
 
