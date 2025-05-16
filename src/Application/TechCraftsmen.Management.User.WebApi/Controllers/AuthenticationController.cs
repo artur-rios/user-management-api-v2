@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TechCraftsmen.Core.WebApi;
 using TechCraftsmen.Core.WebApi.Security.Attributes;
+using TechCraftsmen.Core.WebApi.Security.Interfaces;
 using TechCraftsmen.Core.WebApi.Security.Records;
-using TechCraftsmen.Management.User.Services;
 
 namespace TechCraftsmen.Management.User.WebApi.Controllers;
 
 [ApiController]
 [Authorize]
 [Route("[controller]")]
-public class AuthenticationController(AuthenticationService authenticationService) : BaseController
+public class AuthenticationController(IAuthenticationService authenticationService) : BaseController
 {
     [HttpPost]
-    [Route("User")]
+    [Route("")]
     [AllowAnonymous]
     public ActionResult<WebApiOutput<Authentication>> AuthenticateUser([FromBody] Credentials credentials)
     {

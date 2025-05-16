@@ -14,7 +14,7 @@ public class HealthCheckController : BaseController
     [AllowAnonymous]
     public ActionResult<WebApiOutput<string>> HelloWorld()
     {
-        WebApiOutput<string> result = new("Hello world!", ["User Api ON"], true, HttpStatusCodes.Ok);
+        WebApiOutput<string> result = new("Hello world!", ["User management Web API is ON"], true, HttpStatusCodes.Ok);
             
         return Resolve(result);
     }
