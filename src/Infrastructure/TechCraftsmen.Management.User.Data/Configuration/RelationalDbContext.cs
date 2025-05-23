@@ -20,11 +20,6 @@ public class RelationalDbContext(ILoggerFactory loggerFactory, IOptions<Relation
     {
         optionsBuilder.UseNpgsql(_options.RelationalDatabase);
 
-        optionsBuilder.UseSeeding((context, _) =>
-        {
-            RoleSeeder.EnsureRolesExist(context);
-        });
-
         optionsBuilder
             .UseLoggerFactory(loggerFactory)
             .EnableDetailedErrors()

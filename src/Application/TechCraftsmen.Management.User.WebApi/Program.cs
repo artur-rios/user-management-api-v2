@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TechCraftsmen.Core.Environment;
 using TechCraftsmen.Core.Output;
 using TechCraftsmen.Core.WebApi;
 using TechCraftsmen.Core.WebApi.Security.Middleware;
+using TechCraftsmen.Management.User.Data.Configuration;
 using TechCraftsmen.Management.User.WebApi.DependencyInjection;
 
 namespace TechCraftsmen.Management.User.WebApi;
@@ -12,9 +14,12 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         
-        var appSettings = $"appsettings.api.{builder.Environment.EnvironmentName}.json";
+        var environment = builder.Environment.EnvironmentName;
+        var envFile = $"Environments/.env.{environment.ToLower()}";
 
-        builder.Configuration.AddJsonFile(appSettings, optional: false, reloadOnChange: false);
+        DotNetEnv.Env.Load(File.Exists(envFile) ? envFile : $"Environments/.env.{nameof(EnvironmentType.Local).ToLower()}");
+        
+        builder.Configuration.AddEnvironmentVariables();
 
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -45,6 +50,12 @@ public class Program
         });
 
         var app = builder.Build();
+        
+        app.Services.CreateAsyncScope().ServiceProvider
+            .GetRequiredService<RelationalDbInitializer>()
+            .InitializeAsync()
+            .GetAwaiter()
+            .GetResult();
 
         if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Local"))
         {

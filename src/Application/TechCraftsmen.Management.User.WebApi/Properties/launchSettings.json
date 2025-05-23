@@ -1,0 +1,10 @@
+﻿{
+  "profiles": {
+    "TechCraftsmen.Management.User.WebApi": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Local"
+      }
+    }
+  }
+}

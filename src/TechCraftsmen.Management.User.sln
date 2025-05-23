@@ -41,13 +41,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Management.Us
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{54F0AB5D-B1B7-4AA1-B3F5-52244E1CE4C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Management.User.WebApi.Tests", "TechCraftsmen.Management.User.WebApi.Tests\TechCraftsmen.Management.User.WebApi.Tests.csproj", "{16CCAC7D-F621-47BC-8E81-7A1DA26123A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Management.User.WebApi.Tests", "..\tests\Application\TechCraftsmen.Management.User.WebApi.Tests\TechCraftsmen.Management.User.WebApi.Tests.csproj", "{16CCAC7D-F621-47BC-8E81-7A1DA26123A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Core.Util", "..\core\src\TechCraftsmen.Core.Util\TechCraftsmen.Core.Util.csproj", "{4B659D0D-25E5-4AA2-B4E4-6A0CEE4D56BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Core.Security", "..\core\src\TechCraftsmen.Core.Security\TechCraftsmen.Core.Security.csproj", "{0FC1C5DB-19D3-48FB-8828-534E4DDCC108}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Core.Environment", "..\core\src\TechCraftsmen.Core.Environment\TechCraftsmen.Core.Environment.csproj", "{2469B6DC-AB41-4A06-8888-A7303E9E4C84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechCraftsmen.Management.User.Test.Fixture", "..\tests\Setup\TechCraftsmen.Management.User.Test.Fixture\TechCraftsmen.Management.User.Test.Fixture.csproj", "{CC2BA699-1BB3-4BDD-9E98-3187EDBA64D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -127,6 +129,10 @@ Global
 		{2469B6DC-AB41-4A06-8888-A7303E9E4C84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2469B6DC-AB41-4A06-8888-A7303E9E4C84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2469B6DC-AB41-4A06-8888-A7303E9E4C84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC2BA699-1BB3-4BDD-9E98-3187EDBA64D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC2BA699-1BB3-4BDD-9E98-3187EDBA64D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC2BA699-1BB3-4BDD-9E98-3187EDBA64D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC2BA699-1BB3-4BDD-9E98-3187EDBA64D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{02775870-CC31-4E8E-A491-C59D6323BEFC} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
@@ -150,5 +156,6 @@ Global
 		{4B659D0D-25E5-4AA2-B4E4-6A0CEE4D56BF} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
 		{0FC1C5DB-19D3-48FB-8828-534E4DDCC108} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
 		{2469B6DC-AB41-4A06-8888-A7303E9E4C84} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
+		{CC2BA699-1BB3-4BDD-9E98-3187EDBA64D9} = {C1262FBB-7DCB-422A-BB92-013CEBA9FCD1}
 	EndGlobalSection
 EndGlobal

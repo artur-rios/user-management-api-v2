@@ -12,6 +12,7 @@ public static class RelationalDatabaseConfiguration
 
         services.AddDbContext<RelationalDbContext>(optionsLifetime: ServiceLifetime.Singleton);
         services.AddDbContextFactory<RelationalDbContext>();
+        services.AddScoped<RelationalDbInitializer>();
     }
 
     public static void AddRelationalRepositories(this IServiceCollection services)

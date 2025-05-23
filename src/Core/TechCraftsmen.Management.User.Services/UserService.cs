@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using TechCraftsmen.Core.Data;
 using TechCraftsmen.Core.Extensions;
 using TechCraftsmen.Core.Output;
-using TechCraftsmen.Core.Util.Hash;
+using TechCraftsmen.Core.Util.Hashing;
 using TechCraftsmen.Core.WebApi.Security.Records;
 using TechCraftsmen.Management.User.Domain.Filters;
 using TechCraftsmen.Management.User.Dto;

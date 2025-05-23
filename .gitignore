@@ -307,10 +307,6 @@ node_modules/
 *.dsw
 *.dsp
 
-# Visual Studio 6 technical files
-*.ncb
-*.aps
-
 # Visual Studio LightSwitch build output
 **/*.HTMLClient/GeneratedArtifacts
 **/*.DesktopClient/GeneratedArtifacts
@@ -411,7 +407,6 @@ FodyWeavers.xsd
 
 # globs
 Makefile.in
-*.userprefs
 *.usertasks
 config.make
 config.status
@@ -470,13 +465,6 @@ ehthumbs_vista.db
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
-# Windows Installer files
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-
 # Windows shortcuts
 *.lnk
 
@@ -488,6 +476,12 @@ appsettings.api.Local.json
 appsettings.api.Development.json
 appsettings.api.Staging.json
 appsettings.api.Production.json
+
+# Env files
+.env.local
+.env.development
+.env.staging
+.env.production
 
 # Test results
 TestResults/

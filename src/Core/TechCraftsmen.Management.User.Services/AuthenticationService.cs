@@ -4,7 +4,7 @@ using TechCraftsmen.Core.Data;
 using TechCraftsmen.Core.Extensions;
 using TechCraftsmen.Core.Output;
 using TechCraftsmen.Core.Util;
-using TechCraftsmen.Core.Util.Hash;
+using TechCraftsmen.Core.Util.Hashing;
 using TechCraftsmen.Core.WebApi.Security.Interfaces;
 using TechCraftsmen.Core.WebApi.Security.Records;
 using TechCraftsmen.Management.User.Domain.Filters;
@@ -74,12 +74,7 @@ public class AuthenticationService : IAuthenticationService
 
         var user = _userRepository.GetById(userId!.Value);
 
-        if (user is null)
-        {
-            return new DataOutput<AuthenticatedUser>(null, ["User not found"], false);
-        }
-        
-        return new DataOutput<AuthenticatedUser>(new AuthenticatedUser(user.Id, user.RoleId), ["Auth token is valid", "User retrieved"], true);
+        return user is null ? new DataOutput<AuthenticatedUser>(null, ["User not found"], false) : new DataOutput<AuthenticatedUser>(new AuthenticatedUser(user.Id, user.RoleId), ["Auth token is valid", "User retrieved"], true);
     }
     
     private void ValidateTokenConfigAndThrow()
