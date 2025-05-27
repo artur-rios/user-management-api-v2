@@ -22,4 +22,10 @@
       <ProjectReference Include="..\..\Infrastructure\TechCraftsmen.Management.User.Data\TechCraftsmen.Management.User.Data.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Content Include="Environments\.env.*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
 </Project>

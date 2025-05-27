@@ -1,4 +1,5 @@
-﻿using TechCraftsmen.Core.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TechCraftsmen.Core.Data;
 using TechCraftsmen.Management.User.Data.Configuration;
 using TechCraftsmen.Management.User.Data.Repositories;
 
@@ -6,11 +7,21 @@ namespace TechCraftsmen.Management.User.WebApi.DependencyInjection;
 
 public static class RelationalDatabaseConfiguration
 {
-    public static void AddRelationalContext(this IServiceCollection services, IConfigurationSection configuration)
+    public static void AddRelationalContext(this IServiceCollection services)
     {
-        services.Configure<RelationalDbContextOptions>(configuration);
+        var connectionString = Environment.GetEnvironmentVariable("RELATIONAL_DATABASE_CONNECTION_STRING");
 
-        services.AddDbContext<RelationalDbContext>(optionsLifetime: ServiceLifetime.Singleton);
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new ArgumentException("Database connection string is not configured. Check your .env file.");
+        }
+
+        services.AddSingleton(new RelationalDbContextOptions { ConnectionString = connectionString });
+
+        services.AddDbContext<RelationalDbContext>(options =>
+            options.UseNpgsql(connectionString), 
+            optionsLifetime: ServiceLifetime.Singleton);
+
         services.AddDbContextFactory<RelationalDbContext>();
         services.AddScoped<RelationalDbInitializer>();
     }

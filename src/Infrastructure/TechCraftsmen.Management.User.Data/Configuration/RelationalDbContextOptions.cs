@@ -2,5 +2,5 @@
 
 public class RelationalDbContextOptions
 {
-    public string RelationalDatabase { get; init; } = Environment.GetEnvironmentVariable("RELATIONAL_DATABASE_CONNECTION_STRING") ?? string.Empty;
+    public string ConnectionString { get; init; } = string.Empty;
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using TechCraftsmen.Core.Environment;
 
 namespace TechCraftsmen.Management.User.Data.Configuration;
 
@@ -9,31 +8,33 @@ public class RelationalDbContextFactory : IDesignTimeDbContextFactory<Relational
 {
     public RelationalDbContext CreateDbContext(string[] args)
     {
-        var basePath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../../Application/TechCraftsmen.Management.User.WebApi"));
-        
+        var basePath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(),
+            "../../Application/TechCraftsmen.Management.User.WebApi"));
+
         if (!Directory.Exists(basePath))
         {
             throw new DirectoryNotFoundException($"The base path '{basePath}' does not exist.");
         }
-        
+
         var environmentName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? "Local";
-        var appSettings = $"appsettings.api.{environmentName}.json";
-        
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(basePath)
-            .AddJsonFile(appSettings, optional: false)
-            .Build();
-        
-        var loggerFactory = LoggerFactory.Create(builder =>
+        var envFilePath = Path.Combine(basePath, "Environments", $".env.{environmentName.ToLower()}");
+
+        DotNetEnv.Env.Load(File.Exists(envFilePath)
+            ? envFilePath
+            : Path.Combine(basePath, "Environments", $".env.{nameof(EnvironmentType.Local).ToLower()}"));
+
+        var connectionString = Environment.GetEnvironmentVariable("RELATIONAL_DATABASE_CONNECTION_STRING");
+
+        if (string.IsNullOrEmpty(connectionString))
         {
-            builder.AddConsole();
-        });
-        
-        var options = Options.Create(new RelationalDbContextOptions
+            throw new ArgumentException("Database connection string is not configured in the .env file.");
+        }
+
+        var loggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
+
+        return new RelationalDbContext(loggerFactory, new RelationalDbContextOptions
         {
-            RelationalDatabase = configuration.GetConnectionString("RelationalDatabase")!
+            ConnectionString = connectionString
         });
-        
-        return new RelationalDbContext(loggerFactory, options);
     }
 }

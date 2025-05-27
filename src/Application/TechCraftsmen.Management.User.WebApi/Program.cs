@@ -13,12 +13,15 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        
-        var environment = builder.Environment.EnvironmentName;
-        var envFile = $"Environments/.env.{environment.ToLower()}";
 
-        DotNetEnv.Env.Load(File.Exists(envFile) ? envFile : $"Environments/.env.{nameof(EnvironmentType.Local).ToLower()}");
+        var environment = builder.Environment.EnvironmentName;
+        var basePath = AppDomain.CurrentDomain.BaseDirectory;
+        var envFolder = Path.Combine(basePath, "Environments");
+        var envFile = Path.Combine(envFolder, $".env.{environment.ToLower()}");
+        var defaultEnvFile = Path.Combine(envFolder, $".env.{nameof(EnvironmentType.Local).ToLower()}");
         
+        DotNetEnv.Env.Load(File.Exists(envFile) ? envFile : defaultEnvFile);
+
         builder.Configuration.AddEnvironmentVariables();
 
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -28,8 +31,8 @@ public class Program
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        
-        builder.Services.AddRelationalContext(builder.Configuration.GetSection("ConnectionStrings"));
+
+        builder.Services.AddRelationalContext();
         builder.Services.AddJwtTokenConfiguration(builder.Configuration.GetSection("AuthenticationTokenSettings"));
         builder.Services.AddModelValidators();
         builder.Services.AddRelationalRepositories();
@@ -50,7 +53,7 @@ public class Program
         });
 
         var app = builder.Build();
-        
+
         app.Services.CreateAsyncScope().ServiceProvider
             .GetRequiredService<RelationalDbInitializer>()
             .InitializeAsync()

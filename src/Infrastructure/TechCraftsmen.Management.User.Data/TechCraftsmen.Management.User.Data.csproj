@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="DotNetEnv" Version="3.1.1" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.4">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -19,6 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\core\src\TechCraftsmen.Core.Environment\TechCraftsmen.Core.Environment.csproj" />
       <ProjectReference Include="..\..\..\core\src\TechCraftsmen.Core.Extensions\TechCraftsmen.Core.Extensions.csproj" />
       <ProjectReference Include="..\..\Core\TechCraftsmen.Management.User.Domain\TechCraftsmen.Management.User.Domain.csproj" />
     </ItemGroup>

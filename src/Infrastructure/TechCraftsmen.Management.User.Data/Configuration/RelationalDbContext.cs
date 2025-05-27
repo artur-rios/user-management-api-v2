@@ -1,16 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using TechCraftsmen.Management.User.Data.DataSeed;
 using TechCraftsmen.Management.User.Data.EntityMaps;
 using TechCraftsmen.Management.User.Domain.Aggregates;
 
 namespace TechCraftsmen.Management.User.Data.Configuration;
 
-public class RelationalDbContext(ILoggerFactory loggerFactory, IOptions<RelationalDbContextOptions> options) : DbContext
+public class RelationalDbContext(ILoggerFactory loggerFactory, RelationalDbContextOptions options) : DbContext
 {
-    private readonly RelationalDbContextOptions _options = options.Value;
-    
     private const string Schema = "user_management";
     
     public DbSet<Role> Roles { get; init; }
@@ -18,8 +14,8 @@ public class RelationalDbContext(ILoggerFactory loggerFactory, IOptions<Relation
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(_options.RelationalDatabase);
-
+        optionsBuilder.UseNpgsql(options.ConnectionString);
+        
         optionsBuilder
             .UseLoggerFactory(loggerFactory)
             .EnableDetailedErrors()
