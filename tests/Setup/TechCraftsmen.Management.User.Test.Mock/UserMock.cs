@@ -1,5 +1,5 @@
-﻿using System.Text;
-using Bogus;
+﻿using Bogus;
+using TechCraftsmen.Core.Util.Hashing;
 using TechCraftsmen.Core.Util.Random;
 using TechCraftsmen.Management.User.Domain;
 using TechCraftsmen.Management.User.Domain.Enums;
@@ -8,20 +8,24 @@ namespace TechCraftsmen.Management.User.Test.Mock;
 
 public class UserMock
 {
+    public string MockPassword { get; }
+
     private readonly Faker<Domain.Aggregates.User> _userFaker;
 
     private UserMock()
     {
+        MockPassword = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
+
+        var mockPasswordHash = Hash.NewFromText(MockPassword);
+
         _userFaker = new Faker<Domain.Aggregates.User>()
             .RuleFor(x => x.Id, f => f.Random.Int(1, 1000))
             .RuleFor(x => x.Name, f => f.Name.FullName())
             .RuleFor(x => x.Email, f => f.Internet.Email())
-            .RuleFor(x => x.Password,
-                _ => Encoding.UTF8.GetBytes(CustomRandom.Text(new RandomStringOptions
-                    { Length = Constants.MinimumPasswordLength })))
-            .RuleFor(x => x.Salt, f => Encoding.UTF8.GetBytes(f.Random.String(16)))
+            .RuleFor(x => x.Password, _ => mockPasswordHash.Value)
+            .RuleFor(x => x.Salt, f => mockPasswordHash.Salt)
             .RuleFor(x => x.RoleId, f => f.PickRandom((int)Roles.Admin, (int)Roles.Regular))
-            .RuleFor(x => x.CreatedAt, _ => DateTime.Now)
+            .RuleFor(x => x.CreatedAt, _ => DateTime.UtcNow)
             .RuleFor(x => x.Active, _ => true);
     }
 

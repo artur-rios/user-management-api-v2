@@ -19,6 +19,20 @@ public class CredentialsMock
     
     public static CredentialsMock New => new();
     
+    public CredentialsMock WithEmail(string email)
+    {
+        _faker.RuleFor(x => x.Email, email);
+        
+        return this;
+    }
+    
+    public CredentialsMock WithPassword(string password)
+    {
+        _faker.RuleFor(x => x.Password, password);
+        
+        return this;
+    }
+    
     public Credentials Generate()
     {
         return _faker.Generate();

@@ -9,10 +9,19 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\core\src\TechCraftsmen.Core.Environment\TechCraftsmen.Core.Environment.csproj" />
       <ProjectReference Include="..\..\..\src\Infrastructure\TechCraftsmen.Management.User.Data\TechCraftsmen.Management.User.Data.csproj" />
+      <ProjectReference Include="..\TechCraftsmen.Management.User.Test.Mock\TechCraftsmen.Management.User.Test.Mock.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="DotNetEnv" Version="3.1.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.5" />
+      <PackageReference Include="xunit.extensibility.core" Version="2.9.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="Environments\.env.*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>

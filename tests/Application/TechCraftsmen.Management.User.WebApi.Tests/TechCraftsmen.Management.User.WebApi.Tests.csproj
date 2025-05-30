@@ -28,6 +28,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\core\src\TechCraftsmen.Core.Test\TechCraftsmen.Core.Test.csproj" />
+      <ProjectReference Include="..\..\Setup\TechCraftsmen.Management.User.Test.Fixture\TechCraftsmen.Management.User.Test.Fixture.csproj" />
       <ProjectReference Include="..\..\Setup\TechCraftsmen.Management.User.Test.Mock\TechCraftsmen.Management.User.Test.Mock.csproj" />
       <ProjectReference Include="..\..\..\src\Application\TechCraftsmen.Management.User.WebApi\TechCraftsmen.Management.User.WebApi.csproj" />
     </ItemGroup>
