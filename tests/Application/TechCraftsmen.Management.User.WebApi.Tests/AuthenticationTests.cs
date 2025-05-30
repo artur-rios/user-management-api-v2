@@ -26,5 +26,107 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
         Assert.NotNull(output);
         CustomAssert.NotNullOrWhiteSpace(output.Data?.Token);
         Assert.True(output.Data?.Valid);
+        Assert.True(output.Success);
+    }
+
+    [Functional]
+    public async Task Should_Not_AuthenticateUserWithIncorrectPassword()
+    {
+        var credentials = CredentialsMock.New
+            .WithEmail(fixture.TestUser.Email)
+            .WithPassword("wrong-password")
+            .Generate();
+        
+        var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        
+        Assert.NotNull(output);
+        Assert.True(string.IsNullOrEmpty(output.Data?.Token));
+        Assert.False(output.Success);
+    }
+    
+    [Functional]
+    public async Task Should_Not_AuthenticateUserWithIncorrectEmail()
+    {
+        var credentials = CredentialsMock.New
+            .WithEmail("wrong@mail.com")
+            .WithPassword(fixture.TestPassword)
+            .Generate();
+        
+        var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        
+        Assert.NotNull(output);
+        Assert.True(string.IsNullOrEmpty(output.Data?.Token));
+        Assert.False(output.Success);
+    }
+    
+    [Functional]
+    public async Task Should_Not_AuthenticateUserWithIncorrectCredentials()
+    {
+        var credentials = CredentialsMock.New
+            .WithEmail("wrong@mail.com")
+            .WithPassword("wrong-password")
+            .Generate();
+        
+        var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        
+        Assert.NotNull(output);
+        Assert.True(string.IsNullOrEmpty(output.Data?.Token));
+        Assert.False(output.Success);
+    }
+    
+    [FunctionalTheory]
+    [InlineData("")]
+    [InlineData(null)]
+    [InlineData(" ")]
+    [InlineData("invalid-email")]
+    public async Task Should_Not_AuthenticateUserWithInvalidEmail(string? email)
+    {
+        var credentials = CredentialsMock.New
+            .WithEmail(email!)
+            .WithPassword(fixture.TestPassword)
+            .Generate();
+        
+        var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        
+        Assert.NotNull(output);
+        Assert.True(string.IsNullOrEmpty(output.Data?.Token));
+        Assert.False(output.Success);
+    }
+    
+    [FunctionalTheory]
+    [InlineData("")]
+    [InlineData(null)]
+    [InlineData(" ")]
+    public async Task Should_Not_AuthenticateUserWithInvalidPassword(string? password)
+    {
+        var credentials = CredentialsMock.New
+            .WithEmail(fixture.TestUser.Email)
+            .WithPassword(password!)
+            .Generate();
+        
+        var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        
+        Assert.NotNull(output);
+        Assert.True(string.IsNullOrEmpty(output.Data?.Token));
+        Assert.False(output.Success);
+    }
+    
+    [FunctionalTheory]
+    [InlineData("", "")]
+    [InlineData(null, null)]
+    [InlineData(" ", "")]
+    [InlineData("invalid-email", "")]
+    public async Task Should_Not_AuthenticateUserWithInvalidCredentials(string? email, string? password)
+    {
+        var credentials = CredentialsMock.New
+            .WithEmail(email!)
+            .WithPassword(password!)
+            .Generate();
+        
+        var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        
+        Assert.NotNull(output);
+        Assert.True(string.IsNullOrEmpty(output.Data?.Token));
+        Assert.False(output.Success);
     }
 }
