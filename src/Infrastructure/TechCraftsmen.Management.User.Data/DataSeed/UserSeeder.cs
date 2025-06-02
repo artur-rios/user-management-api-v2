@@ -18,27 +18,56 @@ public static class UserSeeder
         var masterUserEmail = Environment.GetEnvironmentVariable("MASTER_USER_EMAIL");
         var masterUserPassword = Environment.GetEnvironmentVariable("MASTER_USER_PASSWORD");
 
-        if (string.IsNullOrWhiteSpace(masterUserName) ||
-            string.IsNullOrWhiteSpace(masterUserEmail) ||
-            string.IsNullOrWhiteSpace(masterUserPassword))
+        var hasMasterUserData = !(string.IsNullOrWhiteSpace(masterUserName) ||
+                                string.IsNullOrWhiteSpace(masterUserEmail) ||
+                                string.IsNullOrWhiteSpace(masterUserPassword));
+
+        if (!hasMasterUserData)
         {
             throw new ArgumentException("Master user configuration is incomplete. Cannot create master user.");
         }
 
-        var hash = Hash.NewFromText(masterUserPassword);
+        var masterPasswordHash = Hash.NewFromText(masterUserPassword!);
 
         var masterUser = new Domain.Aggregates.User
         {
-            Name = masterUserName,
-            Email = masterUserEmail,
-            Password = hash.Value,
-            Salt = hash.Salt,
+            Name = masterUserName!,
+            Email = masterUserEmail!,
+            Password = masterPasswordHash.Value,
+            Salt = masterPasswordHash.Salt,
             RoleId = (int)Roles.Admin,
             CreatedAt = DateTime.UtcNow,
             Active = true
         };
 
         context.Users.Add(masterUser);
+        
+        var testUserName = Environment.GetEnvironmentVariable("TEST_USER_NAME");
+        var testUserEmail = Environment.GetEnvironmentVariable("TEST_USER_EMAIL");
+        var testUserPassword = Environment.GetEnvironmentVariable("TEST_USER_PASSWORD");
+        
+        var hasTestUserData = !(string.IsNullOrWhiteSpace(testUserName) ||
+                                string.IsNullOrWhiteSpace(testUserEmail) ||
+                                string.IsNullOrWhiteSpace(testUserPassword));
+        
+        if (hasTestUserData)
+        {
+            var testPasswordHash = Hash.NewFromText(testUserPassword!);
+            
+            var testUser = new Domain.Aggregates.User
+            {
+                Name = testUserName!,
+                Email = testUserEmail!,
+                Password = testPasswordHash.Value,
+                Salt = testPasswordHash.Salt,
+                RoleId = (int)Roles.Regular,
+                CreatedAt = DateTime.UtcNow,
+                Active = true
+            };
+
+            context.Users.Add(testUser);
+        }
+        
         await context.SaveChangesAsync();
     }
 }
