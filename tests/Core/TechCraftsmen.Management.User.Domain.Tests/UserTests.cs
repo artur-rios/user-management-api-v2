@@ -6,7 +6,7 @@ namespace TechCraftsmen.Management.User.Domain.Tests;
 
 public class UserTests
 {
-    [Unit]
+    [UnitFact]
     public void Should_NotAllowCreationOfAdmins_IfAuthenticatedUserNotAnAdmin()
     {
         var user = UserMock.New.WithRole(Roles.Admin).Generate();
@@ -18,7 +18,7 @@ public class UserTests
         Assert.Equal("Only admins can register a user with Admin role", canRegister.Errors.FirstOrDefault());
     }
 
-    [Unit]
+    [UnitFact]
     public void Should_NotAllowDeletion_ForActiveUser()
     {
         var user = UserMock.New.Active().Generate();
@@ -30,7 +30,7 @@ public class UserTests
         Assert.Equal("Can't delete active user", canDelete.Errors.FirstOrDefault());
     }
 
-    [Unit]
+    [UnitFact]
     public void Should_AllowDeletion_ForInactiveUser()
     {
         var user = UserMock.New.Inactive().Generate();
@@ -41,7 +41,7 @@ public class UserTests
         Assert.Empty(canDelete.Errors);
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_NotAllowActivation_ForActiveUser()
     {
         var user = UserMock.New.Active().Generate();
@@ -53,7 +53,7 @@ public class UserTests
         Assert.Equal("User already active", canActivate.Errors.FirstOrDefault());
     }
 
-    [Unit]
+    [UnitFact]
     public void Should_AllowActivation_ForInactiveUser()
     {
         var user = UserMock.New.Inactive().Generate();
@@ -64,7 +64,7 @@ public class UserTests
         Assert.Empty(canActivate.Errors);
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_NotAllowDeactivation_ForInactiveUser()
     {
         var user = UserMock.New.Inactive().Generate();
@@ -76,7 +76,7 @@ public class UserTests
         Assert.Equal("User already inactive", canDeactivate.Errors.FirstOrDefault());
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_AllowDeactivation_ForActiveUser()
     {
         var user = UserMock.New.Active().Generate();
@@ -87,7 +87,7 @@ public class UserTests
         Assert.Empty(canDeactivate.Errors);
     }
 
-    [Unit]
+    [UnitFact]
     public void Should_NotAllowUpdate_InactiveUser()
     {
         var user = UserMock.New.Inactive().Generate();
@@ -99,7 +99,7 @@ public class UserTests
         Assert.Equal("Can't update inactive user", canUpdate.Errors.FirstOrDefault());
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_AllowUpdate_ForActiveUser()
     {
         var user = UserMock.New.Active().Generate();

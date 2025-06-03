@@ -57,7 +57,7 @@ public class UserServiceTests
         _userService = new UserService(userRepository.Object, httpContextAccessor.Object, userDtoValidator);
     }
 
-    [Unit]
+    [UnitFact]
     public void Should_ReturnValidationError_When_UserDtoIsInvalid()
     {
         var dto = UserMock.New.WithEmail("").Generate().ToDtoWithPassword();
@@ -69,7 +69,7 @@ public class UserServiceTests
         Assert.False(result.Success);
     }
 
-    [Unit]
+    [UnitFact]
     public void Should_NotCreateUser_When_EmailIsAlreadyRegistered()
     {
         var dto = UserMock.New.WithEmail(ActiveEmail).Generate().ToDtoWithPassword();
@@ -81,7 +81,7 @@ public class UserServiceTests
         Assert.False(result.Success);
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_NotCreateAdminUser_When_AuthenticatedUserIsNotAdmin()
     {
         var dto = UserMock.New.WithRole(Roles.Admin).Generate().ToDtoWithPassword();
@@ -89,11 +89,11 @@ public class UserServiceTests
         var result = _userService.CreateUser(dto);
         
         Assert.Equal(0, result.Data);
-        Assert.Equal($"Only admins can register a user with {Roles.Admin.ToString()} role", result.Messages.First());
+        Assert.Equal($"Only admins can register a user with {nameof(Roles.Admin)} role", result.Messages.First());
         Assert.False(result.Success);
     }
 
-    [Unit]
+    [UnitFact]
     public void Should_CreateUser_And_ReturnId_ForValidDto()
     {
         var dto = UserMock.New.WithRole(Roles.Regular).Generate().ToDtoWithPassword();
@@ -105,7 +105,7 @@ public class UserServiceTests
         Assert.True(result.Success);
     }
 
-    [Unit]
+    [UnitFact]
     public void Should_ReturnNull_When_IdNotOnDatabase()
     {
         var result = _userService.GetUserById(NonexistentId);
@@ -115,7 +115,7 @@ public class UserServiceTests
         Assert.False(result.Success);
     }
 
-    [Unit]
+    [UnitFact]
     public void Should_ReturnUser_When_IdIsOnDatabase()
     {
         var result = _userService.GetUserById(ExistingId);
@@ -125,7 +125,7 @@ public class UserServiceTests
         Assert.True(result.Success);
     }
 
-    [Unit]
+    [UnitFact]
     public void Should_ReturnEmptyList_When_FilterDoesNotMatchAnyUser()
     {
         var filter = new UserFilter{ Email = InactiveEmail };
@@ -136,7 +136,7 @@ public class UserServiceTests
         Assert.False(result.Success);
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_ReturnListOfUsers_When_FilterMatchesUsers()
     {
         var filter = new UserFilter{ Email = ActiveEmail };
@@ -147,7 +147,7 @@ public class UserServiceTests
         Assert.True(result.Success);
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_NotUpdateUser_When_IdIsNotOnDatabase()
     {
         var dto = UserMock.New.WithId(NonexistentId).Generate().ToDtoWithPassword();
@@ -159,7 +159,7 @@ public class UserServiceTests
         Assert.False(result.Success);
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_NotUpdateUser_When_UserIsInactive()
     {
         var dto = UserMock.New.WithId(InactiveId).Inactive().Generate().ToDtoWithPassword();
@@ -171,7 +171,7 @@ public class UserServiceTests
         Assert.False(result.Success);
     }
 
-    [Unit]
+    [UnitFact]
     public void Should_UpdateUser()
     {
         var dto = UserMock.New.WithId(ExistingId).Generate().ToDtoWithPassword();
@@ -183,7 +183,7 @@ public class UserServiceTests
         Assert.True(result.Success);
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_NotActivateUser_When_IdIsNotOnDatabase()
     {
         var result = _userService.ActivateUser(NonexistentId);
@@ -192,7 +192,7 @@ public class UserServiceTests
         Assert.False(result.Success);
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_NotActivateUser_When_UserIsAlreadyActive()
     {
         var result = _userService.ActivateUser(ExistingId);
@@ -201,7 +201,7 @@ public class UserServiceTests
         Assert.False(result.Success);
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_ActivateUser()
     {
         var result = _userService.ActivateUser(InactiveId);
@@ -210,7 +210,7 @@ public class UserServiceTests
         Assert.True(result.Success);
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_NotDeactivateUser_When_IdIsNotOnDatabase()
     {
         var result = _userService.DeactivateUser(NonexistentId);
@@ -219,7 +219,7 @@ public class UserServiceTests
         Assert.False(result.Success);
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_NotDeactivateUser_When_UserIsAlreadyInactive()
     {
         var result = _userService.DeactivateUser(InactiveId);
@@ -228,7 +228,7 @@ public class UserServiceTests
         Assert.False(result.Success);
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_DeactivateUser()
     {
         var result = _userService.DeactivateUser(ExistingId);
@@ -237,7 +237,7 @@ public class UserServiceTests
         Assert.True(result.Success);
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_NotDeleteUser_When_IdIsNotOnDatabase()
     {
         var result = _userService.DeleteUser(NonexistentId);
@@ -246,7 +246,7 @@ public class UserServiceTests
         Assert.False(result.Success);
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_NotDeleteUser_When_UserIsActive()
     {
         var result = _userService.DeleteUser(ExistingId);
@@ -255,7 +255,7 @@ public class UserServiceTests
         Assert.False(result.Success);
     }
     
-    [Unit]
+    [UnitFact]
     public void Should_DeleteUser()
     {
         var result = _userService.DeleteUser(InactiveId);

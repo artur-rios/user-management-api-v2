@@ -9,7 +9,7 @@ public class HealthCheckTests(EnvironmentType environment = EnvironmentType.Loca
 {
     private const string HealthCheckRoute = "/HealthCheck";
 
-    [Functional]
+    [FunctionalFact]
     public async Task Should_DoHealthCheck()
     {
         var output = await Get<string>(HealthCheckRoute, HttpStatusCode.OK);

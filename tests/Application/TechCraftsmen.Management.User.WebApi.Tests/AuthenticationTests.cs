@@ -13,7 +13,7 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
 {
     private const string AuthenticationRoute = "/Authentication";
 
-    [Functional]
+    [FunctionalFact]
     public async Task Should_AuthenticateUser()
     {
         var credentials = CredentialsMock.New
@@ -29,7 +29,7 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
         Assert.True(output.Success);
     }
 
-    [Functional]
+    [FunctionalFact]
     public async Task Should_Not_AuthenticateUserWithIncorrectPassword()
     {
         var credentials = CredentialsMock.New
@@ -44,7 +44,7 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
         Assert.False(output.Success);
     }
     
-    [Functional]
+    [FunctionalFact]
     public async Task Should_Not_AuthenticateUserWithIncorrectEmail()
     {
         var credentials = CredentialsMock.New
@@ -59,7 +59,7 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
         Assert.False(output.Success);
     }
     
-    [Functional]
+    [FunctionalFact]
     public async Task Should_Not_AuthenticateUserWithIncorrectCredentials()
     {
         var credentials = CredentialsMock.New
