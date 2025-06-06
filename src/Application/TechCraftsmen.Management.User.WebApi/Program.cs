@@ -51,6 +51,10 @@ public class Program
                 return new BadRequestObjectResult(output);
             };
         });
+        
+        builder.Services.AddAuthentication("Jwt").AddJwtBearer("Jwt");
+
+        builder.Services.AddAuthorization();
 
         var app = builder.Build();
 
@@ -74,6 +78,7 @@ public class Program
         app.UseMiddleware<ExceptionMiddleware>();
         app.UseMiddleware<JwtMiddleware>();
         app.UseHttpsRedirection();
+        app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
 
