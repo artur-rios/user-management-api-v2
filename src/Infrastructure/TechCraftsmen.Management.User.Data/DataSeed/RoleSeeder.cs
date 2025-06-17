@@ -8,7 +8,7 @@ namespace TechCraftsmen.Management.User.Data.DataSeed;
 
 public static class RoleSeeder
 {
-    public static async Task EnsureRolesExist(RelationalDbContext context)
+    public static async Task CreateRoles(RelationalDbContext context)
     {
         if (!await context.Roles.AnyAsync())
         {

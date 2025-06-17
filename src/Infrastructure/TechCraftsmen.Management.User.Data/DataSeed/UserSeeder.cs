@@ -7,7 +7,7 @@ namespace TechCraftsmen.Management.User.Data.DataSeed;
 
 public static class UserSeeder
 {
-    public static async Task EnsureMasterUserExists(RelationalDbContext context)
+    public static async Task CreateInitialUsers(RelationalDbContext context)
     {
         if (await context.Users.AnyAsync())
         {
