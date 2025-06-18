@@ -24,7 +24,7 @@ public class DatabaseFixture : IDisposable
 
         var testUserId = testRepository.GetUserNextId();
         
-        var userMock = UserMock.New.WithId(testUserId).WithRole(Roles.Regular);
+        var userMock = UserMock.New.WithId(testUserId).WithRole(Roles.Test);
 
         TestUser = userMock.Generate();
         TestPassword = userMock.MockPassword;

@@ -72,12 +72,12 @@ public class UserService(
 
         if (userSearch.Count == 0)
         {
-            return new DataOutput<IList<UserDto>>([], ["No users found for the given filter"], false);
+            return new DataOutput<IList<UserDto>>([], ["No users found for the given filter"], true);
         }
 
         var users = userSearch.Select(user => user.ToDto()).ToList();
 
-        return new DataOutput<IList<UserDto>>(users, ["Users found"], true);
+        return new DataOutput<IList<UserDto>>(users, ["Search completed with success"], true);
     }
 
     public DataOutput<UserDto?> UpdateUser(UserDto userDto)

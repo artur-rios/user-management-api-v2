@@ -58,7 +58,7 @@ public class UserController(UserService userService) : BaseController
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
     public ActionResult<WebApiOutput<string>> DeactivateUser([FromRoute] int id)
     {
-        return Resolve(userService.DeactivateUser(id), $"User with id {id} activated successfully");
+        return Resolve(userService.DeactivateUser(id), $"User with id {id} deactivated successfully");
     }
     
     [HttpDelete]

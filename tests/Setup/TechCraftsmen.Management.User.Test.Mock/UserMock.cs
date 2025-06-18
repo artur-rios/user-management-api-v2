@@ -23,7 +23,7 @@ public class UserMock
             .RuleFor(x => x.Name, f => f.Name.FullName())
             .RuleFor(x => x.Email, f => f.Internet.Email())
             .RuleFor(x => x.Password, _ => mockPasswordHash.Value)
-            .RuleFor(x => x.Salt, f => mockPasswordHash.Salt)
+            .RuleFor(x => x.Salt, _ => mockPasswordHash.Salt)
             .RuleFor(x => x.RoleId, f => f.PickRandom((int)Roles.Admin, (int)Roles.Regular))
             .RuleFor(x => x.CreatedAt, _ => DateTime.UtcNow)
             .RuleFor(x => x.Active, _ => true);
@@ -34,6 +34,13 @@ public class UserMock
     public UserMock WithId(int id)
     {
         _userFaker.RuleFor(x => x.Id, id);
+
+        return this;
+    }
+
+    public UserMock WithNoId()
+    {
+        _userFaker.RuleFor(x => x.Id, 0);
 
         return this;
     }
