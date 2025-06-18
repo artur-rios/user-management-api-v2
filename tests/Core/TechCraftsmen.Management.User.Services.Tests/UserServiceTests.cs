@@ -30,7 +30,7 @@ public class UserServiceTests
         userRepository.Setup(repo => repo.Create(It.IsAny<Domain.Aggregates.User>()))
             .Returns(() => _faker.Random.Int(1, 1000));
 
-        userRepository.Setup(repo => repo.GetById(It.IsAny<int>()))
+        userRepository.Setup(repo => repo.GetById(It.IsAny<int>(), false))
             .Returns((int id) => id switch
             {
                 ExistingId => UserMock.New.WithId(ExistingId).Generate(),
@@ -38,7 +38,7 @@ public class UserServiceTests
                 _ => null
             });
 
-        userRepository.Setup(repo => repo.GetByFilter(It.IsAny<UserFilter>()))
+        userRepository.Setup(repo => repo.GetByFilter(It.IsAny<UserFilter>(), false))
             .Returns((UserFilter userFilter) => userFilter.Email == ActiveEmail
                 ? new List<Domain.Aggregates.User>
                 {

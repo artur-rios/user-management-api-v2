@@ -16,7 +16,7 @@ public class UserRepository(IDbContextFactory<RelationalDbContext> dbContextFact
         return entity.Id;
     }
 
-    public IQueryable<Domain.Aggregates.User> GetByFilter(DataFilter filter)
+    public IQueryable<Domain.Aggregates.User> GetByFilter(DataFilter filter, bool track = false)
     {
         if (filter is not UserFilter userFilter)
         {
@@ -50,12 +50,12 @@ public class UserRepository(IDbContextFactory<RelationalDbContext> dbContextFact
             query = query.Where(e => e.Active == userFilter.Active.Value);
         }
         
-        return query;
+        return track ? query : query.AsNoTracking();
     }
 
-    public Domain.Aggregates.User? GetById(int id)
+    public Domain.Aggregates.User? GetById(int id, bool track = false)
     {
-        return _dbContext.Users.Find(id);
+        return track ? _dbContext.Users.Find(id) : _dbContext.Users.AsNoTracking().FirstOrDefault(e => e.Id == id);
     }
 
     public void Update(Domain.Aggregates.User entity)
