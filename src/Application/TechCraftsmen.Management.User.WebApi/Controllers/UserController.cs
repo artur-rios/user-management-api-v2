@@ -37,6 +37,14 @@ public class UserController(UserService userService) : BaseController
         return Resolve(userService.GetUsersByFilter(filter)!);
     }
     
+    [HttpGet]
+    [Route("Filter/Multi")]
+    [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
+    public ActionResult<WebApiOutput<IList<UserDto>>> GetUsersByMultiFilter([FromQuery] UserMultiFilter filter)
+    {
+        return Resolve(userService.GetUsersByMultiFilter(filter)!);
+    }
+    
     [HttpPut]
     [Route("Update")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
@@ -54,11 +62,27 @@ public class UserController(UserService userService) : BaseController
     }
     
     [HttpPatch]
+    [Route("/ActivateMany")]
+    [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
+    public ActionResult<WebApiOutput<string>> ActivateManyUsers([FromBody] int[] ids)
+    {
+        return Resolve(userService.ActivateManyUsers(ids), "All users activated successfully");
+    }
+    
+    [HttpPatch]
     [Route("{id:int}/Deactivate")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
     public ActionResult<WebApiOutput<string>> DeactivateUser([FromRoute] int id)
     {
         return Resolve(userService.DeactivateUser(id), $"User with id {id} deactivated successfully");
+    }
+    
+    [HttpPatch]
+    [Route("/DeactivateMany")]
+    [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
+    public ActionResult<WebApiOutput<string>> DeactivateManyUsers([FromBody] int[] ids)
+    {
+        return Resolve(userService.DeactivateManyUsers(ids), "All users deactivated successfully");
     }
     
     [HttpDelete]
@@ -67,5 +91,13 @@ public class UserController(UserService userService) : BaseController
     public ActionResult<WebApiOutput<string>> DeleteUser([FromRoute] int id)
     {
         return Resolve(userService.DeleteUser(id), $"User with id {id} deleted successfully");
+    }
+    
+    [HttpDelete]
+    [Route("/DeleteMany")]
+    [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
+    public ActionResult<WebApiOutput<string>> DeleteManyUsers([FromBody] int[] ids)
+    {
+        return Resolve(userService.DeleteManyUsers(ids), "All users deleted successfully");
     }
 }

@@ -80,6 +80,20 @@ public class UserService(
         return new DataOutput<IList<UserDto>>(users, ["Search completed with success"], true);
     }
 
+    public DataOutput<IList<UserDto>> GetUsersByMultiFilter(UserMultiFilter filter)
+    {
+        var userSearch = userRepository.GetByMultiFilter(filter).ToList();
+
+        if (userSearch.Count == 0)
+        {
+            return new DataOutput<IList<UserDto>>([], ["No users found for the given filter"], true);
+        }
+
+        var users = userSearch.Select(user => user.ToDto()).ToList();
+
+        return new DataOutput<IList<UserDto>>(users, ["Search completed with success"], true);
+    }
+
     public DataOutput<UserDto?> UpdateUser(UserDto userDto)
     {
         var currentUser = userRepository.GetById(userDto.Id);
@@ -126,6 +140,54 @@ public class UserService(
 
         return new ProcessOutput();
     }
+    
+    public ProcessOutput ActivateManyUsers(int[] ids)
+    {
+        List<int> notFoundIds = [];
+        List<(int, string[])> canNotActivateIds = [];
+        
+        foreach (var id in ids)
+        {
+            var user = userRepository.GetById(id);
+
+            if (user is null)
+            {
+                notFoundIds.Add(id);
+                
+                continue;
+            }
+
+            var canActivate = user.CanActivate();
+
+            if (!canActivate.Success)
+            {
+                canNotActivateIds.Add((id, canActivate.Errors.ToArray()));
+                
+                continue;
+            }
+
+            user.Active = true;
+            userRepository.Update(user);
+        }
+        
+        var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found." : string.Empty;
+        var canNotActivateMessage = canNotActivateIds.Count > 0 ? $"Users with IDs {string.Join(", ", canNotActivateIds.Select(x => x.Item1))} cannot be activated" : string.Empty;
+
+        List<string> errors = [];
+        
+        if (!string.IsNullOrEmpty(notFoundMessage))
+        {
+            errors.Add(notFoundMessage);
+        }
+        
+        if (!string.IsNullOrEmpty(canNotActivateMessage))
+        {
+            errors.Add(canNotActivateMessage);
+            errors.AddRange(canNotActivateIds.SelectMany(x => x.Item2));
+        }
+
+        return new ProcessOutput(errors);
+    }
 
     public ProcessOutput DeactivateUser(int id)
     {
@@ -148,6 +210,54 @@ public class UserService(
 
         return new ProcessOutput();
     }
+    
+    public ProcessOutput DeactivateManyUsers(int[] ids)
+    {
+        List<int> notFoundIds = [];
+        List<(int, string[])> canNotDeactivateIds = [];
+        
+        foreach (var id in ids)
+        {
+            var user = userRepository.GetById(id);
+
+            if (user is null)
+            {
+                notFoundIds.Add(id);
+                
+                continue;
+            }
+
+            var canDeactivate = user.CanDeactivate();
+
+            if (!canDeactivate.Success)
+            {
+                canNotDeactivateIds.Add((id, canDeactivate.Errors.ToArray()));
+                
+                continue;
+            }
+
+            user.Active = false;
+            userRepository.Update(user);
+        }
+        
+        var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found." : string.Empty;
+        var canNotDeactivateMessage = canNotDeactivateIds.Count > 0 ? $"Users with IDs {string.Join(", ", canNotDeactivateIds.Select(x => x.Item1))} cannot be deactivated" : string.Empty;
+
+        List<string> errors = [];
+        
+        if (!string.IsNullOrEmpty(notFoundMessage))
+        {
+            errors.Add(notFoundMessage);
+        }
+        
+        if (!string.IsNullOrEmpty(canNotDeactivateMessage))
+        {
+            errors.Add(canNotDeactivateMessage);
+            errors.AddRange(canNotDeactivateIds.SelectMany(x => x.Item2));
+        }
+
+        return new ProcessOutput(errors);
+    }
 
     public ProcessOutput DeleteUser(int id)
     {
@@ -168,6 +278,56 @@ public class UserService(
         userRepository.Delete(id);
 
         return new ProcessOutput();
+    }
+
+    public ProcessOutput DeleteManyUsers(int[] ids)
+    {
+        List<int> idsToDelete = [];
+        List<int> notFoundIds = [];
+        List<(int, string[])> canNotDeleteIds = [];
+
+        foreach (var id in ids)
+        {
+            var user = userRepository.GetById(id);
+
+            if (user is null)
+            {
+                notFoundIds.Add(id);
+                
+                continue;
+            }
+
+            var canDelete = user.CanDelete();
+
+            if (!canDelete.Success)
+            {
+                canNotDeleteIds.Add((id, canDelete.Errors.ToArray()));
+                
+                continue;
+            }
+            
+            idsToDelete.Add(id);
+        }
+        
+        userRepository.MultiDelete(idsToDelete);
+        
+        var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found." : string.Empty;
+        var canNotDeleteMessage = canNotDeleteIds.Count > 0 ? $"Users with IDs {string.Join(", ", canNotDeleteIds.Select(x => x.Item1))} cannot be deleted" : string.Empty;
+
+        List<string> errors = [];
+        
+        if (!string.IsNullOrEmpty(notFoundMessage))
+        {
+            errors.Add(notFoundMessage);
+        }
+        
+        if (!string.IsNullOrEmpty(canNotDeleteMessage))
+        {
+            errors.Add(canNotDeleteMessage);
+            errors.AddRange(canNotDeleteIds.SelectMany(x => x.Item2));
+        }
+
+        return new ProcessOutput(errors);
     }
 
     private static void MergeUser(Domain.Aggregates.User source, Domain.Aggregates.User target, bool mergeStatus = true)

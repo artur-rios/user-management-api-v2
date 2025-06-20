@@ -110,10 +110,12 @@ public class UserRepository(IDbContextFactory<RelationalDbContext> dbContextFact
         return track ? query : query.AsNoTracking();
     }
 
-    public void MultiDelete(IEnumerable<int> ids)
+    public IEnumerable<Domain.Aggregates.User> MultiDelete(IEnumerable<int> ids)
     {
         var users = _dbContext.Users.Where(u => ids.Contains(u.Id)).ToList();
         _dbContext.Users.RemoveRange(users);
         _dbContext.SaveChanges();
+
+        return users;
     }
 }
