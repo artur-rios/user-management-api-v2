@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Options;
-using TechCraftsmen.Core.Data;
 using TechCraftsmen.Core.Extensions;
 using TechCraftsmen.Core.Output;
 using TechCraftsmen.Core.Util;
@@ -8,6 +7,7 @@ using TechCraftsmen.Core.Util.Hashing;
 using TechCraftsmen.Core.WebApi.Security.Interfaces;
 using TechCraftsmen.Core.WebApi.Security.Records;
 using TechCraftsmen.Management.User.Domain.Filters;
+using TechCraftsmen.Management.User.Domain.Interfaces;
 using TechCraftsmen.Management.User.Services.Exceptions;
 
 namespace TechCraftsmen.Management.User.Services;
@@ -15,11 +15,11 @@ namespace TechCraftsmen.Management.User.Services;
 public class AuthenticationService : IAuthenticationService
 {
     private readonly IValidator<Credentials> _credentialsValidator;
-    private readonly ICrudRepository<Domain.Aggregates.User> _userRepository;
+    private readonly IUserRepository _userRepository;
     private readonly JwtTokenConfiguration _jwtTokenConfiguration;
     private readonly IValidator<JwtTokenConfiguration> _jwtTokenConfigurationValidator;
 
-    public AuthenticationService(IValidator<Credentials> credentialsValidator, ICrudRepository<Domain.Aggregates.User> userRepository, IOptions<JwtTokenConfiguration> jwtTokenConfiguration, IValidator<JwtTokenConfiguration> jwtTokenConfigurationValidator)
+    public AuthenticationService(IValidator<Credentials> credentialsValidator, IUserRepository userRepository, IOptions<JwtTokenConfiguration> jwtTokenConfiguration, IValidator<JwtTokenConfiguration> jwtTokenConfigurationValidator)
     {
         _credentialsValidator = credentialsValidator;
         _userRepository = userRepository;

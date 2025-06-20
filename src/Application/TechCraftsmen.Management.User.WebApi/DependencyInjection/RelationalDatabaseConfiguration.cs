@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TechCraftsmen.Core.Data;
 using TechCraftsmen.Management.User.Data.Configuration;
 using TechCraftsmen.Management.User.Data.Repositories;
+using TechCraftsmen.Management.User.Domain.Interfaces;
 
 namespace TechCraftsmen.Management.User.WebApi.DependencyInjection;
 
@@ -28,6 +28,6 @@ public static class RelationalDatabaseConfiguration
 
     public static void AddRelationalRepositories(this IServiceCollection services)
     {
-        services.AddScoped<ICrudRepository<Domain.Aggregates.User>, UserRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
     }
 }

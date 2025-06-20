@@ -1,10 +1,10 @@
 using Bogus;
 using Microsoft.AspNetCore.Http;
 using Moq;
-using TechCraftsmen.Core.Data;
 using TechCraftsmen.Core.Test.Attributes;
 using TechCraftsmen.Management.User.Domain.Enums;
 using TechCraftsmen.Management.User.Domain.Filters;
+using TechCraftsmen.Management.User.Domain.Interfaces;
 using TechCraftsmen.Management.User.Dto.Validation;
 using TechCraftsmen.Management.User.Test.Mock;
 
@@ -23,7 +23,7 @@ public class UserServiceTests
 
     public UserServiceTests()
     {
-        var userRepository = new Mock<ICrudRepository<Domain.Aggregates.User>>();
+        var userRepository = new Mock<IUserRepository>();
         var httpContextAccessor = new Mock<HttpContextAccessor>();
         var userDtoValidator = new UserDtoValidator();
 

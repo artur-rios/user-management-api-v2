@@ -1,18 +1,18 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
-using TechCraftsmen.Core.Data;
 using TechCraftsmen.Core.Extensions;
 using TechCraftsmen.Core.Output;
 using TechCraftsmen.Core.Util.Hashing;
 using TechCraftsmen.Core.WebApi.Security.Records;
 using TechCraftsmen.Management.User.Domain.Filters;
+using TechCraftsmen.Management.User.Domain.Interfaces;
 using TechCraftsmen.Management.User.Dto;
 using TechCraftsmen.Management.User.Dto.Mapping;
 
 namespace TechCraftsmen.Management.User.Services;
 
 public class UserService(
-    ICrudRepository<Domain.Aggregates.User> userRepository,
+    IUserRepository userRepository,
     IHttpContextAccessor httpContextAccessor,
     IValidator<UserDto> userValidator)
 {
