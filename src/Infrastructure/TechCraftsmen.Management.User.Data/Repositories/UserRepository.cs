@@ -79,13 +79,19 @@ public class UserRepository(IDbContextFactory<RelationalDbContext> dbContextFact
         {
             throw new ArgumentException("Invalid filter");
         }
-
+        
+        var ids = multiFilter.Ids?.ToList();
         var names = multiFilter.Names?.ToList();
         var emails = multiFilter.Emails?.ToList();
         var roleIds = multiFilter.RoleIds?.ToList();
         var creationDates = multiFilter.CreationDates?.ToList();
 
         var query = _dbContext.Set<Domain.Aggregates.User>().AsQueryable();
+        
+        if (ids.IsNotEmpty())
+        {
+            query = query.Where(e => ids!.Contains(e.Id));
+        }
 
         if (names.IsNotEmpty())
         {
