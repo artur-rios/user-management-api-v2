@@ -161,7 +161,7 @@ public class UserServiceTests
 
         Assert.Empty(result.Data!);
         Assert.Equal("No users found for the given filter", result.Messages.First());
-        Assert.False(result.Success);
+        Assert.True(result.Success);
     }
 
     [UnitFact]
@@ -171,7 +171,7 @@ public class UserServiceTests
         var result = _userService.GetUsersByFilter(filter);
 
         Assert.NotEmpty(result.Data!);
-        Assert.Equal("Users found", result.Messages.First());
+        Assert.Equal("Search completed with success", result.Messages.First());
         Assert.True(result.Success);
     }
 
@@ -201,7 +201,7 @@ public class UserServiceTests
 
         var result = _userService.GetUsersByMultiFilter(filter);
 
-        Assert.False(result.Success);
+        Assert.True(result.Success);
         CustomAssert.NullOrEmpty(result.Data);
         Assert.Contains("No users found for the given filter", result.Messages);
     }
@@ -285,11 +285,7 @@ public class UserServiceTests
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
-
-        foreach (var error in result.Errors)
-        {
-            Assert.Equal("Can't activate already active user", error);
-        }
+        Assert.Equal($"Users with IDs {string.Join(", ", ActiveIds)} cannot be activated", result.Errors.First());
     }
 
     [UnitFact]
@@ -299,7 +295,7 @@ public class UserServiceTests
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
-        Assert.Equal($"Users with IDs {string.Join(", ", NonexistentIds)} not found.", result.Errors.First());
+        Assert.Equal($"Users with IDs {string.Join(", ", NonexistentIds)} not found", result.Errors.First());
     }
 
     [UnitFact]
@@ -343,8 +339,9 @@ public class UserServiceTests
     {
         var result = _userService.DeactivateManyUsers(InactiveIds);
 
-        Assert.True(result.Success);
-        Assert.Empty(result.Errors);
+        Assert.False(result.Success);
+        Assert.NotEmpty(result.Errors);
+        Assert.Equal($"Users with IDs {string.Join(", ", InactiveIds)} cannot be deactivated", result.Errors.First());
     }
 
     [UnitFact]
@@ -354,7 +351,7 @@ public class UserServiceTests
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
-        Assert.Equal($"Users with IDs {string.Join(", ", NonexistentIds)} not found.", result.Errors.First());
+        Assert.Equal($"Users with IDs {string.Join(", ", NonexistentIds)} not found", result.Errors.First());
     }
 
     [UnitFact]
@@ -400,11 +397,7 @@ public class UserServiceTests
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
-
-        foreach (var error in result.Errors)
-        {
-            Assert.Equal("Can't delete active user", error);
-        }
+        Assert.Equal($"Users with IDs {string.Join(", ", ActiveIds)} cannot be deleted", result.Errors.First());
     }
     
     [UnitFact]
@@ -414,6 +407,6 @@ public class UserServiceTests
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
-        Assert.Equal($"Users with IDs {string.Join(", ", NonexistentIds)} not found.", result.Errors.First());
+        Assert.Equal($"Users with IDs {string.Join(", ", NonexistentIds)} not found", result.Errors.First());
     }
 }

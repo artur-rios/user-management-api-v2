@@ -170,7 +170,7 @@ public class UserService(
             userRepository.Update(user);
         }
         
-        var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found." : string.Empty;
+        var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found" : string.Empty;
         var canNotActivateMessage = canNotActivateIds.Count > 0 ? $"Users with IDs {string.Join(", ", canNotActivateIds.Select(x => x.Item1))} cannot be activated" : string.Empty;
 
         List<string> errors = [];
@@ -240,7 +240,7 @@ public class UserService(
             userRepository.Update(user);
         }
         
-        var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found." : string.Empty;
+        var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found" : string.Empty;
         var canNotDeactivateMessage = canNotDeactivateIds.Count > 0 ? $"Users with IDs {string.Join(", ", canNotDeactivateIds.Select(x => x.Item1))} cannot be deactivated" : string.Empty;
 
         List<string> errors = [];
@@ -311,7 +311,7 @@ public class UserService(
         
         userRepository.MultiDelete(idsToDelete);
         
-        var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found." : string.Empty;
+        var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found" : string.Empty;
         var canNotDeleteMessage = canNotDeleteIds.Count > 0 ? $"Users with IDs {string.Join(", ", canNotDeleteIds.Select(x => x.Item1))} cannot be deleted" : string.Empty;
 
         List<string> errors = [];
