@@ -144,7 +144,7 @@ public class UserService(
     public ProcessOutput ActivateManyUsers(int[] ids)
     {
         List<int> notFoundIds = [];
-        List<(int, string[])> canNotActivateIds = [];
+        List<(int, string[])> cannotActivateIds = [];
         
         foreach (var id in ids)
         {
@@ -161,7 +161,7 @@ public class UserService(
 
             if (!canActivate.Success)
             {
-                canNotActivateIds.Add((id, canActivate.Errors.ToArray()));
+                cannotActivateIds.Add((id, canActivate.Errors.ToArray()));
                 
                 continue;
             }
@@ -171,8 +171,8 @@ public class UserService(
         }
         
         var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found" : string.Empty;
-        var canNotActivateMessage = canNotActivateIds.Count > 0 ? $"Users with IDs {string.Join(", ", canNotActivateIds.Select(x => x.Item1))} cannot be activated" : string.Empty;
-
+        var cannotActivateMessage = cannotActivateIds.Count > 0 ? $"Users with IDs {string.Join(", ", cannotActivateIds.Select(x => x.Item1))} cannot be activated" : string.Empty;
+        
         List<string> errors = [];
         
         if (!string.IsNullOrEmpty(notFoundMessage))
@@ -180,10 +180,14 @@ public class UserService(
             errors.Add(notFoundMessage);
         }
         
-        if (!string.IsNullOrEmpty(canNotActivateMessage))
+        if (!string.IsNullOrEmpty(cannotActivateMessage))
         {
-            errors.Add(canNotActivateMessage);
-            errors.AddRange(canNotActivateIds.SelectMany(x => x.Item2));
+            errors.Add(cannotActivateMessage);
+
+            foreach (var cannotActivate in cannotActivateIds)
+            {
+                errors.Add($"User with Id {cannotActivate.Item1}: {string.Join(", ", cannotActivate.Item2)}");
+            }
         }
 
         return new ProcessOutput(errors);
@@ -214,7 +218,7 @@ public class UserService(
     public ProcessOutput DeactivateManyUsers(int[] ids)
     {
         List<int> notFoundIds = [];
-        List<(int, string[])> canNotDeactivateIds = [];
+        List<(int, string[])> cannotDeactivateIds = [];
         
         foreach (var id in ids)
         {
@@ -231,7 +235,7 @@ public class UserService(
 
             if (!canDeactivate.Success)
             {
-                canNotDeactivateIds.Add((id, canDeactivate.Errors.ToArray()));
+                cannotDeactivateIds.Add((id, canDeactivate.Errors.ToArray()));
                 
                 continue;
             }
@@ -241,7 +245,7 @@ public class UserService(
         }
         
         var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found" : string.Empty;
-        var canNotDeactivateMessage = canNotDeactivateIds.Count > 0 ? $"Users with IDs {string.Join(", ", canNotDeactivateIds.Select(x => x.Item1))} cannot be deactivated" : string.Empty;
+        var cannotDeactivateMessage = cannotDeactivateIds.Count > 0 ? $"Users with IDs {string.Join(", ", cannotDeactivateIds.Select(x => x.Item1))} cannot be deactivated" : string.Empty;
 
         List<string> errors = [];
         
@@ -250,10 +254,14 @@ public class UserService(
             errors.Add(notFoundMessage);
         }
         
-        if (!string.IsNullOrEmpty(canNotDeactivateMessage))
+        if (!string.IsNullOrEmpty(cannotDeactivateMessage))
         {
-            errors.Add(canNotDeactivateMessage);
-            errors.AddRange(canNotDeactivateIds.SelectMany(x => x.Item2));
+            errors.Add(cannotDeactivateMessage);
+
+            foreach (var cannotDeactivate in cannotDeactivateIds)
+            {
+                errors.Add($"User with Id {cannotDeactivate.Item1}: {string.Join(", ", cannotDeactivate.Item2)}");
+            }
         }
 
         return new ProcessOutput(errors);
@@ -284,7 +292,7 @@ public class UserService(
     {
         List<int> idsToDelete = [];
         List<int> notFoundIds = [];
-        List<(int, string[])> canNotDeleteIds = [];
+        List<(int, string[])> cannotDeleteIds = [];
 
         foreach (var id in ids)
         {
@@ -301,7 +309,7 @@ public class UserService(
 
             if (!canDelete.Success)
             {
-                canNotDeleteIds.Add((id, canDelete.Errors.ToArray()));
+                cannotDeleteIds.Add((id, canDelete.Errors.ToArray()));
                 
                 continue;
             }
@@ -312,7 +320,7 @@ public class UserService(
         userRepository.MultiDelete(idsToDelete);
         
         var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found" : string.Empty;
-        var canNotDeleteMessage = canNotDeleteIds.Count > 0 ? $"Users with IDs {string.Join(", ", canNotDeleteIds.Select(x => x.Item1))} cannot be deleted" : string.Empty;
+        var cannotDeleteMessage = cannotDeleteIds.Count > 0 ? $"Users with IDs {string.Join(", ", cannotDeleteIds.Select(x => x.Item1))} cannot be deleted" : string.Empty;
 
         List<string> errors = [];
         
@@ -321,10 +329,14 @@ public class UserService(
             errors.Add(notFoundMessage);
         }
         
-        if (!string.IsNullOrEmpty(canNotDeleteMessage))
+        if (!string.IsNullOrEmpty(cannotDeleteMessage))
         {
-            errors.Add(canNotDeleteMessage);
-            errors.AddRange(canNotDeleteIds.SelectMany(x => x.Item2));
+            errors.Add(cannotDeleteMessage);
+
+            foreach (var cannotDelete in cannotDeleteIds)
+            {
+                errors.Add($"User with Id {cannotDelete.Item1}: {string.Join(", ", cannotDelete.Item2)}");
+            }
         }
 
         return new ProcessOutput(errors);

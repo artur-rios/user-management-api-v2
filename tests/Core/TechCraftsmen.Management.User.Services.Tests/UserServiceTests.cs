@@ -1,6 +1,7 @@
 using Bogus;
 using Microsoft.AspNetCore.Http;
 using Moq;
+using TechCraftsmen.Core.Extensions;
 using TechCraftsmen.Core.Test;
 using TechCraftsmen.Core.Test.Attributes;
 using TechCraftsmen.Management.User.Domain.Enums;
@@ -285,7 +286,18 @@ public class UserServiceTests
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
-        Assert.Equal($"Users with IDs {string.Join(", ", ActiveIds)} cannot be activated", result.Errors.First());
+
+        for (var i = 0; i < ActiveIds.Length; i++)
+        {
+            if (i == 0)
+            {
+                Assert.Equal($"Users with IDs {string.Join(", ", ActiveIds)} cannot be activated", result.Errors[i]);
+                
+                continue;
+            }
+            
+            Assert.Equal($"User with Id {ActiveIds[i]}: User already active", result.Errors.Skip(1).FirstOrDefault(e => ExtractIdFromDomainError(e) == ActiveIds[i]));
+        }
     }
 
     [UnitFact]
@@ -341,7 +353,18 @@ public class UserServiceTests
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
-        Assert.Equal($"Users with IDs {string.Join(", ", InactiveIds)} cannot be deactivated", result.Errors.First());
+        
+        for (var i = 0; i < InactiveIds.Length; i++)
+        {
+            if (i == 0)
+            {
+                Assert.Equal($"Users with IDs {string.Join(", ", InactiveIds)} cannot be deactivated", result.Errors[i]);
+                
+                continue;
+            }
+            
+            Assert.Equal($"User with Id {InactiveIds[i]}: User already inactive", result.Errors.Skip(1).FirstOrDefault(e => ExtractIdFromDomainError(e) == InactiveIds[i]));
+        }
     }
 
     [UnitFact]
@@ -398,6 +421,18 @@ public class UserServiceTests
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
         Assert.Equal($"Users with IDs {string.Join(", ", ActiveIds)} cannot be deleted", result.Errors.First());
+        
+        for (var i = 0; i < ActiveIds.Length; i++)
+        {
+            if (i == 0)
+            {
+                Assert.Equal($"Users with IDs {string.Join(", ", ActiveIds)} cannot be deleted", result.Errors[i]);
+                
+                continue;
+            }
+            
+            Assert.Equal($"User with Id {ActiveIds[i]}: Can't delete active user", result.Errors.Skip(1).FirstOrDefault(e => ExtractIdFromDomainError(e) == ActiveIds[i]));
+        }
     }
     
     [UnitFact]
@@ -408,5 +443,10 @@ public class UserServiceTests
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
         Assert.Equal($"Users with IDs {string.Join(", ", NonexistentIds)} not found", result.Errors.First());
+    }
+
+    private static int ExtractIdFromDomainError(string error)
+    {
+        return int.Parse(error.Split(" ")[3].TrimChar(':'));
     }
 }
