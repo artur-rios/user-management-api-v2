@@ -62,7 +62,7 @@ public class UserController(UserService userService) : BaseController
     }
     
     [HttpPatch]
-    [Route("/ActivateMany")]
+    [Route("ActivateMany")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
     public ActionResult<WebApiOutput<string>> ActivateManyUsers([FromBody] int[] ids)
     {
@@ -78,7 +78,7 @@ public class UserController(UserService userService) : BaseController
     }
     
     [HttpPatch]
-    [Route("/DeactivateMany")]
+    [Route("DeactivateMany")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
     public ActionResult<WebApiOutput<string>> DeactivateManyUsers([FromBody] int[] ids)
     {
@@ -94,7 +94,7 @@ public class UserController(UserService userService) : BaseController
     }
     
     [HttpDelete]
-    [Route("/DeleteMany")]
+    [Route("DeleteMany")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
     public ActionResult<WebApiOutput<string>> DeleteManyUsers([FromBody] int[] ids)
     {

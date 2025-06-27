@@ -1,5 +1,9 @@
-﻿using TechCraftsmen.Management.User.Data.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using TechCraftsmen.Management.User.Data.Repositories;
 using TechCraftsmen.Management.User.Domain.Enums;
+using TechCraftsmen.Management.User.Domain.Filters;
+using TechCraftsmen.Management.User.Dto;
+using TechCraftsmen.Management.User.Dto.Mapping;
 using TechCraftsmen.Management.User.Test.Mock;
 
 namespace TechCraftsmen.Management.User.Test.Fixture;
@@ -8,33 +12,65 @@ namespace TechCraftsmen.Management.User.Test.Fixture;
 // Reason: this class is meant to be used as a fixture for xunit test and is not explicitly instantiated
 public class DatabaseFixture : IDisposable
 {
-    public Domain.Aggregates.User TestUser { get; }
-    public string TestPassword { get; }
-    
+    private readonly RelationalDbContextFactory _dbContextFactory;
     private readonly UserRepository _userRepository;
 
-    private readonly int _userId;
-
+    private readonly List<int> _createdIds = [];
+    
     public DatabaseFixture()
     {
-        var dbContextFactory = new RelationalDbContextFactory();
+        _dbContextFactory = new RelationalDbContextFactory();
+        _userRepository = new UserRepository(_dbContextFactory);
+    }
+
+    public IEnumerable<UserDto> CreateUsers(bool active = true, int quantity = 1)
+    {
+        List<UserDto> createdUsers = [];
         
-        var testRepository = new TestRepository(dbContextFactory);
-        _userRepository = new UserRepository(dbContextFactory);
+        using var dbContext = _dbContextFactory.CreateDbContext();
 
-        var testUserId = testRepository.GetUserNextId();
+        for (var i = 0; i < quantity; i++)
+        {
+            var userMock = UserMock.New.WithNoId().WithRole(Roles.Test);
+            
+            if (!active)
+            {
+                userMock.Inactive();
+            }
+            
+            var user = userMock.Generate();
+            var userDto = user.ToDto();
+            userDto.Password = userMock.MockPassword;
+
+            var createdId = _userRepository.Create(user);
+            
+            userDto.Id = createdId;
+            _createdIds.Add(createdId);
+            
+            createdUsers.Add(userDto);
+        }
         
-        var userMock = UserMock.New.WithId(testUserId).WithRole(Roles.Test);
+        foreach (var entry in dbContext.ChangeTracker.Entries())
+        {
+            entry.State = EntityState.Detached;
+        }
 
-        TestUser = userMock.Generate();
-        TestPassword = userMock.MockPassword;
-
-        _userId = _userRepository.Create(TestUser);
+        return createdUsers;
+    }
+    
+    public IEnumerable<UserDto> GetUsersByMultiFilter(UserMultiFilter filter)
+    {
+        return _userRepository.GetByMultiFilter(filter).Select(user => user.ToDto());
+    }
+    
+    public UserDto? GetUserById(int id)
+    {
+        return _userRepository.GetById(id)?.ToDto();
     }
 
     public void Dispose()
     {
-        _userRepository.Delete(_userId);
+        _userRepository.MultiDelete(_createdIds);
         GC.SuppressFinalize(this);
     }
 }

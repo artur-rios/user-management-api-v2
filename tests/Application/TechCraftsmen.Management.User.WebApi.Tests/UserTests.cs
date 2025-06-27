@@ -1,40 +1,40 @@
 ﻿using System.Net;
 using TechCraftsmen.Core.Environment;
+using TechCraftsmen.Core.Extensions;
 using TechCraftsmen.Core.Test;
 using TechCraftsmen.Core.Test.Attributes;
 using TechCraftsmen.Core.Util.Random;
 using TechCraftsmen.Core.WebApi.Security.Records;
 using TechCraftsmen.Management.User.Domain;
 using TechCraftsmen.Management.User.Domain.Enums;
+using TechCraftsmen.Management.User.Domain.Filters;
 using TechCraftsmen.Management.User.Dto;
 using TechCraftsmen.Management.User.Dto.Mapping;
 using TechCraftsmen.Management.User.Test.Fixture;
 using TechCraftsmen.Management.User.Test.Mock;
-using Xunit.Abstractions;
 
 namespace TechCraftsmen.Management.User.WebApi.Tests;
 
 public class UserTests(
     DatabaseFixture fixture,
-    ITestOutputHelper testOutputHelper,
     EnvironmentType environment = EnvironmentType.Local)
     : WebApiTest<Program>(environment), IClassFixture<DatabaseFixture>, IAsyncLifetime
 {
     private const string AuthenticationRoute = "/Authentication";
     private const string UserRoute = "/User";
-
+    
     private const string NonexistentEmail = "inexists@mail.com";
-
-    private static bool _testUserActive;
-    private static int _testUserId;
-    private static bool _testUserCreated;
+    
+    private UserDto _testUser = new();
 
     public async Task InitializeAsync()
     {
+        _testUser = fixture.CreateUsers().First();
+        
         Credentials credentials = new()
         {
-            Email = fixture.TestUser.Email,
-            Password = fixture.TestPassword
+            Email = _testUser.Email,
+            Password = _testUser.Password
         };
 
         await AuthenticateAndAuthorize(credentials, AuthenticationRoute);
@@ -48,7 +48,7 @@ public class UserTests(
     [FunctionalFact]
     public async Task Should_GetUsersByFilter()
     {
-        var query = $"?Email={fixture.TestUser.Email}";
+        var query = $"?Email={_testUser.Email}";
 
         var result = await Get<IList<UserDto>>($"{UserRoute}/Filter{query}", HttpStatusCode.OK);
 
@@ -59,9 +59,9 @@ public class UserTests(
 
         var userFound = result.Data.FirstOrDefault();
 
-        Assert.Equal(fixture.TestUser.Name, userFound?.Name);
-        Assert.Equal(fixture.TestUser.Email, userFound?.Email);
-        Assert.Equal(fixture.TestUser.RoleId, userFound?.RoleId);
+        Assert.Equal(_testUser.Name, userFound?.Name);
+        Assert.Equal(_testUser.Email, userFound?.Email);
+        Assert.Equal(_testUser.RoleId, userFound?.RoleId);
     }
 
     [FunctionalFact]
@@ -84,60 +84,30 @@ public class UserTests(
         user.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
 
         var result = await Post<int>($"{UserRoute}/Create", user);
-        _testUserId = result.Data;
 
         Assert.NotNull(result);
-        Assert.True(_testUserId > 0);
+        Assert.True(result.Data > 0);
         Assert.Equal("User created with success", result.Messages.First());
-
-        _testUserActive = true;
-        _testUserCreated = false;
     }
 
     [FunctionalFact]
     public async Task Should_DeactivateUser()
     {
-        if (!_testUserCreated)
-        {
-            testOutputHelper.WriteLine("Test user not created, running Should_CreateUser test to create it");
+        var userId = fixture.CreateUsers().First().Id;
 
-            await Should_CreateUser();
-        }
-
-        if (!_testUserActive)
-        {
-            testOutputHelper.WriteLine("Test user not active, running Should_ActivateUser test to activate it");
-
-            await Should_ActivateUser();
-        }
-
-        var result = await Patch<string>($"{UserRoute}/{_testUserId}/Deactivate");
+        var result = await Patch<string>($"{UserRoute}/{userId}/Deactivate", null, HttpStatusCode.OK);
 
         Assert.NotNull(result);
-        Assert.Equal($"User with id {_testUserId} deactivated successfully", result.Data);
+        Assert.Equal($"User with id {userId} deactivated successfully", result.Data);
         Assert.Equal("Process executed with no errors", result.Messages.First());
-
-        _testUserActive = false;
     }
 
     [FunctionalFact]
     public async Task Should_NotDeactivateUser()
     {
-        if (!_testUserCreated)
-        {
-            testOutputHelper.WriteLine("Test user not created, running Should_CreateUser test to create it");
+        var userId = fixture.CreateUsers(false).First().Id;
 
-            await Should_CreateUser();
-        }
-
-        if (_testUserActive)
-        {
-            testOutputHelper.WriteLine("Test user active, running Should_DeactivateUser test to activate it");
-
-            await Should_DeactivateUser();
-        }
-
-        var result = await Patch<string>($"{UserRoute}/{_testUserId}/Deactivate");
+        var result = await Patch<string>($"{UserRoute}/{userId}/Deactivate");
 
         Assert.NotNull(result);
         Assert.Equal("Process executed with 1 error", result.Data);
@@ -147,47 +117,21 @@ public class UserTests(
     [FunctionalFact]
     public async Task Should_ActivateUser()
     {
-        if (!_testUserCreated)
-        {
-            testOutputHelper.WriteLine("Test user not created, running Should_CreateUser test to create it");
+        var userId = fixture.CreateUsers(false).First().Id;
 
-            await Should_CreateUser();
-        }
-
-        if (_testUserActive)
-        {
-            testOutputHelper.WriteLine("Test user active, running Should_DeactivateUser test to activate it");
-
-            await Should_DeactivateUser();
-        }
-
-        var result = await Patch<string>($"{UserRoute}/{_testUserId}/Activate");
+        var result = await Patch<string>($"{UserRoute}/{userId}/Activate");
 
         Assert.NotNull(result);
-        Assert.Equal($"User with id {_testUserId} activated successfully", result.Data);
+        Assert.Equal($"User with id {userId} activated successfully", result.Data);
         Assert.Equal("Process executed with no errors", result.Messages.First());
-
-        _testUserActive = true;
     }
 
     [FunctionalFact]
     public async Task Should_NotActivateUser()
     {
-        if (!_testUserCreated)
-        {
-            testOutputHelper.WriteLine("Test user not created, running Should_CreateUser test to create it");
+        var userId = fixture.CreateUsers().First().Id;
 
-            await Should_CreateUser();
-        }
-
-        if (!_testUserActive)
-        {
-            testOutputHelper.WriteLine("Test user not active, running Should_ActivateUser test to activate it");
-
-            await Should_ActivateUser();
-        }
-
-        var result = await Patch<string>($"{UserRoute}/{_testUserId}/Activate");
+        var result = await Patch<string>($"{UserRoute}/{userId}/Activate");
 
         Assert.NotNull(result);
         Assert.Equal("Process executed with 1 error", result.Data);
@@ -195,23 +139,32 @@ public class UserTests(
     }
 
     [FunctionalFact]
+    public async Task Should_ActivateMultipleUsers()
+    {
+        var ids = fixture.CreateUsers(false, 3).Select(user => user.Id).ToArray();
+        
+        var result = await Patch<string>($"{UserRoute}/ActivateMany", ids, HttpStatusCode.OK);
+        
+        Assert.NotNull(result);
+        Assert.Equal("All users activated successfully", result.Data);
+        Assert.Equal("Process executed with no errors", result.Messages.First());
+        
+        var users = fixture.GetUsersByMultiFilter(new UserMultiFilter { Ids = ids.ToList() }).ToList();
+        
+        Assert.Equal(3, users.Count);
+
+        foreach (var user in users)
+        {
+            Assert.True(user.Active);
+        }
+    }
+
+    [FunctionalFact]
     public async Task Should_NotDeleteUser()
     {
-        if (!_testUserCreated)
-        {
-            testOutputHelper.WriteLine("Test user not created, running Should_CreateUser test to create it");
+        var userId = fixture.CreateUsers().First().Id;
 
-            await Should_CreateUser();
-        }
-
-        if (!_testUserActive)
-        {
-            testOutputHelper.WriteLine("Test user not active, running Should_ActivateUser test to activate it");
-
-            await Should_ActivateUser();
-        }
-
-        var result = await Delete<string>($"{UserRoute}/{_testUserId}/Delete");
+        var result = await Delete<string>($"{UserRoute}/{userId}/Delete");
 
         Assert.NotNull(result);
         Assert.Equal("Process executed with 1 error", result.Data);
@@ -221,22 +174,12 @@ public class UserTests(
     [FunctionalFact]
     public async Task Should_DeleteUser()
     {
-        if (!_testUserCreated)
-        {
-            testOutputHelper.WriteLine("Test user not created, running Should_CreateUser test to create it");
+        var userId = fixture.CreateUsers(false).First().Id;
 
-            await Should_CreateUser();
-        }
-
-        if (_testUserActive)
-        {
-            await Should_DeactivateUser();
-        }
-
-        var result = await Delete<string>($"{UserRoute}/{_testUserId}/Delete");
+        var result = await Delete<string>($"{UserRoute}/{userId}/Delete");
 
         Assert.NotNull(result);
-        Assert.Equal($"User with id {_testUserId} deleted successfully", result.Data);
+        Assert.Equal($"User with id {userId} deleted successfully", result.Data);
         Assert.Equal("Process executed with no errors", result.Messages.First());
     }
 
@@ -256,8 +199,8 @@ public class UserTests(
     [FunctionalFact]
     public async Task Should_ReturnEmailAlreadyRegisteredError_And_NotCreateUser()
     {
-        var user = fixture.TestUser.ToDto();
-        user.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
+        var user = _testUser.Clone();
+        user!.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
 
         var result = await Post<int>($"{UserRoute}/Create", user);
 
@@ -270,17 +213,8 @@ public class UserTests(
     [FunctionalFact]
     public async Task Should_UpdateUser()
     {
-        var user = UserMock.New.WithNoId().WithRole(Roles.Regular).Generate().ToDto();
-        user.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
-
-        var creationResult = await Post<int>($"{UserRoute}/Create", user);
-        var userId = creationResult.Data;
-
-        Assert.NotNull(creationResult);
-        Assert.True(userId > 0);
-        Assert.Equal("User created with success", creationResult.Messages.First());
-
-        user.Id = userId;
+        var user = fixture.CreateUsers().First();
+        
         user.Name = "Updated name";
 
         var updateResult = await Put<UserDto>($"{UserRoute}/Update", user);
@@ -290,11 +224,10 @@ public class UserTests(
         Assert.Equal(user.Name, updateResult.Data?.Name);
         Assert.Equal("User updated with success", updateResult.Messages.First());
 
-        var getUserResult = await Get<UserDto>($"{UserRoute}/{user.Id}");
+        var returnedUser = fixture.GetUserById(user.Id);
 
-        Assert.NotNull(getUserResult);
-        Assert.NotNull(getUserResult.Data);
-        Assert.Equal(user.Id, getUserResult.Data.Id);
-        Assert.Equal(user.Name, getUserResult.Data.Name);
+        Assert.NotNull(returnedUser);
+        Assert.Equal(user.Id, returnedUser.Id);
+        Assert.Equal(user.Name, returnedUser.Name);
     }
 }

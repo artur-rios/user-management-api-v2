@@ -3,22 +3,38 @@ using TechCraftsmen.Core.Environment;
 using TechCraftsmen.Core.Test;
 using TechCraftsmen.Core.Test.Attributes;
 using TechCraftsmen.Core.WebApi.Security.Records;
+using TechCraftsmen.Management.User.Dto;
 using TechCraftsmen.Management.User.Test.Fixture;
 using TechCraftsmen.Management.User.Test.Mock;
 
 namespace TechCraftsmen.Management.User.WebApi.Tests;
 
 public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType environment = EnvironmentType.Local)
-    : WebApiTest<Program>(environment), IClassFixture<DatabaseFixture>
+    : WebApiTest<Program>(environment), IClassFixture<DatabaseFixture>, IAsyncLifetime
 {
     private const string AuthenticationRoute = "/Authentication";
+
+    private UserDto _testUser = new();
+    
+    public Task InitializeAsync()
+    {
+        _testUser = fixture.CreateUsers().First();
+
+        return Task.CompletedTask;
+    }
+
+    public Task DisposeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
 
     [FunctionalFact]
     public async Task Should_AuthenticateUser()
     {
         var credentials = CredentialsMock.New
-            .WithEmail(fixture.TestUser.Email)
-            .WithPassword(fixture.TestPassword)
+            .WithEmail(_testUser.Email)
+            .WithPassword(_testUser.Password)
             .Generate();
 
         var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.OK);
@@ -33,32 +49,32 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
     public async Task Should_Not_AuthenticateUserWithIncorrectPassword()
     {
         var credentials = CredentialsMock.New
-            .WithEmail(fixture.TestUser.Email)
+            .WithEmail(_testUser.Email)
             .WithPassword("wrong-password")
             .Generate();
-        
+
         var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
-        
+
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
         Assert.False(output.Success);
     }
-    
+
     [FunctionalFact]
     public async Task Should_Not_AuthenticateUserWithIncorrectEmail()
     {
         var credentials = CredentialsMock.New
             .WithEmail("wrong@mail.com")
-            .WithPassword(fixture.TestPassword)
+            .WithPassword(_testUser.Password)
             .Generate();
-        
+
         var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
-        
+
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
         Assert.False(output.Success);
     }
-    
+
     [FunctionalFact]
     public async Task Should_Not_AuthenticateUserWithIncorrectCredentials()
     {
@@ -66,14 +82,14 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithEmail("wrong@mail.com")
             .WithPassword("wrong-password")
             .Generate();
-        
+
         var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
-        
+
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
         Assert.False(output.Success);
     }
-    
+
     [FunctionalTheory]
     [InlineData("")]
     [InlineData(null)]
@@ -83,16 +99,16 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
     {
         var credentials = CredentialsMock.New
             .WithEmail(email!)
-            .WithPassword(fixture.TestPassword)
+            .WithPassword(_testUser.Password)
             .Generate();
-        
+
         var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
-        
+
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
         Assert.False(output.Success);
     }
-    
+
     [FunctionalTheory]
     [InlineData("")]
     [InlineData(null)]
@@ -100,17 +116,17 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
     public async Task Should_Not_AuthenticateUserWithInvalidPassword(string? password)
     {
         var credentials = CredentialsMock.New
-            .WithEmail(fixture.TestUser.Email)
+            .WithEmail(_testUser.Email)
             .WithPassword(password!)
             .Generate();
-        
+
         var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
-        
+
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
         Assert.False(output.Success);
     }
-    
+
     [FunctionalTheory]
     [InlineData("", "")]
     [InlineData(null, null)]
@@ -122,9 +138,9 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithEmail(email!)
             .WithPassword(password!)
             .Generate();
-        
+
         var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
-        
+
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
         Assert.False(output.Success);
