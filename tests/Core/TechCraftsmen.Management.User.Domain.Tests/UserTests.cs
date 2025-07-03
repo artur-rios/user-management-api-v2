@@ -75,7 +75,7 @@ public class UserTests
     }
     
     [UnitFact]
-    public void Should_NotAllowActivation_WhenUserIsAlreadyActive()
+    public void ShouldNot_AllowActivation_WhenUserIsAlreadyActive()
     {
         var user = UserMock.New.Active().Generate();
         
@@ -98,7 +98,7 @@ public class UserTests
     }
     
     [UnitFact]
-    public void Should_NotAllowDeactivation_When_UserIsAlreadyInactive()
+    public void ShouldNot_AllowDeactivation_When_UserIsAlreadyInactive()
     {
         var user = UserMock.New.Inactive().Generate();
         
@@ -121,7 +121,7 @@ public class UserTests
     }
 
     [UnitFact]
-    public void Should_NotAllowUpdate_When_UserIsInactive()
+    public void ShouldNot_AllowUpdate_When_UserIsInactive()
     {
         var user = UserMock.New.Inactive().Generate();
         
