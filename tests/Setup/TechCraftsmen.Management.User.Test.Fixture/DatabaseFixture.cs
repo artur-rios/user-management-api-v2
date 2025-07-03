@@ -13,6 +13,7 @@ namespace TechCraftsmen.Management.User.Test.Fixture;
 public class DatabaseFixture : IDisposable
 {
     private readonly RelationalDbContextFactory _dbContextFactory;
+    private readonly TestRepository _testRepository;
     private readonly UserRepository _userRepository;
 
     private readonly List<int> _createdIds = [];
@@ -20,6 +21,7 @@ public class DatabaseFixture : IDisposable
     public DatabaseFixture()
     {
         _dbContextFactory = new RelationalDbContextFactory();
+        _testRepository = new TestRepository(_dbContextFactory);
         _userRepository = new UserRepository(_dbContextFactory);
     }
 
@@ -57,6 +59,11 @@ public class DatabaseFixture : IDisposable
 
         return createdUsers;
     }
+
+    public int GetUserNextId()
+    {
+        return _testRepository.GetUserNextId();
+    }
     
     public IEnumerable<UserDto> GetUsersByMultiFilter(UserMultiFilter filter)
     {
@@ -66,6 +73,11 @@ public class DatabaseFixture : IDisposable
     public UserDto? GetUserById(int id)
     {
         return _userRepository.GetById(id)?.ToDto();
+    }
+
+    public void DeleteUsers(int[] ids)
+    {
+        _userRepository.MultiDelete(ids);
     }
 
     public void Dispose()

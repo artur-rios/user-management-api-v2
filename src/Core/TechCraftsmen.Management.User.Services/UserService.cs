@@ -63,7 +63,7 @@ public class UserService(
 
         var message = user is null ? "User not found" : "User found";
 
-        return new DataOutput<UserDto>(user?.ToDto(), [message], user is not null);
+        return new DataOutput<UserDto>(user?.ToDto(), [message], true);
     }
 
     public DataOutput<IList<UserDto>> GetUsersByFilter(UserFilter filter)

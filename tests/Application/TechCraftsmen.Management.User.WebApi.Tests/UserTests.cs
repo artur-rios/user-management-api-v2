@@ -27,6 +27,8 @@ public class UserTests(
     
     private UserDto _testUser = new();
 
+    private readonly List<int> _userIdsToDelete = [];
+
     public async Task InitializeAsync()
     {
         _testUser = fixture.CreateUsers().First();
@@ -42,7 +44,83 @@ public class UserTests(
 
     public Task DisposeAsync()
     {
+        fixture.DeleteUsers(_userIdsToDelete.ToArray());
+        
         return Task.CompletedTask;
+    }
+    
+    [FunctionalFact]
+    public async Task Should_CreateUser()
+    {
+        var user = UserMock.New.WithNoId().WithRole(Roles.Regular).Generate().ToDto();
+        user.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
+
+        var result = await Post<int>($"{UserRoute}/Create", user);
+
+        Assert.NotNull(result);
+        Assert.True(result.Data > 0);
+        Assert.True(result.Success);
+        
+        _userIdsToDelete.Add(result.Data);
+        
+        Assert.Equal("User created with success", result.Messages.First());
+    }
+
+    [FunctionalFact]
+    public async Task Should_NotCreateUser_WhenInputIsInvalid()
+    {
+        var user = UserMock.New.WithNoId().WithEmail(string.Empty).WithRole(Roles.Regular).Generate().ToDto();
+        user.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
+        
+        var result = await Post<int>($"{UserRoute}/Create", user);
+        
+        Assert.NotNull(result);
+        Assert.Equal(0, result.Data);
+        Assert.False(result.Success);
+        Assert.Equal("Email should be valid", result.Messages.First());
+    }
+
+    [FunctionalFact]
+    public async Task Should_NotCreateUser_WhenEmailAlreadyRegistered()
+    {
+        var user = fixture.CreateUsers().First();
+        user.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
+        
+        var result = await Post<int>($"{UserRoute}/Create", user);
+        
+        Assert.NotNull(result);
+        Assert.Equal(0, result.Data);
+        Assert.False(result.Success);
+        Assert.Equal("E-mail already registered", result.Messages.First());
+    }
+
+    [FunctionalFact]
+    public async Task Should_GetUserById()
+    {
+        var result = await Get<UserDto>($"{UserRoute}/{_testUser.Id}", HttpStatusCode.OK);
+        
+        Assert.NotNull(result);
+        Assert.True(result.Success);
+        Assert.Equal("User found", result.Messages.First());
+        Assert.NotNull(result.Data);
+        
+        Assert.Equal(_testUser.Name, result.Data?.Name);
+        Assert.Equal(_testUser.Email, result.Data?.Email);
+        Assert.Equal(_testUser.RoleId, result.Data?.RoleId);
+        Assert.True(result.Data?.Active);
+    }
+    
+    [FunctionalFact]
+    public async Task Should_NotGetUserById()
+    {
+        var nonExistentUserId = fixture.GetUserNextId();
+        
+        var result = await Get<UserDto>($"{UserRoute}/{nonExistentUserId}", HttpStatusCode.OK);
+        
+        Assert.NotNull(result);
+        Assert.Null(result.Data);
+        Assert.True(result.Success);
+        Assert.Equal("User not found", result.Messages.First());
     }
 
     [FunctionalFact]
@@ -65,7 +143,7 @@ public class UserTests(
     }
 
     [FunctionalFact]
-    public async Task Should_ReturnEmptyList()
+    public async Task ShouldNot_GetUsersByFilter()
     {
         const string query = $"?Email={NonexistentEmail}";
 
@@ -75,19 +153,6 @@ public class UserTests(
         Assert.True(result.Success);
         Assert.Empty(result.Data!);
         Assert.Equal("No users found for the given filter", result.Messages.First());
-    }
-
-    [FunctionalFact]
-    public async Task Should_CreateUser()
-    {
-        var user = UserMock.New.WithNoId().WithRole(Roles.Regular).Generate().ToDto();
-        user.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
-
-        var result = await Post<int>($"{UserRoute}/Create", user);
-
-        Assert.NotNull(result);
-        Assert.True(result.Data > 0);
-        Assert.Equal("User created with success", result.Messages.First());
     }
 
     [FunctionalFact]
