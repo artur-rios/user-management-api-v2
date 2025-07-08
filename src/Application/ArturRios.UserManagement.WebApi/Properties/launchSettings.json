@@ -1,0 +1,10 @@
+﻿{
+  "profiles": {
+    "ArturRios.UserManagement.WebApi": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Local"
+      }
+    }
+  }
+}

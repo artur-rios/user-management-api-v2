@@ -10,8 +10,8 @@ if "%~1"=="" (
 
 :: Set variables
 set MigrationName=%~1
-set DataProjectPath=%~dp0..\src\Infrastructure\TechCraftsmen.Management.User.Data
-set MigrationsPath=%~dp0..\src\Infrastructure\TechCraftsmen.Management.User.Data\Migrations
+set DataProjectPath=%~dp0..\src\Infrastructure\ArturRios.UserManagement.Data
+set MigrationsPath=%~dp0..\src\Infrastructure\ArturRios.UserManagement.Data\Migrations
 set ScriptsPath=%~dp0..\migrations
 
 :: Navigate to the Data project directory

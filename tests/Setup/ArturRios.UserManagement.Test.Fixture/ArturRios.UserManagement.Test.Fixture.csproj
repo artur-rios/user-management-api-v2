@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Environment\ArturRios.Common.Environment.csproj" />
+      <ProjectReference Include="..\..\..\src\Infrastructure\ArturRios.UserManagement.Data\ArturRios.UserManagement.Data.csproj" />
+      <ProjectReference Include="..\ArturRios.UserManagement.Test.Mock\ArturRios.UserManagement.Test.Mock.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DotNetEnv" Version="3.1.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.7" />
+      <PackageReference Include="xunit.extensibility.core" Version="2.9.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="Environments\.env.*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+</Project>

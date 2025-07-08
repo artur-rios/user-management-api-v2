@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\common\src\ArturRios.Common.WebApi\ArturRios.Common.WebApi.csproj" />
+      <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Data\ArturRios.Common.Data.csproj" />
+      <ProjectReference Include="..\..\..\common\src\ArturRios.Common.WebApi\ArturRios.Common.WebApi.csproj" />
+      <ProjectReference Include="..\ArturRios.UserManagement.Domain\ArturRios.UserManagement.Domain.csproj" />
+      <ProjectReference Include="..\ArturRios.UserManagement.Dto\ArturRios.UserManagement.Dto.csproj" />
+    </ItemGroup>
+
+</Project>
