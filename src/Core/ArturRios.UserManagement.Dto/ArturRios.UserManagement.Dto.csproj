@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Extensions\ArturRios.Common.Extensions.csproj" />
+      <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Validation\ArturRios.Common.Validation.csproj" />
       <ProjectReference Include="..\ArturRios.UserManagement.Domain\ArturRios.UserManagement.Domain.csproj" />
     </ItemGroup>
 

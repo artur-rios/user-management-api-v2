@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.Common.Environmen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.UserManagement.Test.Fixture", "..\tests\Setup\ArturRios.UserManagement.Test.Fixture\ArturRios.UserManagement.Test.Fixture.csproj", "{CC2BA699-1BB3-4BDD-9E98-3187EDBA64D9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.Common.Validation", "..\common\src\ArturRios.Common.Validation\ArturRios.Common.Validation.csproj", "{09AF71C8-A785-49BA-B67B-03A2D8429A59}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +135,10 @@ Global
 		{CC2BA699-1BB3-4BDD-9E98-3187EDBA64D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC2BA699-1BB3-4BDD-9E98-3187EDBA64D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC2BA699-1BB3-4BDD-9E98-3187EDBA64D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09AF71C8-A785-49BA-B67B-03A2D8429A59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09AF71C8-A785-49BA-B67B-03A2D8429A59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09AF71C8-A785-49BA-B67B-03A2D8429A59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09AF71C8-A785-49BA-B67B-03A2D8429A59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{02775870-CC31-4E8E-A491-C59D6323BEFC} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
@@ -157,5 +163,6 @@ Global
 		{0FC1C5DB-19D3-48FB-8828-534E4DDCC108} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
 		{2469B6DC-AB41-4A06-8888-A7303E9E4C84} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
 		{CC2BA699-1BB3-4BDD-9E98-3187EDBA64D9} = {C1262FBB-7DCB-422A-BB92-013CEBA9FCD1}
+		{09AF71C8-A785-49BA-B67B-03A2D8429A59} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
 	EndGlobalSection
 EndGlobal

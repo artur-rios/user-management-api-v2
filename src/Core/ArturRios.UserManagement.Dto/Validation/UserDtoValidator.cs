@@ -1,11 +1,12 @@
 ﻿using ArturRios.Common.Extensions;
+using ArturRios.Common.Validation;
 using ArturRios.UserManagement.Domain;
 using ArturRios.UserManagement.Domain.Enums;
 using FluentValidation;
 
 namespace ArturRios.UserManagement.Dto.Validation;
 
-public class UserDtoValidator : AbstractValidator<UserDto>
+public class UserDtoValidator : FluentValidator<UserDto>
 {
     public UserDtoValidator()
     {

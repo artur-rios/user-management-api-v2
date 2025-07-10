@@ -1,12 +1,12 @@
 ﻿using ArturRios.Common.Extensions;
 using ArturRios.Common.Output;
 using ArturRios.Common.Util.Hashing;
+using ArturRios.Common.Validation;
 using ArturRios.Common.WebApi.Security.Records;
 using ArturRios.UserManagement.Domain.Filters;
 using ArturRios.UserManagement.Domain.Interfaces;
 using ArturRios.UserManagement.Dto;
 using ArturRios.UserManagement.Dto.Mapping;
-using FluentValidation;
 using Microsoft.AspNetCore.Http;
 
 namespace ArturRios.UserManagement.Services;
@@ -14,15 +14,15 @@ namespace ArturRios.UserManagement.Services;
 public class UserService(
     IUserRepository userRepository,
     IHttpContextAccessor httpContextAccessor,
-    IValidator<UserDto> userValidator)
+    IFluentValidator<UserDto> userValidator)
 {
     public DataOutput<int> CreateUser(UserDto userDto)
     {
-        var validationResult = userValidator.Validate(userDto);
+        var validationErrors = userValidator.ValidateAndReturnErrors(userDto);
 
-        if (!validationResult.IsValid)
+        if (validationErrors.IsNotEmpty())
         {
-            return validationResult.ToDataOutput<int>();
+            return new DataOutput<int>(0, validationErrors, false);
         }
 
         var filter = new UserFilter { Email = userDto.Email };
@@ -96,6 +96,13 @@ public class UserService(
 
     public DataOutput<UserDto?> UpdateUser(UserDto userDto)
     {
+        var validationErrors = userValidator.ValidateAndReturnErrors(userDto);
+        
+        if (validationErrors.IsNotEmpty())
+        {
+            return new DataOutput<UserDto?>(null, validationErrors, false);
+        }
+        
         var currentUser = userRepository.GetById(userDto.Id);
 
         if (currentUser is null)

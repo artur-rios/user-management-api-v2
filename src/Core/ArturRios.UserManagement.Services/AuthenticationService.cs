@@ -2,24 +2,24 @@
 using ArturRios.Common.Output;
 using ArturRios.Common.Security;
 using ArturRios.Common.Util.Hashing;
+using ArturRios.Common.Validation;
 using ArturRios.Common.WebApi.Security.Interfaces;
 using ArturRios.Common.WebApi.Security.Records;
 using ArturRios.UserManagement.Domain.Filters;
 using ArturRios.UserManagement.Domain.Interfaces;
 using ArturRios.UserManagement.Services.Exceptions;
-using FluentValidation;
 using Microsoft.Extensions.Options;
 
 namespace ArturRios.UserManagement.Services;
 
 public class AuthenticationService : IAuthenticationService
 {
-    private readonly IValidator<Credentials> _credentialsValidator;
+    private readonly IFluentValidator<Credentials> _credentialsValidator;
     private readonly IUserRepository _userRepository;
     private readonly JwtTokenConfiguration _jwtTokenConfiguration;
-    private readonly IValidator<JwtTokenConfiguration> _jwtTokenConfigurationValidator;
+    private readonly IFluentValidator<JwtTokenConfiguration> _jwtTokenConfigurationValidator;
 
-    public AuthenticationService(IValidator<Credentials> credentialsValidator, IUserRepository userRepository, IOptions<JwtTokenConfiguration> jwtTokenConfiguration, IValidator<JwtTokenConfiguration> jwtTokenConfigurationValidator)
+    public AuthenticationService(IFluentValidator<Credentials> credentialsValidator, IUserRepository userRepository, IOptions<JwtTokenConfiguration> jwtTokenConfiguration, IFluentValidator<JwtTokenConfiguration> jwtTokenConfigurationValidator)
     {
         _credentialsValidator = credentialsValidator;
         _userRepository = userRepository;
@@ -79,14 +79,12 @@ public class AuthenticationService : IAuthenticationService
     
     private void ValidateTokenConfigAndThrow()
     {
-        var validationResult = _jwtTokenConfigurationValidator.Validate(_jwtTokenConfiguration);
+        var validationErrors = _jwtTokenConfigurationValidator.ValidateAndReturnErrors(_jwtTokenConfiguration);
 
-        if (validationResult.IsValid)
+        if (validationErrors.IsEmpty())
         {
             return;
         }
-
-        var validationErrors = validationResult.Errors.Select(vf => vf.ErrorMessage).ToArray();
 
         throw new MissingConfigurationException(validationErrors);
     }

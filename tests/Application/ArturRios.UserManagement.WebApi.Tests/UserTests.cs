@@ -111,7 +111,7 @@ public class UserTests(
     }
     
     [FunctionalFact]
-    public async Task Should_NotGetUserById()
+    public async Task ShouldNot_GetUserById()
     {
         var nonExistentUserId = fixture.GetUserNextId();
         
