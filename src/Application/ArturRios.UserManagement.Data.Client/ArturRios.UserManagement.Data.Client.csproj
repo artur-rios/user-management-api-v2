@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DotNetEnv" Version="3.1.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.7" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="Environments\.env.*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Data\ArturRios.Common.Data.csproj" />
+      <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Environment\ArturRios.Common.Environment.csproj" />
+      <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Domain\ArturRios.UserManagement.Domain.csproj" />
+    </ItemGroup>
+
+</Project>
