@@ -1,4 +1,4 @@
-using ArturRios.Common.Environment;
+using ArturRios.Common.Configuration;
 using ArturRios.Common.Test.Attributes;
 
 namespace ArturRios.UserManagement.Data.Client.Tests;

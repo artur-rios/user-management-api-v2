@@ -1,4 +1,4 @@
-﻿using ArturRios.Common.Environment;
+﻿using ArturRios.Common.Configuration;
 using ArturRios.UserManagement.Data.Client.Configuration;
 using ArturRios.UserManagement.Data.Client.Repositories;
 

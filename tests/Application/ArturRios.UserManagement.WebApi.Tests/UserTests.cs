@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using ArturRios.Common.Environment;
+using ArturRios.Common.Configuration;
 using ArturRios.Common.Extensions;
 using ArturRios.Common.Test;
 using ArturRios.Common.Test.Attributes;
@@ -39,7 +39,7 @@ public class UserTests(
             Password = _testUser.Password
         };
 
-        await AuthenticateAndAuthorize(credentials, AuthenticationRoute);
+        await AuthenticateAndAuthorizeAsync(credentials, AuthenticationRoute);
     }
 
     public Task DisposeAsync()
@@ -55,7 +55,7 @@ public class UserTests(
         var user = UserMock.New.WithNoId().WithRole(Roles.Regular).Generate().ToDto();
         user.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
 
-        var result = await Post<int>($"{UserRoute}/Create", user);
+        var result = await PostAsync<int>($"{UserRoute}/Create", user);
 
         Assert.NotNull(result);
         Assert.True(result.Data > 0);
@@ -72,7 +72,7 @@ public class UserTests(
         var user = UserMock.New.WithNoId().WithEmail(string.Empty).WithRole(Roles.Regular).Generate().ToDto();
         user.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
         
-        var result = await Post<int>($"{UserRoute}/Create", user);
+        var result = await PostAsync<int>($"{UserRoute}/Create", user);
         
         Assert.NotNull(result);
         Assert.Equal(0, result.Data);
@@ -86,7 +86,7 @@ public class UserTests(
         var user = fixture.CreateUsers().First();
         user.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
         
-        var result = await Post<int>($"{UserRoute}/Create", user);
+        var result = await PostAsync<int>($"{UserRoute}/Create", user);
         
         Assert.NotNull(result);
         Assert.Equal(0, result.Data);
@@ -97,7 +97,7 @@ public class UserTests(
     [FunctionalFact]
     public async Task Should_GetUserById()
     {
-        var result = await Get<UserDto>($"{UserRoute}/{_testUser.Id}", HttpStatusCode.OK);
+        var result = await GetAsync<UserDto>($"{UserRoute}/{_testUser.Id}", HttpStatusCode.OK);
         
         Assert.NotNull(result);
         Assert.True(result.Success);
@@ -115,7 +115,7 @@ public class UserTests(
     {
         var nonExistentUserId = fixture.GetUserNextId();
         
-        var result = await Get<UserDto>($"{UserRoute}/{nonExistentUserId}", HttpStatusCode.OK);
+        var result = await GetAsync<UserDto>($"{UserRoute}/{nonExistentUserId}", HttpStatusCode.OK);
         
         Assert.NotNull(result);
         Assert.Null(result.Data);
@@ -128,7 +128,7 @@ public class UserTests(
     {
         var query = $"?Email={_testUser.Email}";
 
-        var result = await Get<IList<UserDto>>($"{UserRoute}/Filter{query}", HttpStatusCode.OK);
+        var result = await GetAsync<IList<UserDto>>($"{UserRoute}/Filter{query}", HttpStatusCode.OK);
 
         Assert.NotNull(result);
         Assert.True(result.Success);
@@ -147,7 +147,7 @@ public class UserTests(
     {
         const string query = $"?Email={NonexistentEmail}";
 
-        var result = await Get<IList<UserDto>>($"{UserRoute}/Filter{query}", HttpStatusCode.OK);
+        var result = await GetAsync<IList<UserDto>>($"{UserRoute}/Filter{query}", HttpStatusCode.OK);
 
         Assert.NotNull(result);
         Assert.True(result.Success);
@@ -160,7 +160,7 @@ public class UserTests(
     {
         var userId = fixture.CreateUsers().First().Id;
 
-        var result = await Patch<string>($"{UserRoute}/{userId}/Deactivate", null, HttpStatusCode.OK);
+        var result = await PatchAsync<string>($"{UserRoute}/{userId}/Deactivate", null, HttpStatusCode.OK);
 
         Assert.NotNull(result);
         Assert.Equal($"User with id {userId} deactivated successfully", result.Data);
@@ -172,7 +172,7 @@ public class UserTests(
     {
         var userId = fixture.CreateUsers(false).First().Id;
 
-        var result = await Patch<string>($"{UserRoute}/{userId}/Deactivate");
+        var result = await PatchAsync<string>($"{UserRoute}/{userId}/Deactivate");
 
         Assert.NotNull(result);
         Assert.Equal("Process executed with 1 error", result.Data);
@@ -184,7 +184,7 @@ public class UserTests(
     {
         var userId = fixture.CreateUsers(false).First().Id;
 
-        var result = await Patch<string>($"{UserRoute}/{userId}/Activate");
+        var result = await PatchAsync<string>($"{UserRoute}/{userId}/Activate");
 
         Assert.NotNull(result);
         Assert.Equal($"User with id {userId} activated successfully", result.Data);
@@ -196,7 +196,7 @@ public class UserTests(
     {
         var userId = fixture.CreateUsers().First().Id;
 
-        var result = await Patch<string>($"{UserRoute}/{userId}/Activate");
+        var result = await PatchAsync<string>($"{UserRoute}/{userId}/Activate");
 
         Assert.NotNull(result);
         Assert.Equal("Process executed with 1 error", result.Data);
@@ -208,7 +208,7 @@ public class UserTests(
     {
         var ids = fixture.CreateUsers(false, 3).Select(user => user.Id).ToArray();
         
-        var result = await Patch<string>($"{UserRoute}/ActivateMany", ids, HttpStatusCode.OK);
+        var result = await PatchAsync<string>($"{UserRoute}/ActivateMany", ids, HttpStatusCode.OK);
         
         Assert.NotNull(result);
         Assert.Equal("All users activated successfully", result.Data);
@@ -229,7 +229,7 @@ public class UserTests(
     {
         var userId = fixture.CreateUsers().First().Id;
 
-        var result = await Delete<string>($"{UserRoute}/{userId}/Delete");
+        var result = await DeleteAsync<string>($"{UserRoute}/{userId}/Delete");
 
         Assert.NotNull(result);
         Assert.Equal("Process executed with 1 error", result.Data);
@@ -241,7 +241,7 @@ public class UserTests(
     {
         var userId = fixture.CreateUsers(false).First().Id;
 
-        var result = await Delete<string>($"{UserRoute}/{userId}/Delete");
+        var result = await DeleteAsync<string>($"{UserRoute}/{userId}/Delete");
 
         Assert.NotNull(result);
         Assert.Equal($"User with id {userId} deleted successfully", result.Data);
@@ -253,7 +253,7 @@ public class UserTests(
     {
         var user = UserMock.New.WithNoId().WithEmail(string.Empty).WithRole(Roles.Regular).Generate().ToDto();
 
-        var result = await Post<int>($"{UserRoute}/Create", user);
+        var result = await PostAsync<int>($"{UserRoute}/Create", user);
 
         Assert.NotNull(result);
         Assert.Equal(0, result.Data);
@@ -267,7 +267,7 @@ public class UserTests(
         var user = _testUser.Clone();
         user!.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
 
-        var result = await Post<int>($"{UserRoute}/Create", user);
+        var result = await PostAsync<int>($"{UserRoute}/Create", user);
 
         Assert.NotNull(result);
         Assert.Equal(0, result.Data);
@@ -282,7 +282,7 @@ public class UserTests(
         
         user.Name = "Updated name";
 
-        var updateResult = await Put<UserDto>($"{UserRoute}/Update", user);
+        var updateResult = await PutAsync<UserDto>($"{UserRoute}/Update", user);
 
         Assert.NotNull(updateResult);
         Assert.Equal(user.Id, updateResult.Data?.Id);

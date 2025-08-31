@@ -1,5 +1,5 @@
 using System.Net;
-using ArturRios.Common.Environment;
+using ArturRios.Common.Configuration;
 using ArturRios.Common.Test;
 using ArturRios.Common.Test.Attributes;
 using ArturRios.Common.WebApi.Security.Records;
@@ -37,7 +37,7 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithPassword(_testUser.Password)
             .Generate();
 
-        var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.OK);
+        var output = await PostAsync<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.OK);
 
         Assert.NotNull(output);
         CustomAssert.NotNullOrWhiteSpace(output.Data?.Token);
@@ -53,7 +53,7 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithPassword("wrong-password")
             .Generate();
 
-        var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        var output = await PostAsync<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
 
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
@@ -68,7 +68,7 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithPassword(_testUser.Password)
             .Generate();
 
-        var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        var output = await PostAsync<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
 
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
@@ -83,7 +83,7 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithPassword("wrong-password")
             .Generate();
 
-        var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        var output = await PostAsync<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
 
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
@@ -102,7 +102,7 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithPassword(_testUser.Password)
             .Generate();
 
-        var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        var output = await PostAsync<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
 
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
@@ -120,7 +120,7 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithPassword(password!)
             .Generate();
 
-        var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        var output = await PostAsync<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
 
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
@@ -139,7 +139,7 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithPassword(password!)
             .Generate();
 
-        var output = await Post<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        var output = await PostAsync<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
 
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));

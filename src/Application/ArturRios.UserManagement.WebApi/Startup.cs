@@ -1,4 +1,4 @@
-﻿using ArturRios.Common.Environment;
+﻿using ArturRios.Common.Configuration;
 using ArturRios.Common.Output;
 using ArturRios.Common.WebApi;
 using ArturRios.Common.WebApi.Security.Middleware;

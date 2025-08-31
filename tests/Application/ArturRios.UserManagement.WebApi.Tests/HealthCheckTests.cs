@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using ArturRios.Common.Environment;
+using ArturRios.Common.Configuration;
 using ArturRios.Common.Test;
 using ArturRios.Common.Test.Attributes;
 
@@ -12,7 +12,7 @@ public class HealthCheckTests(EnvironmentType environment = EnvironmentType.Loca
     [FunctionalFact]
     public async Task Should_DoHealthCheck()
     {
-        var output = await Get<string>(HealthCheckRoute, HttpStatusCode.OK);
+        var output = await GetAsync<string>(HealthCheckRoute, HttpStatusCode.OK);
         
         Assert.NotNull(output);
         Assert.Equal("Hello world!", output.Data);

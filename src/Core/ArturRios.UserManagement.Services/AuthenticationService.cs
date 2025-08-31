@@ -63,7 +63,7 @@ public class AuthenticationService : IAuthenticationService
     public DataOutput<AuthenticatedUser> ValidateTokenAndGetUser(string token)
     {
         var jwtToken = new JwtToken(token, _jwtTokenConfiguration.Secret);
-        var isValid = jwtToken.IsTokenValid().GetAwaiter().GetResult();
+        var isValid = jwtToken.IsTokenValidAsync().GetAwaiter().GetResult();
         
         if (!isValid)
         {
