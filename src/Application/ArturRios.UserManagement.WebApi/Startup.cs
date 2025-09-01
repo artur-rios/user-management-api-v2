@@ -11,6 +11,7 @@ public class Startup(string[] args) : WebApiStartup(args)
     {
         LoadConfiguration();
         ConfigureServices();
+        AddCustomInvalidModelStateResponse();
         UseSwaggerGen(jwtAuthentication: true);
 
         BuildApp();
