@@ -1,5 +1,5 @@
 using System.Net;
-using ArturRios.Common.Configuration;
+using ArturRios.Common.Configuration.Enums;
 using ArturRios.Common.Test;
 using ArturRios.Common.Test.Attributes;
 using ArturRios.Common.WebApi.Security.Records;

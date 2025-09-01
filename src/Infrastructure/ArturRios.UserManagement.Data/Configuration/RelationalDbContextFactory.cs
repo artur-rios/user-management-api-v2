@@ -1,4 +1,4 @@
-﻿using ArturRios.Common.Configuration;
+﻿using ArturRios.Common.Configuration.Enums;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Logging;
 

@@ -5,7 +5,7 @@ namespace ArturRios.UserManagement.WebApi.DependencyInjection;
 
 public static class AuthenticationConfiguration
 {
-    public static void AddJwtTokenConfiguration(this IServiceCollection services, IConfigurationSection jwtTokenConfiguration)
+    public static void AddJwtTokenConfiguration(this IServiceCollection services)
     {
         services.AddSingleton<JwtTokenConfiguration>(_ => new JwtTokenConfiguration(
             Audience: Environment.GetEnvironmentVariable("AUTH_TOKEN_AUDIENCE")!,

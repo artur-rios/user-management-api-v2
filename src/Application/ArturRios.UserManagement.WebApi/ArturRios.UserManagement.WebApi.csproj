@@ -4,25 +4,28 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <EnableDefaultContentItems>false</EnableDefaultContentItems>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="DotNetEnv" Version="3.1.1" />
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.19" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.8" />
+        <PackageReference Include="DotNetEnv" Version="3.1.1"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.8"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Output\ArturRios.Common.Output.csproj" />
-      <ProjectReference Include="..\..\..\common\src\ArturRios.Common.WebApi\ArturRios.Common.WebApi.csproj" />
-      <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Domain\ArturRios.UserManagement.Domain.csproj" />
-      <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Dto\ArturRios.UserManagement.Dto.csproj" />
-      <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Services\ArturRios.UserManagement.Services.csproj" />
-      <ProjectReference Include="..\..\Infrastructure\ArturRios.UserManagement.Data\ArturRios.UserManagement.Data.csproj" />
+        <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Output\ArturRios.Common.Output.csproj"/>
+        <ProjectReference Include="..\..\..\common\src\ArturRios.Common.WebApi\ArturRios.Common.WebApi.csproj"/>
+        <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Domain\ArturRios.UserManagement.Domain.csproj"/>
+        <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Dto\ArturRios.UserManagement.Dto.csproj"/>
+        <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Services\ArturRios.UserManagement.Services.csproj"/>
+        <ProjectReference Include="..\..\Infrastructure\ArturRios.UserManagement.Data\ArturRios.UserManagement.Data.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Environments\.env.*">
+        <Content Include="Environments\.env*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Settings\appsettings.*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>

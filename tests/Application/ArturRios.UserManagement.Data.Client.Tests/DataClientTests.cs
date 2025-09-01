@@ -1,4 +1,4 @@
-using ArturRios.Common.Configuration;
+using ArturRios.Common.Configuration.Enums;
 using ArturRios.Common.Test.Attributes;
 
 namespace ArturRios.UserManagement.Data.Client.Tests;
