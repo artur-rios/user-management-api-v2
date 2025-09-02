@@ -7,23 +7,11 @@ public class ClientDbContextFactory : IDbContextFactory<ClientDbContext>
 {
     public ClientDbContext CreateDbContext()
     {
-        var basePath = AppDomain.CurrentDomain.BaseDirectory;
-        var envFolder = Path.Combine(basePath, "Environments");
-        var environmentName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? "Local";
-        var envFile = Path.Combine(envFolder, $".env.{environmentName.ToLower()}");
-
-        if (!File.Exists(envFile))
-        {
-            throw new FileNotFoundException($".env file not found at expected location: {envFile}");
-        }
-
-        DotNetEnv.Env.Load(envFile);
-
         var connectionString = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING");
 
         if (string.IsNullOrEmpty(connectionString))
         {
-            throw new ArgumentException("Database connection string is not configured in the .env file.");
+            throw new ArgumentException("Database connection string is not configured in the environment variables");
         }
 
         var loggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
