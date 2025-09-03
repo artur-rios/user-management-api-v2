@@ -1,4 +1,4 @@
-﻿using ArturRios.Common.Data;
+﻿using ArturRios.Common.Data.Interfaces;
 
 namespace ArturRios.UserManagement.Domain.Interfaces;
 
