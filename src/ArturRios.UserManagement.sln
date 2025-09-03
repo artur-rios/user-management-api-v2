@@ -59,6 +59,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.Common.Configurat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.Common.Pipelines", "..\common\src\ArturRios.Common.Pipelines\ArturRios.Common.Pipelines.csproj", "{65115210-AEC1-400D-A431-745E10D5D29C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.UserManagement.WebApi.Client", "Application\ArturRios.UserManagement.WebApi.Client\ArturRios.UserManagement.WebApi.Client.csproj", "{1908ADE3-25F4-48FE-BBAD-2BFAB6BAB2EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.UserManagement.WebApi.Client.Tests", "ArturRios.UserManagement.WebApi.Client.Tests\ArturRios.UserManagement.WebApi.Client.Tests.csproj", "{2299984D-25A0-458A-AF2C-B54C29B51C75}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +165,14 @@ Global
 		{65115210-AEC1-400D-A431-745E10D5D29C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65115210-AEC1-400D-A431-745E10D5D29C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65115210-AEC1-400D-A431-745E10D5D29C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1908ADE3-25F4-48FE-BBAD-2BFAB6BAB2EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1908ADE3-25F4-48FE-BBAD-2BFAB6BAB2EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1908ADE3-25F4-48FE-BBAD-2BFAB6BAB2EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1908ADE3-25F4-48FE-BBAD-2BFAB6BAB2EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2299984D-25A0-458A-AF2C-B54C29B51C75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2299984D-25A0-458A-AF2C-B54C29B51C75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2299984D-25A0-458A-AF2C-B54C29B51C75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2299984D-25A0-458A-AF2C-B54C29B51C75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{02775870-CC31-4E8E-A491-C59D6323BEFC} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
@@ -190,5 +202,7 @@ Global
 		{7A4F1C94-F73C-4BA2-A08D-96961BDDBE32} = {54F0AB5D-B1B7-4AA1-B3F5-52244E1CE4C6}
 		{C568A635-9ABF-4F0F-B1EE-F43BD6A3091D} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
 		{65115210-AEC1-400D-A431-745E10D5D29C} = {38CD81D7-3B96-461C-A0A2-2187BAEF40BD}
+		{1908ADE3-25F4-48FE-BBAD-2BFAB6BAB2EA} = {BD973C5A-84F6-4A05-8B05-0292FD017C37}
+		{2299984D-25A0-458A-AF2C-B54C29B51C75} = {54F0AB5D-B1B7-4AA1-B3F5-52244E1CE4C6}
 	EndGlobalSection
 EndGlobal
