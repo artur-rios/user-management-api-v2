@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ArturRios.Common.Data.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ArturRios.UserManagement.Data.Client.Configuration;
@@ -16,7 +17,7 @@ public class ClientDbContextFactory : IDbContextFactory<ClientDbContext>
 
         var loggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
-        return new ClientDbContext(loggerFactory, new ClientDbContextOptions
+        return new ClientDbContext(loggerFactory, new BaseDbContextOptions
         {
             ConnectionString = connectionString
         });

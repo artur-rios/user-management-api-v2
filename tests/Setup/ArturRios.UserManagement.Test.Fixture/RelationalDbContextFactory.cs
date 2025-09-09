@@ -1,4 +1,5 @@
 ﻿using ArturRios.Common.Configuration.Enums;
+using ArturRios.Common.Data.Configuration;
 using ArturRios.UserManagement.Data.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -21,14 +22,12 @@ public class RelationalDbContextFactory : IDbContextFactory<RelationalDbContext>
         DotNetEnv.Env.Load(envFile);
         
         var connectionString = Environment.GetEnvironmentVariable("RELATIONAL_DATABASE_CONNECTION_STRING");
-
-        var options = new RelationalDbContextOptions { ConnectionString = connectionString! };
         
         var loggerFactory = LoggerFactory.Create(builder =>
         {
             builder.AddConsole();
         });
         
-        return new RelationalDbContext(loggerFactory, options);
+        return new RelationalDbContext(loggerFactory, new BaseDbContextOptions { ConnectionString = connectionString! });
     }
 }

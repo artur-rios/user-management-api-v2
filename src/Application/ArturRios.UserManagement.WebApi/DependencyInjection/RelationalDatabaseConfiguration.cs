@@ -1,4 +1,5 @@
-﻿using ArturRios.UserManagement.Data.Configuration;
+﻿using ArturRios.Common.Data.Configuration;
+using ArturRios.UserManagement.Data.Configuration;
 using ArturRios.UserManagement.Data.Repositories;
 using ArturRios.UserManagement.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,7 @@ public static class RelationalDatabaseConfiguration
             throw new ArgumentException("Database connection string is not configured. Check your .env file.");
         }
 
-        services.AddSingleton(new RelationalDbContextOptions { ConnectionString = connectionString });
+        services.AddSingleton(new BaseDbContextOptions { ConnectionString = connectionString });
 
         services.AddDbContext<RelationalDbContext>(options =>
             options.UseNpgsql(connectionString), 

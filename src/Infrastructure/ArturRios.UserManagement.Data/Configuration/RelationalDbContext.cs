@@ -1,11 +1,12 @@
-﻿using ArturRios.UserManagement.Data.EntityMaps;
+﻿using ArturRios.Common.Data.Configuration;
+using ArturRios.UserManagement.Data.EntityMaps;
 using ArturRios.UserManagement.Domain.Aggregates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ArturRios.UserManagement.Data.Configuration;
 
-public class RelationalDbContext(ILoggerFactory loggerFactory, RelationalDbContextOptions options) : DbContext
+public class RelationalDbContext(ILoggerFactory loggerFactory, BaseDbContextOptions options) : DbContext
 {
     private const string Schema = "user_management";
 

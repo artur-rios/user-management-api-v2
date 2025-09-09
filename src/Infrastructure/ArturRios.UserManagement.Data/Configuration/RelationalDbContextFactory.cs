@@ -1,4 +1,5 @@
 ﻿using ArturRios.Common.Configuration.Enums;
+using ArturRios.Common.Data.Configuration;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Logging;
 
@@ -32,7 +33,7 @@ public class RelationalDbContextFactory : IDesignTimeDbContextFactory<Relational
 
         var loggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
-        return new RelationalDbContext(loggerFactory, new RelationalDbContextOptions
+        return new RelationalDbContext(loggerFactory, new BaseDbContextOptions
         {
             ConnectionString = connectionString
         });
