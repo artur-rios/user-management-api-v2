@@ -484,3 +484,7 @@ appsettings.api.Production.json
 TestResults/
 coverage.json
 TestReports/
+
+# Doc generation
+Doxygen/
+*.asta.lock
