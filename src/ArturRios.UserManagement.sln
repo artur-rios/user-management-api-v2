@@ -61,7 +61,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.Common.Pipelines"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.UserManagement.WebApi.Client", "Application\ArturRios.UserManagement.WebApi.Client\ArturRios.UserManagement.WebApi.Client.csproj", "{1908ADE3-25F4-48FE-BBAD-2BFAB6BAB2EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.UserManagement.WebApi.Client.Tests", "ArturRios.UserManagement.WebApi.Client.Tests\ArturRios.UserManagement.WebApi.Client.Tests.csproj", "{2299984D-25A0-458A-AF2C-B54C29B51C75}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.UserManagement.WebApi.Client.Tests", "..\tests\Application\ArturRios.UserManagement.WebApi.Client.Tests\ArturRios.UserManagement.WebApi.Client.Tests.csproj", "{2299984D-25A0-458A-AF2C-B54C29B51C75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
