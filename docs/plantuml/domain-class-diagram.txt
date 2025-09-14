@@ -1,0 +1,50 @@
+@startuml
+class Constants{
+  +MinimumPasswordLength : int
+}
+class Role{
+  +Name : string
+  +Description : string
+}
+class User{
+  +Name : string
+  +Email : string
+  +Password : byte
+  +Salt : byte
+  +RoleId : int
+  +CreatedAt : DateTime
+  +Active : bool
+  +CanActivate() : ProcessOutput
+  +CanDeactivate() : ProcessOutput
+  +CanDelete() : ProcessOutput
+  +CanRegister(,) : ProcessOutput
+  +CanUpdate() : ProcessOutput
+}
+class Roles{
+  -Admin : int
+  -Regular : int
+  -Test : int
+}
+class UserFilter{
+  +Name : string?
+  +Email : string?
+  +RoleId : int?
+  +CreatedAt : DateTime?
+  +Active : bool?
+}
+class UserMultiFilter{
+  +Ids : 
+  +Names : 
+  +Emails : 
+  +RoleIds : 
+  +CreationDates : 
+}
+class Entity{
+  +Id : int
+}
+class DataFilter
+Role --|> Entity
+User --|> Entity
+UserFilter --|> DataFilter
+UserMultiFilter --|> DataFilter
+@enduml
