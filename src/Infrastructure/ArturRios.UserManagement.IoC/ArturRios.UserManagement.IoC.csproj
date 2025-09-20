@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Security\ArturRios.Common.Security.csproj" />
+      <ProjectReference Include="..\..\..\common\src\ArturRios.Common.WebApi\ArturRios.Common.WebApi.csproj" />
+      <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Dto\ArturRios.UserManagement.Dto.csproj" />
+      <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Services\ArturRios.UserManagement.Services.csproj" />
+      <ProjectReference Include="..\ArturRios.UserManagement.Data.Relational\ArturRios.UserManagement.Data.Relational.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.9" />
+    </ItemGroup>
+
+</Project>

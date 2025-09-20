@@ -1,10 +1,11 @@
 ﻿using ArturRios.Common.Data.Configuration;
-using ArturRios.UserManagement.Data.Configuration;
-using ArturRios.UserManagement.Data.Repositories;
+using ArturRios.UserManagement.Data.Relational.Configuration;
+using ArturRios.UserManagement.Data.Relational.Repositories;
 using ArturRios.UserManagement.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace ArturRios.UserManagement.WebApi.DependencyInjection;
+namespace ArturRios.UserManagement.IoC.DependencyInjection;
 
 public static class RelationalDatabaseConfiguration
 {

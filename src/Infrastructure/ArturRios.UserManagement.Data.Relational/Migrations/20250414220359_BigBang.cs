@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace ArturRios.UserManagement.Data.Migrations
+namespace ArturRios.UserManagement.Data.Relational.Migrations
 {
     /// <inheritdoc />
     public partial class BigBang : Migration

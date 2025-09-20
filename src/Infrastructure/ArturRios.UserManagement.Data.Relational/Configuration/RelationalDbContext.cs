@@ -1,10 +1,10 @@
 ﻿using ArturRios.Common.Data.Configuration;
-using ArturRios.UserManagement.Data.EntityMaps;
+using ArturRios.UserManagement.Data.Relational.EntityMaps;
 using ArturRios.UserManagement.Domain.Aggregates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace ArturRios.UserManagement.Data.Configuration;
+namespace ArturRios.UserManagement.Data.Relational.Configuration;
 
 public class RelationalDbContext(ILoggerFactory loggerFactory, BaseDbContextOptions options) : DbContext
 {

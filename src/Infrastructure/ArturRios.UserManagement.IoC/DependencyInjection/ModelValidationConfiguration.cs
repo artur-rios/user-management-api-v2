@@ -4,8 +4,9 @@ using ArturRios.Common.WebApi.Security.Records;
 using ArturRios.Common.WebApi.Security.Validation;
 using ArturRios.UserManagement.Dto;
 using ArturRios.UserManagement.Dto.Validation;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace ArturRios.UserManagement.WebApi.DependencyInjection;
+namespace ArturRios.UserManagement.IoC.DependencyInjection;
 
 public static class ModelValidationConfiguration
 {

@@ -1,7 +1,7 @@
 ﻿using ArturRios.UserManagement.Domain.Aggregates;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ArturRios.UserManagement.Data.EntityMaps;
+namespace ArturRios.UserManagement.Data.Relational.EntityMaps;
 
 internal static class UserRelationalMap
 {

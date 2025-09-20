@@ -1,4 +1,4 @@
-﻿using ArturRios.UserManagement.Data.Configuration;
+﻿using ArturRios.UserManagement.Data.Relational.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArturRios.UserManagement.Test.Fixture;

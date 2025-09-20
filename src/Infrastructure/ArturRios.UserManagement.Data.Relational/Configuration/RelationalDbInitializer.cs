@@ -1,6 +1,6 @@
-﻿using ArturRios.UserManagement.Data.DataSeed;
+﻿using ArturRios.UserManagement.Data.Relational.DataSeed;
 
-namespace ArturRios.UserManagement.Data.Configuration;
+namespace ArturRios.UserManagement.Data.Relational.Configuration;
 
 public class RelationalDbInitializer(RelationalDbContext context)
 {

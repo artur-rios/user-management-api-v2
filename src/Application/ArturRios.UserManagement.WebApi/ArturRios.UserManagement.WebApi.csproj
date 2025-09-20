@@ -9,7 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="DotNetEnv" Version="3.1.1"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.8"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.9" />
     </ItemGroup>
 
     <ItemGroup>
@@ -18,7 +18,8 @@
         <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Domain\ArturRios.UserManagement.Domain.csproj"/>
         <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Dto\ArturRios.UserManagement.Dto.csproj"/>
         <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Services\ArturRios.UserManagement.Services.csproj"/>
-        <ProjectReference Include="..\..\Infrastructure\ArturRios.UserManagement.Data\ArturRios.UserManagement.Data.csproj"/>
+        <ProjectReference Include="..\..\Infrastructure\ArturRios.UserManagement.Data.Relational\ArturRios.UserManagement.Data.Relational.csproj" />
+        <ProjectReference Include="..\..\Infrastructure\ArturRios.UserManagement.IoC\ArturRios.UserManagement.IoC.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -28,6 +29,10 @@
         <Content Include="Settings\appsettings.*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="DependencyInjection\" />
     </ItemGroup>
 
 </Project>

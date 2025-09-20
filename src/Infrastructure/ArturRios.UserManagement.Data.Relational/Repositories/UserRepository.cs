@@ -1,11 +1,11 @@
 ﻿using ArturRios.Common.Data;
 using ArturRios.Common.Extensions;
-using ArturRios.UserManagement.Data.Configuration;
+using ArturRios.UserManagement.Data.Relational.Configuration;
 using ArturRios.UserManagement.Domain.Filters;
 using ArturRios.UserManagement.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace ArturRios.UserManagement.Data.Repositories;
+namespace ArturRios.UserManagement.Data.Relational.Repositories;
 
 public class UserRepository(IDbContextFactory<RelationalDbContext> dbContextFactory) : IUserRepository
 {

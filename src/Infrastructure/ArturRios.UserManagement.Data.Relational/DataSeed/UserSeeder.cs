@@ -1,8 +1,8 @@
 ﻿using ArturRios.Common.Util.Hashing;
-using ArturRios.UserManagement.Data.Configuration;
+using ArturRios.UserManagement.Data.Relational.Configuration;
 using ArturRios.UserManagement.Domain.Enums;
 
-namespace ArturRios.UserManagement.Data.DataSeed;
+namespace ArturRios.UserManagement.Data.Relational.DataSeed;
 
 public static class UserSeeder
 {

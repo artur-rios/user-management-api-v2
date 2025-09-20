@@ -1,7 +1,8 @@
 ﻿using ArturRios.Common.Security;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace ArturRios.UserManagement.WebApi.DependencyInjection;
+namespace ArturRios.UserManagement.IoC.DependencyInjection;
 
 public static class AuthenticationConfiguration
 {

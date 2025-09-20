@@ -1,4 +1,4 @@
-﻿using ArturRios.UserManagement.Data.Repositories;
+﻿using ArturRios.UserManagement.Data.Relational.Repositories;
 using ArturRios.UserManagement.Domain.Enums;
 using ArturRios.UserManagement.Domain.Filters;
 using ArturRios.UserManagement.Dto;

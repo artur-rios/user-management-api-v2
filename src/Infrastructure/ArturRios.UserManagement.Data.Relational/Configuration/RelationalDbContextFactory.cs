@@ -3,7 +3,7 @@ using ArturRios.Common.Data.Configuration;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Logging;
 
-namespace ArturRios.UserManagement.Data.Configuration;
+namespace ArturRios.UserManagement.Data.Relational.Configuration;
 
 public class RelationalDbContextFactory : IDesignTimeDbContextFactory<RelationalDbContext>
 {

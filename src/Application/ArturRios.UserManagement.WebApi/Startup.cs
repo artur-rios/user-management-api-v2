@@ -1,7 +1,7 @@
 ﻿using ArturRios.Common.WebApi;
 using ArturRios.Common.WebApi.Security.Middleware;
-using ArturRios.UserManagement.Data.Configuration;
-using ArturRios.UserManagement.WebApi.DependencyInjection;
+using ArturRios.UserManagement.Data.Relational.Configuration;
+using ArturRios.UserManagement.IoC.DependencyInjection;
 
 namespace ArturRios.UserManagement.WebApi;
 
