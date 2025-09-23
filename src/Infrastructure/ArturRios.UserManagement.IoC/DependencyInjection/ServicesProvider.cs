@@ -1,11 +1,10 @@
-﻿using ArturRios.UserManagement.Services;
-using Microsoft.AspNetCore.Authentication;
+﻿using ArturRios.Common.WebApi.Security.Interfaces;
+using ArturRios.UserManagement.Services;
 using Microsoft.Extensions.DependencyInjection;
-using AuthenticationService = Microsoft.AspNetCore.Authentication.AuthenticationService;
 
 namespace ArturRios.UserManagement.IoC.DependencyInjection;
 
-public static class ServicesConfiguration
+public static class ServicesProvider
 {
     public static void AddServices(this IServiceCollection services)
     {

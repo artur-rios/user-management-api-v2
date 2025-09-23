@@ -1,6 +1,8 @@
-﻿using ArturRios.Common.WebApi;
+﻿using ArturRios.Common.Configuration.Enums;
+using ArturRios.Common.WebApi;
 using ArturRios.Common.WebApi.Security.Middleware;
 using ArturRios.UserManagement.Data.Relational.Configuration;
+using ArturRios.UserManagement.IoC.Configuration;
 using ArturRios.UserManagement.IoC.DependencyInjection;
 
 namespace ArturRios.UserManagement.WebApi;
@@ -15,7 +17,7 @@ public class Startup(string[] args) : WebApiStartup(args)
         UseSwaggerGen(jwtAuthentication: true);
 
         BuildApp();
-        
+
         ConfigureApp();
         AddMiddlewares([typeof(ExceptionMiddleware), typeof(JwtMiddleware)]);
         UseSwagger();
@@ -28,11 +30,7 @@ public class Startup(string[] args) : WebApiStartup(args)
         Builder.Services.AddControllers();
         Builder.Services.AddLogging();
         Builder.Services.AddEndpointsApiExplorer();
-        Builder.Services.AddRelationalContext();
-        Builder.Services.AddJwtTokenConfiguration();
-        Builder.Services.AddModelValidators();
-        Builder.Services.AddRelationalRepositories();
-        Builder.Services.AddServices();
+        Builder.Services.AddDomainServices(new DomainServicesConfiguration { DataSource = DataSource.Relational });
         Builder.Services.AddAuthentication("Jwt").AddJwtBearer("Jwt");
         Builder.Services.AddAuthorization();
     }

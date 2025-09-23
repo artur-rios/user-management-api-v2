@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace ArturRios.UserManagement.IoC.DependencyInjection;
 
-public static class AuthenticationConfiguration
+public static class AuthenticationProvider
 {
     public static void AddJwtTokenConfiguration(this IServiceCollection services)
     {

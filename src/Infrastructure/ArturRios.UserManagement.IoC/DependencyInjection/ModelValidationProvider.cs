@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ArturRios.UserManagement.IoC.DependencyInjection;
 
-public static class ModelValidationConfiguration
+public static class ModelValidationProvider
 {
     public static void AddModelValidators(this IServiceCollection services)
     {

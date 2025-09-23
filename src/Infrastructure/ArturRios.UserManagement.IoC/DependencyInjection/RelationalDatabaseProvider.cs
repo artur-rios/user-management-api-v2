@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ArturRios.UserManagement.IoC.DependencyInjection;
 
-public static class RelationalDatabaseConfiguration
+public static class RelationalDatabaseProvider
 {
     public static void AddRelationalContext(this IServiceCollection services)
     {
