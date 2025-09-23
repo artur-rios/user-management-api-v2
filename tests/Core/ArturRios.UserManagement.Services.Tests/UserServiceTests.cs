@@ -67,13 +67,13 @@ public class UserServiceTests
                 {
                     return ActiveUsers.AsQueryable();
                 }
-                
+
                 if (userFilter.Email == ActiveEmail)
                 {
                     return new List<Domain.Aggregates.User> { UserMock.New.WithEmail(ActiveEmail).Generate() }
                         .AsQueryable();
                 }
-                
+
                 return new List<Domain.Aggregates.User>().AsQueryable();
             });
 
@@ -98,7 +98,7 @@ public class UserServiceTests
     [UnitFact]
     public void Should_CreateUser()
     {
-        var dto = UserMock.New.WithRole(Roles.Regular).Generate().ToDtoWithPassword();
+        var dto = UserMock.New.WithRole(Roles.Regular).GenerateDto();
 
         var result = _userService.CreateUser(dto);
 
@@ -110,7 +110,7 @@ public class UserServiceTests
     [UnitFact]
     public void ShouldNot_CreateUser_When_UserDtoIsInvalid()
     {
-        var dto = UserMock.New.WithEmail("").Generate().ToDtoWithPassword();
+        var dto = UserMock.New.WithEmail("").GenerateDto();
 
         var result = _userService.CreateUser(dto);
 
@@ -122,7 +122,7 @@ public class UserServiceTests
     [UnitFact]
     public void ShouldNot_CreateUser_When_EmailIsAlreadyRegistered()
     {
-        var dto = UserMock.New.WithEmail(ActiveEmail).Generate().ToDtoWithPassword();
+        var dto = UserMock.New.WithEmail(ActiveEmail).GenerateDto();
 
         var result = _userService.CreateUser(dto);
 
@@ -134,7 +134,7 @@ public class UserServiceTests
     [UnitFact]
     public void ShouldNot_CreateAdminUser_When_AuthenticatedUserIsNotAdmin()
     {
-        var dto = UserMock.New.WithRole(Roles.Admin).Generate().ToDtoWithPassword();
+        var dto = UserMock.New.WithRole(Roles.Admin).GenerateDto();
 
         var result = _userService.CreateUser(dto);
 
@@ -178,7 +178,7 @@ public class UserServiceTests
     [UnitFact]
     public void Should_GetUsersByFilter()
     {
-        var filter = new UserFilter { Active = true};
+        var filter = new UserFilter { Active = true };
         var result = _userService.GetUsersByFilter(filter);
 
         Assert.NotEmpty(result.Data!);
@@ -232,7 +232,7 @@ public class UserServiceTests
     [UnitFact]
     public void Should_UpdateUser()
     {
-        var dto = UserMock.New.WithId(ActiveIds.First()).Generate().ToDtoWithPassword();
+        var dto = UserMock.New.WithId(ActiveIds.First()).GenerateDto();
 
         var result = _userService.UpdateUser(dto);
 
@@ -244,7 +244,7 @@ public class UserServiceTests
     [UnitFact]
     public void Should_NotUpdateUser_When_UserIsInactive()
     {
-        var dto = UserMock.New.WithId(InactiveIds.First()).Inactive().Generate().ToDtoWithPassword();
+        var dto = UserMock.New.WithId(InactiveIds.First()).Inactive().GenerateDto();
 
         var result = _userService.UpdateUser(dto);
 
@@ -256,7 +256,7 @@ public class UserServiceTests
     [UnitFact]
     public void Should_NotUpdateUser_When_IdIsNotOnDatabase()
     {
-        var dto = UserMock.New.WithId(NonexistentIds.First()).Generate().ToDtoWithPassword();
+        var dto = UserMock.New.WithId(NonexistentIds.First()).GenerateDto();
 
         var result = _userService.UpdateUser(dto);
 

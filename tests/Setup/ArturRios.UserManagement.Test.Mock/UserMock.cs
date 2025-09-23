@@ -2,6 +2,8 @@
 using ArturRios.Common.Util.Random;
 using ArturRios.UserManagement.Domain;
 using ArturRios.UserManagement.Domain.Enums;
+using ArturRios.UserManagement.Dto;
+using ArturRios.UserManagement.Dto.Mapping;
 using Bogus;
 
 namespace ArturRios.UserManagement.Test.Mock;
@@ -76,5 +78,14 @@ public class UserMock
     public Domain.Aggregates.User Generate()
     {
         return _userFaker.Generate();
+    }
+
+    public UserDto GenerateDto()
+    {
+        var dto = _userFaker.Generate().ToDto();
+
+        dto.Password = MockPassword;
+        
+        return dto;
     }
 }
