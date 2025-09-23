@@ -6,33 +6,27 @@ namespace ArturRios.UserManagement.Service.Provider;
 
 public class ServiceProvider
 {
-    public ServiceProvider(IServiceCollection services, DataSource dataSource)
+    public ServiceProvider(IServiceCollection services, ServiceConfiguration configuration)
     {
-        ConfigureDatabase(services, dataSource);
+        ConfigureDatabase(services, configuration);
         ConfigureServices(services);
     }
 
-    private static void ConfigureDatabase(IServiceCollection services, DataSource dataSource)
+    private static void ConfigureDatabase(IServiceCollection services, ServiceConfiguration configuration)
     {
-        switch (dataSource)
+        switch (configuration.DataSource)
         {
             case DataSource.Relational:
                 services.AddRelationalContext();
                 services.AddRelationalRepositories();
                 break;
-            case DataSource.ProtoBuf:
-                services.AddProtoBufContext();
-                break;
             case DataSource.NoSql:
             case DataSource.InMemory:
-            case DataSource.Xml:
-            case DataSource.Json:
-            case DataSource.PlainText:
             default:
-                throw new ArgumentOutOfRangeException(nameof(dataSource), dataSource, null);
+                throw new ArgumentOutOfRangeException(nameof(configuration), configuration.DataSource, null);
         }
     }
-    
+
     private static void ConfigureServices(IServiceCollection services)
     {
         services.AddJwtTokenConfiguration();

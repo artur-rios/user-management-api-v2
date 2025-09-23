@@ -1,6 +1,8 @@
-﻿namespace ArturRios.UserManagement.Service.Provider;
+﻿using ArturRios.Common.Configuration.Enums;
+
+namespace ArturRios.UserManagement.Service.Provider;
 
 public class ServiceConfiguration
 {
-    public string DatabaseConnectionString { get; set; }
+    public DataSource DataSource { get; set; }
 }
