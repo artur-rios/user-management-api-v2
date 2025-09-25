@@ -1,0 +1,32 @@
+﻿services:
+  web_api:
+    container_name: user_management_webapi
+    build:
+      context: ..
+      dockerfile: iac/Dockerfile
+    image: user_management_webapi:1.0.0
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env.docker
+    depends_on:
+      - db
+    networks:
+      - app_net
+  db:
+    container_name: postgres_db
+    image: postgres
+    ports:
+      - "5433:5433"
+    command: -p 5433
+    env_file:
+      - .env.docker
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_net
+volumes:
+  postgres_data:
+    name: user_management_postgres_data
+networks:
+  app_net:

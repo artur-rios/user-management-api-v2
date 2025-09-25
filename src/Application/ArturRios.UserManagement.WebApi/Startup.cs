@@ -9,26 +9,53 @@ namespace ArturRios.UserManagement.WebApi;
 
 public class Startup(string[] args) : WebApiStartup(args)
 {
+    private static readonly ILogger Logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<Startup>();
+    
+    private const int MaxDbConnectionRetries = 5;
+    private const int DelayDbConnectionAttemptMilliseconds = 2000;
+    
     public override void Build()
     {
+        ConfigureLogging();
+        
+        Logger.LogInformation("Building web api on {EnvironmentEnvironmentName} environment", Builder.Environment.EnvironmentName);
+        
         LoadConfiguration();
+        
+        Logger.LogInformation("Configuration loaded successfully");
+        
         ConfigureServices();
+        
+        Logger.LogInformation("Services configured successfully");
+        
         AddCustomInvalidModelStateResponse();
         UseSwaggerGen(jwtAuthentication: true);
 
         BuildApp();
+        
+        Logger.LogInformation("App built successfully");
 
         ConfigureApp();
         AddMiddlewares([typeof(ExceptionMiddleware), typeof(JwtMiddleware)]);
         UseSwagger();
+        
+        Logger.LogInformation("App configured successfully");
+        
         StartServices();
+        
+        Logger.LogInformation("Services started successfully");
+        Logger.LogInformation("Ready to run!");
+    }
+
+    private void ConfigureLogging()
+    {
+        Builder.Services.AddLogging();
     }
 
     public override void ConfigureServices()
     {
         Builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         Builder.Services.AddControllers();
-        Builder.Services.AddLogging();
         Builder.Services.AddEndpointsApiExplorer();
         Builder.Services.AddDomainServices(new DomainServicesConfiguration { DataSource = DataSource.Relational });
         Builder.Services.AddAuthentication("Jwt").AddJwtBearer("Jwt");
@@ -52,12 +79,38 @@ public class Startup(string[] args) : WebApiStartup(args)
 
     public override void StartServices()
     {
-        using var scope = Builder.Services.BuildServiceProvider().CreateScope();
+        using var scope = App.Services.CreateScope();
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<RelationalDbInitializer>();
+        var attempt = 0;
+        
+        while (true)
+        {
+            try
+            {
+                dbInitializer.InitializeAsync().GetAwaiter().GetResult();
+                
+                Logger.LogInformation("Database initialized successfully");
+                
+                break;
+            }
+            catch (Exception ex)
+            {
+                attempt++;
+                
+                Logger.LogError(ex, "Database initialization failed on attempt {Attempt}", attempt);
+                Logger.LogError("Reason: {ExceptionMessage}", ex.Message);
 
-        scope.ServiceProvider
-            .GetRequiredService<RelationalDbInitializer>()
-            .InitializeAsync()
-            .GetAwaiter()
-            .GetResult();
+                if (attempt >= MaxDbConnectionRetries)
+                {
+                    Logger.LogCritical("Max retry attempts reached. Unable to initialize database");
+                    
+                    throw;
+                }
+
+                Logger.LogInformation("Waiting {DelayDbConnectionAttemptMilliseconds}ms before next attempt", DelayDbConnectionAttemptMilliseconds);
+                
+                Thread.Sleep(DelayDbConnectionAttemptMilliseconds);
+            }
+        }
     }
 }

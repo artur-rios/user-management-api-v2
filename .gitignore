@@ -477,6 +477,7 @@ appsettings.api.Production.json
 # Env files
 .env.local
 .env.development
+.env.docker
 .env.staging
 .env.production
 
@@ -488,3 +489,6 @@ TestReports/
 # Doc generation
 Doxygen/
 *.asta.lock
+
+# Secret files
+*_secret.txt
