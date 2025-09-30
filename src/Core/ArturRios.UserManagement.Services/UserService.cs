@@ -49,8 +49,7 @@ public class UserService(
 
         var hash = Hash.NewFromText(userDto.Password);
 
-        user.Password = hash.Value;
-        user.Salt = hash.Salt;
+        user.SetPassword(hash.Value, hash.Salt);
 
         var userId = userRepository.Create(user);
 
@@ -103,25 +102,23 @@ public class UserService(
             return new DataOutput<UserDto?>(null, validationErrors, false);
         }
         
-        var currentUser = userRepository.GetById(userDto.Id);
+        var user = userRepository.GetById(userDto.Id);
 
-        if (currentUser is null)
+        if (user is null)
         {
             return new DataOutput<UserDto?>(null, ["User not found"], false);
         }
 
-        var canUpdate = currentUser.CanUpdate();
+        var result = user.Update(userDto.ToEntity());
 
-        if (!canUpdate.Success)
+        if (result.Success)
         {
-            return new DataOutput<UserDto?>(null, canUpdate.Errors.ToArray(), false);
+            userRepository.Update(user);
         }
-
-        var user = userDto.ToEntity();
-
-        MergeUser(currentUser, user);
-
-        userRepository.Update(user);
+        else
+        {
+            return new DataOutput<UserDto?>(null, result.Errors.ToArray(), false);
+        }
 
         return new DataOutput<UserDto?>(user.ToDto(), ["User updated with success"], true);
     }
@@ -135,23 +132,20 @@ public class UserService(
             return new ProcessOutput(["User not found"]);
         }
 
-        var canActivate = user.CanActivate();
+        var result = user.Activate();
 
-        if (!canActivate.Success)
+        if (result.Success)
         {
-            return new ProcessOutput(canActivate.Errors.ToArray());
+            userRepository.Update(user);
         }
 
-        user.Active = true;
-        userRepository.Update(user);
-
-        return new ProcessOutput();
+        return result;
     }
     
     public ProcessOutput ActivateManyUsers(int[] ids)
     {
         List<int> notFoundIds = [];
-        List<(int, string[])> cannotActivateIds = [];
+        List<(int, string[])> failedActivations = [];
         
         foreach (var id in ids)
         {
@@ -164,21 +158,20 @@ public class UserService(
                 continue;
             }
 
-            var canActivate = user.CanActivate();
+            var result = user.Activate();
 
-            if (!canActivate.Success)
+            if (result.Success)
             {
-                cannotActivateIds.Add((id, canActivate.Errors.ToArray()));
-                
-                continue;
+                userRepository.Update(user);
             }
-
-            user.Active = true;
-            userRepository.Update(user);
+            else
+            {
+                failedActivations.Add((id, result.Errors.ToArray()));
+            }
         }
         
         var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found" : string.Empty;
-        var cannotActivateMessage = cannotActivateIds.Count > 0 ? $"Users with IDs {string.Join(", ", cannotActivateIds.Select(x => x.Item1))} cannot be activated" : string.Empty;
+        var cannotActivateMessage = failedActivations.Count > 0 ? $"Users with IDs {string.Join(", ", failedActivations.Select(x => x.Item1))} cannot be activated" : string.Empty;
         
         List<string> errors = [];
         
@@ -186,15 +179,17 @@ public class UserService(
         {
             errors.Add(notFoundMessage);
         }
-        
-        if (!string.IsNullOrEmpty(cannotActivateMessage))
-        {
-            errors.Add(cannotActivateMessage);
 
-            foreach (var cannotActivate in cannotActivateIds)
-            {
-                errors.Add($"User with Id {cannotActivate.Item1}: {string.Join(", ", cannotActivate.Item2)}");
-            }
+        if (string.IsNullOrEmpty(cannotActivateMessage))
+        {
+            return new ProcessOutput(errors);
+        }
+        
+        errors.Add(cannotActivateMessage);
+
+        foreach (var cannotActivate in failedActivations)
+        {
+            errors.Add($"User with Id {cannotActivate.Item1}: {string.Join(", ", cannotActivate.Item2)}");
         }
 
         return new ProcessOutput(errors);
@@ -209,23 +204,20 @@ public class UserService(
             return new ProcessOutput(["User not found"]);
         }
 
-        var canDeactivate = user.CanDeactivate();
+        var result = user.Deactivate();
 
-        if (!canDeactivate.Success)
+        if (result.Success)
         {
-            return new ProcessOutput(canDeactivate.Errors.ToArray());
+            userRepository.Update(user);
         }
 
-        user.Active = false;
-        userRepository.Update(user);
-
-        return new ProcessOutput();
+        return result;
     }
     
     public ProcessOutput DeactivateManyUsers(int[] ids)
     {
         List<int> notFoundIds = [];
-        List<(int, string[])> cannotDeactivateIds = [];
+        List<(int, string[])> failedDeactivations = [];
         
         foreach (var id in ids)
         {
@@ -238,21 +230,20 @@ public class UserService(
                 continue;
             }
 
-            var canDeactivate = user.CanDeactivate();
+            var result = user.Deactivate();
 
-            if (!canDeactivate.Success)
+            if (result.Success)
             {
-                cannotDeactivateIds.Add((id, canDeactivate.Errors.ToArray()));
-                
-                continue;
+                userRepository.Update(user);
             }
-
-            user.Active = false;
-            userRepository.Update(user);
+            else
+            {
+                failedDeactivations.Add((id, result.Errors.ToArray()));
+            }
         }
         
         var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found" : string.Empty;
-        var cannotDeactivateMessage = cannotDeactivateIds.Count > 0 ? $"Users with IDs {string.Join(", ", cannotDeactivateIds.Select(x => x.Item1))} cannot be deactivated" : string.Empty;
+        var cannotDeactivateMessage = failedDeactivations.Count > 0 ? $"Users with IDs {string.Join(", ", failedDeactivations.Select(x => x.Item1))} cannot be deactivated" : string.Empty;
 
         List<string> errors = [];
         
@@ -260,15 +251,17 @@ public class UserService(
         {
             errors.Add(notFoundMessage);
         }
-        
-        if (!string.IsNullOrEmpty(cannotDeactivateMessage))
-        {
-            errors.Add(cannotDeactivateMessage);
 
-            foreach (var cannotDeactivate in cannotDeactivateIds)
-            {
-                errors.Add($"User with Id {cannotDeactivate.Item1}: {string.Join(", ", cannotDeactivate.Item2)}");
-            }
+        if (string.IsNullOrEmpty(cannotDeactivateMessage))
+        {
+            return new ProcessOutput(errors);
+        }
+        
+        errors.Add(cannotDeactivateMessage);
+
+        foreach (var cannotDeactivate in failedDeactivations)
+        {
+            errors.Add($"User with Id {cannotDeactivate.Item1}: {string.Join(", ", cannotDeactivate.Item2)}");
         }
 
         return new ProcessOutput(errors);
@@ -299,7 +292,7 @@ public class UserService(
     {
         List<int> idsToDelete = [];
         List<int> notFoundIds = [];
-        List<(int, string[])> cannotDeleteIds = [];
+        List<(int, string[])> failedDeletions = [];
 
         foreach (var id in ids)
         {
@@ -316,7 +309,7 @@ public class UserService(
 
             if (!canDelete.Success)
             {
-                cannotDeleteIds.Add((id, canDelete.Errors.ToArray()));
+                failedDeletions.Add((id, canDelete.Errors.ToArray()));
                 
                 continue;
             }
@@ -327,7 +320,7 @@ public class UserService(
         userRepository.MultiDelete(idsToDelete);
         
         var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found" : string.Empty;
-        var cannotDeleteMessage = cannotDeleteIds.Count > 0 ? $"Users with IDs {string.Join(", ", cannotDeleteIds.Select(x => x.Item1))} cannot be deleted" : string.Empty;
+        var cannotDeleteMessage = failedDeletions.Count > 0 ? $"Users with IDs {string.Join(", ", failedDeletions.Select(x => x.Item1))} cannot be deleted" : string.Empty;
 
         List<string> errors = [];
         
@@ -335,29 +328,19 @@ public class UserService(
         {
             errors.Add(notFoundMessage);
         }
-        
-        if (!string.IsNullOrEmpty(cannotDeleteMessage))
-        {
-            errors.Add(cannotDeleteMessage);
 
-            foreach (var cannotDelete in cannotDeleteIds)
-            {
-                errors.Add($"User with Id {cannotDelete.Item1}: {string.Join(", ", cannotDelete.Item2)}");
-            }
+        if (string.IsNullOrEmpty(cannotDeleteMessage))
+        {
+            return new ProcessOutput(errors);
+        }
+        
+        errors.Add(cannotDeleteMessage);
+
+        foreach (var cannotDelete in failedDeletions)
+        {
+            errors.Add($"User with Id {cannotDelete.Item1}: {string.Join(", ", cannotDelete.Item2)}");
         }
 
         return new ProcessOutput(errors);
-    }
-
-    private static void MergeUser(Domain.Aggregates.User source, Domain.Aggregates.User target, bool mergeStatus = true)
-    {
-        target.Password = source.Password;
-        target.Salt = source.Salt;
-        target.CreatedAt = source.CreatedAt;
-
-        if (mergeStatus)
-        {
-            target.Active = source.Active;
-        }
     }
 }

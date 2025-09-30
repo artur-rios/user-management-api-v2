@@ -53,16 +53,8 @@ public static class UserSeeder
     {
         var passwordHash = Hash.NewFromText(password);
 
-        var user = new Domain.Aggregates.User
-        {
-            Name = name,
-            Email = email,
-            Password = passwordHash.Value,
-            Salt = passwordHash.Salt,
-            RoleId = (int)role,
-            CreatedAt = DateTime.UtcNow,
-            Active = true
-        };
+        var user = new Domain.Aggregates.User(name, email, (int)role, DateTime.UtcNow);
+        user.SetPassword(passwordHash.Value, passwordHash.Salt);
 
         context.Users.Add(user);
     }

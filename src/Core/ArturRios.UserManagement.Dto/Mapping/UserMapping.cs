@@ -17,14 +17,6 @@ public static class UserMapping
 
     public static Domain.Aggregates.User ToEntity(this UserDto dto)
     {
-        return new Domain.Aggregates.User
-        {
-            Id = dto.Id,
-            Email = dto.Email,
-            Name = dto.Name,
-            RoleId = dto.RoleId,
-            CreatedAt = dto.CreatedAt,
-            Active = dto.Active
-        };
+        return new Domain.Aggregates.User(dto.Id, dto.Email, dto.Name, dto.RoleId, dto.CreatedAt, dto.Active);
     }
 }

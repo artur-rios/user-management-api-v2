@@ -68,7 +68,7 @@ public class UserTests
     {
         var user = UserMock.New.Inactive().Generate();
         
-        var canActivate = user.CanActivate();
+        var canActivate = user.Activate();
         
         Assert.True(canActivate.Success);
         Assert.Empty(canActivate.Errors);
@@ -79,7 +79,7 @@ public class UserTests
     {
         var user = UserMock.New.Active().Generate();
         
-        var canActivate = user.CanActivate();
+        var canActivate = user.Activate();
         
         Assert.False(canActivate.Success);
         Assert.NotEmpty(canActivate.Errors);
@@ -91,7 +91,7 @@ public class UserTests
     {
         var user = UserMock.New.Active().Generate();
         
-        var canDeactivate = user.CanDeactivate();
+        var canDeactivate = user.Deactivate();
         
         Assert.True(canDeactivate.Success);
         Assert.Empty(canDeactivate.Errors);
@@ -102,7 +102,7 @@ public class UserTests
     {
         var user = UserMock.New.Inactive().Generate();
         
-        var canDeactivate = user.CanDeactivate();
+        var canDeactivate = user.Deactivate();
         
         Assert.False(canDeactivate.Success);
         Assert.NotEmpty(canDeactivate.Errors);
@@ -113,8 +113,9 @@ public class UserTests
     public void Should_AllowUpdate()
     {
         var user = UserMock.New.Active().Generate();
+        var updatedUser = UserMock.New.Active().Generate();
         
-        var canUpdate = user.CanUpdate();
+        var canUpdate = user.Update(updatedUser);
         
         Assert.True(canUpdate.Success);
         Assert.Empty(canUpdate.Errors);
@@ -124,8 +125,9 @@ public class UserTests
     public void ShouldNot_AllowUpdate_When_UserIsInactive()
     {
         var user = UserMock.New.Inactive().Generate();
+        var updatedUser = UserMock.New.Active().Generate();
         
-        var canUpdate = user.CanUpdate();
+        var canUpdate = user.Update(updatedUser);
         
         Assert.False(canUpdate.Success);
         Assert.NotEmpty(canUpdate.Errors);

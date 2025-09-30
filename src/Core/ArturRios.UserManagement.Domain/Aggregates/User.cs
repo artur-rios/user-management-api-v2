@@ -1,38 +1,71 @@
-﻿using ArturRios.Common.Data;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using ArturRios.Common.Data;
 using ArturRios.Common.Output;
 using ArturRios.Common.Util.Condition;
+using ArturRios.Common.Util.Hashing;
 using ArturRios.UserManagement.Domain.Enums;
 
 namespace ArturRios.UserManagement.Domain.Aggregates;
 
 public class User : Entity
 {
-    public string Name { get; init; } = string.Empty;
+    [Column(Order = 1)]
+    [MaxLength(300)]
+    public string Name { get; private set; } = string.Empty;
 
-    public string Email { get; init; } = string.Empty;
+    [Column(Order = 2)]
+    [MaxLength(300)]
+    public string Email { get; private set; } = string.Empty;
 
-    public byte[] Password { get; set; } = [];
+    [Column(Order = 3)]
+    public byte[] Password { get;  private set; } = [];
 
-    public byte[] Salt { get; set; } = [];
+    [Column(Order = 4)]
+    public byte[] Salt { get;  private set; } = [];
 
-    public int RoleId { get; init; }
+    [Column(Order = 5)]
+    public int RoleId { get;  private set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    [Column(Order = 6)]
+    public DateTime CreatedAt { get; } = DateTime.UtcNow;
 
-    public bool Active { get; set; } = true;
+    [Column(Order = 7)]
+    public bool Active { get; private set; } = true;
 
-    public ProcessOutput CanActivate()
+    public User()
     {
-        return Condition.Create
-            .IfNot(Active).FailsWith("User already active")
-            .ToProcessOutput();
+    }
+    
+    public User(string email, string name, int roleId, DateTime createdAt, bool active = true)
+    {
+        Email = email;
+        Name = name;
+        RoleId = roleId;
+        CreatedAt = createdAt;
+        Active = active;
     }
 
-    public ProcessOutput CanDeactivate()
+    public User(int id, string email, string name, int roleId, DateTime createdAt, bool active)
     {
-        return Condition.Create
-            .If(Active).FailsWith("User already inactive")
-            .ToProcessOutput();
+        Id = id;
+        Email = email;
+        Name = name;
+        RoleId = roleId;
+        CreatedAt = createdAt;
+        Active = active;
+    }
+
+    public ProcessOutput Activate()
+    {
+        var condition = Condition.Create.IfNot(Active).FailsWith("User already active");
+        
+        if (condition.IsSatisfied)
+        {
+            Active = true;
+        }
+        
+        return condition.ToProcessOutput();
     }
 
     public ProcessOutput CanDelete()
@@ -49,11 +82,35 @@ public class User : Entity
             .FailsWith($"Only admins can register a user with {((Roles)RoleId).ToString()} role")
             .ToProcessOutput();
     }
-
-    public ProcessOutput CanUpdate()
+    
+    public ProcessOutput Deactivate()
     {
-        return Condition.Create
-            .If(Active).FailsWith("Can't update inactive user")
-            .ToProcessOutput();
+        var condition = Condition.Create.If(Active).FailsWith("User already inactive");
+        
+        if (condition.IsSatisfied)
+        {
+            Active = false;
+        }
+        
+        return condition.ToProcessOutput();
+    }
+
+    public void SetPassword(byte[] password, byte[] salt)
+    {
+        Password = password;
+        Salt = salt;
+    }
+
+    public ProcessOutput Update(User updatedUser)
+    {
+        var condition = Condition.Create.If(Active).FailsWith("Can't update inactive user");
+        
+        if (condition.IsSatisfied)
+        {
+            Name = updatedUser.Name;
+            Email = updatedUser.Email;
+        }
+        
+        return condition.ToProcessOutput();
     }
 }
