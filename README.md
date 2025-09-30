@@ -18,8 +18,9 @@
 - Unit Tests
 - Functional Tests
 
-## Domain class diagram
+## Detailed Documentation
 
-![domain-class-diagram](/docs/diagrams/domain-class-diagram.svg)
+- [Domain](./docs/domain.md)
+- [Services](./docs/services.md)
 
 *Documentation under construction*
