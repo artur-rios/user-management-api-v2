@@ -4,7 +4,7 @@ using ArturRios.Common.Util.Hashing;
 using ArturRios.Common.Validation;
 using ArturRios.Common.WebApi.Security.Records;
 using ArturRios.UserManagement.Domain.Filters;
-using ArturRios.UserManagement.Domain.Interfaces;
+using ArturRios.UserManagement.Domain.Repositories;
 using ArturRios.UserManagement.Dto;
 using ArturRios.UserManagement.Dto.Mapping;
 using Microsoft.AspNetCore.Http;

@@ -1,7 +1,7 @@
 ﻿using ArturRios.Common.Data.Configuration;
 using ArturRios.UserManagement.Data.Relational.Configuration;
 using ArturRios.UserManagement.Data.Relational.Repositories;
-using ArturRios.UserManagement.Domain.Interfaces;
+using ArturRios.UserManagement.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

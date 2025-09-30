@@ -6,7 +6,7 @@ using ArturRios.Common.Validation;
 using ArturRios.Common.WebApi.Security.Interfaces;
 using ArturRios.Common.WebApi.Security.Records;
 using ArturRios.UserManagement.Domain.Filters;
-using ArturRios.UserManagement.Domain.Interfaces;
+using ArturRios.UserManagement.Domain.Repositories;
 using ArturRios.UserManagement.Services.Exceptions;
 using Microsoft.Extensions.Options;
 

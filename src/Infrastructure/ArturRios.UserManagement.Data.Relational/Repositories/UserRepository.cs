@@ -2,7 +2,7 @@
 using ArturRios.Common.Extensions;
 using ArturRios.UserManagement.Data.Relational.Configuration;
 using ArturRios.UserManagement.Domain.Filters;
-using ArturRios.UserManagement.Domain.Interfaces;
+using ArturRios.UserManagement.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArturRios.UserManagement.Data.Relational.Repositories;

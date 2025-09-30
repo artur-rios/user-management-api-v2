@@ -3,7 +3,7 @@ using ArturRios.Common.Test;
 using ArturRios.Common.Test.Attributes;
 using ArturRios.UserManagement.Domain.Enums;
 using ArturRios.UserManagement.Domain.Filters;
-using ArturRios.UserManagement.Domain.Interfaces;
+using ArturRios.UserManagement.Domain.Repositories;
 using ArturRios.UserManagement.Dto.Validation;
 using ArturRios.UserManagement.Test.Mock;
 using Bogus;

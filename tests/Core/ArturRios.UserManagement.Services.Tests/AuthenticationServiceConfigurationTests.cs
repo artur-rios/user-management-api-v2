@@ -3,7 +3,7 @@ using ArturRios.Common.Test.Attributes;
 using ArturRios.Common.Validation;
 using ArturRios.Common.WebApi.Security.Records;
 using ArturRios.Common.WebApi.Security.Validation;
-using ArturRios.UserManagement.Domain.Interfaces;
+using ArturRios.UserManagement.Domain.Repositories;
 using ArturRios.UserManagement.Services.Exceptions;
 using Microsoft.Extensions.Options;
 using Moq;

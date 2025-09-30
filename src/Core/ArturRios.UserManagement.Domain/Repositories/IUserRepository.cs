@@ -1,5 +1,5 @@
 ﻿using ArturRios.Common.Data.Interfaces;
 
-namespace ArturRios.UserManagement.Domain.Interfaces;
+namespace ArturRios.UserManagement.Domain.Repositories;
 
 public interface IUserRepository : ICrudRepository<Aggregates.User>, IMultiRepository<Aggregates.User>;
