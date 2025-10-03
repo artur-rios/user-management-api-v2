@@ -1,68 +1,10 @@
 using ArturRios.Common.Test.Attributes;
-using ArturRios.UserManagement.Domain.Enums;
 using ArturRios.UserManagement.Test.Mock;
 
 namespace ArturRios.UserManagement.Domain.Tests;
 
 public class UserTests
 {
-    [UnitFact]
-    public void Should_AllowCreationOfAdmin()
-    {
-        var user = UserMock.New.WithRole(Roles.Admin).Generate();
-        
-        var canRegister = user.CanRegister((int)Roles.Admin);
-
-        Assert.True(canRegister.Success);
-        Assert.Empty(canRegister.Errors);
-    }
-    
-    [UnitFact]
-    public void Should_AllowCreationOfRegularUser()
-    {
-        var user = UserMock.New.WithRole(Roles.Regular).Generate();
-        
-        var canRegister = user.CanRegister((int)Roles.Regular);
-
-        Assert.True(canRegister.Success);
-        Assert.Empty(canRegister.Errors);
-    }
-    
-    [UnitFact]
-    public void Should_AllowCreationOfTestUser()
-    {
-        var user = UserMock.New.WithRole(Roles.Test).Generate();
-        
-        var canRegister = user.CanRegister((int)Roles.Admin);
-
-        Assert.True(canRegister.Success);
-        Assert.Empty(canRegister.Errors);
-    }
-    
-    [UnitFact]
-    public void ShouldNot_AllowCreationOfAdmin_When_AuthenticatedUserIsNotAnAdmin()
-    {
-        var user = UserMock.New.WithRole(Roles.Admin).Generate();
-        
-        var canRegister = user.CanRegister((int)Roles.Regular);
-
-        Assert.False(canRegister.Success);
-        Assert.NotEmpty(canRegister.Errors);
-        Assert.Equal("Only admins can register a user with Admin role", canRegister.Errors.FirstOrDefault());
-    }
-    
-    [UnitFact]
-    public void ShouldNot_AllowCreationOfTestUser_When_AuthenticatedUserIsNotAnAdmin()
-    {
-        var user = UserMock.New.WithRole(Roles.Test).Generate();
-        
-        var canRegister = user.CanRegister((int)Roles.Regular);
-
-        Assert.False(canRegister.Success);
-        Assert.NotEmpty(canRegister.Errors);
-        Assert.Equal("Only admins can register a user with Test role", canRegister.Errors.FirstOrDefault());
-    }
-    
     [UnitFact]
     public void Should_AllowActivation()
     {

@@ -2,21 +2,31 @@
 using ArturRios.Common.Output;
 using ArturRios.Common.Util.Hashing;
 using ArturRios.Common.Validation;
-using ArturRios.Common.WebApi.Security.Records;
+using ArturRios.UserManagement.Domain.Enums;
 using ArturRios.UserManagement.Domain.Filters;
 using ArturRios.UserManagement.Domain.Repositories;
 using ArturRios.UserManagement.Dto;
 using ArturRios.UserManagement.Dto.Mapping;
-using Microsoft.AspNetCore.Http;
 
 namespace ArturRios.UserManagement.Services;
 
-public class UserService(
-    IUserRepository userRepository,
-    IHttpContextAccessor httpContextAccessor,
-    IFluentValidator<UserDto> userValidator)
+public class UserService(IUserRepository userRepository, IFluentValidator<UserDto> userValidator)
 {
-    public DataOutput<int> CreateUser(UserDto userDto)
+    public DataOutput<int> CreateAdmin(UserDto userDto)
+    {
+        userDto.RoleId = (int)Roles.Admin;
+
+        return Create(userDto);
+    }
+
+    public DataOutput<int> CreateRegular(UserDto userDto)
+    {
+        userDto.RoleId = (int)Roles.Regular;
+
+        return Create(userDto);
+    }
+
+    private DataOutput<int> Create(UserDto userDto)
     {
         var validationErrors = userValidator.ValidateAndReturnErrors(userDto);
 
@@ -36,17 +46,6 @@ public class UserService(
 
         var user = userDto.ToEntity();
 
-        httpContextAccessor.HttpContext!.Items.TryGetValue("User", out var userData);
-
-        var authenticatedUser = userData as AuthenticatedUser;
-
-        var canRegister = user.CanRegister(authenticatedUser!.Role);
-
-        if (!canRegister.Success)
-        {
-            return new DataOutput<int>(0, canRegister.Errors.ToArray(), false);
-        }
-
         var hash = Hash.NewFromText(userDto.Password);
 
         user.SetPassword(hash.Value, hash.Salt);
@@ -56,7 +55,7 @@ public class UserService(
         return new DataOutput<int>(userId, ["User created with success"], true);
     }
 
-    public DataOutput<UserDto> GetUserById(int id)
+    public DataOutput<UserDto> GetById(int id)
     {
         var user = userRepository.GetById(id);
 
@@ -65,7 +64,7 @@ public class UserService(
         return new DataOutput<UserDto>(user?.ToDto(), [message], true);
     }
 
-    public DataOutput<IList<UserDto>> GetUsersByFilter(UserFilter filter)
+    public DataOutput<IList<UserDto>> GetByFilter(UserFilter filter)
     {
         var userSearch = userRepository.GetByFilter(filter).ToList();
 
@@ -79,7 +78,7 @@ public class UserService(
         return new DataOutput<IList<UserDto>>(users, ["Search completed with success"], true);
     }
 
-    public DataOutput<IList<UserDto>> GetUsersByMultiFilter(UserMultiFilter filter)
+    public DataOutput<IList<UserDto>> GetByMultiFilter(UserMultiFilter filter)
     {
         var userSearch = userRepository.GetByMultiFilter(filter).ToList();
 
@@ -93,15 +92,15 @@ public class UserService(
         return new DataOutput<IList<UserDto>>(users, ["Search completed with success"], true);
     }
 
-    public DataOutput<UserDto?> UpdateUser(UserDto userDto)
+    public DataOutput<UserDto?> Update(UserDto userDto)
     {
         var validationErrors = userValidator.ValidateAndReturnErrors(userDto);
-        
+
         if (validationErrors.IsNotEmpty())
         {
             return new DataOutput<UserDto?>(null, validationErrors, false);
         }
-        
+
         var user = userRepository.GetById(userDto.Id);
 
         if (user is null)
@@ -123,7 +122,7 @@ public class UserService(
         return new DataOutput<UserDto?>(user.ToDto(), ["User updated with success"], true);
     }
 
-    public ProcessOutput ActivateUser(int id)
+    public ProcessOutput Activate(int id)
     {
         var user = userRepository.GetById(id);
 
@@ -141,12 +140,12 @@ public class UserService(
 
         return result;
     }
-    
-    public ProcessOutput ActivateManyUsers(int[] ids)
+
+    public ProcessOutput ActivateMany(int[] ids)
     {
         List<int> notFoundIds = [];
         List<(int, string[])> failedActivations = [];
-        
+
         foreach (var id in ids)
         {
             var user = userRepository.GetById(id);
@@ -154,7 +153,7 @@ public class UserService(
             if (user is null)
             {
                 notFoundIds.Add(id);
-                
+
                 continue;
             }
 
@@ -169,12 +168,16 @@ public class UserService(
                 failedActivations.Add((id, result.Errors.ToArray()));
             }
         }
-        
-        var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found" : string.Empty;
-        var cannotActivateMessage = failedActivations.Count > 0 ? $"Users with IDs {string.Join(", ", failedActivations.Select(x => x.Item1))} cannot be activated" : string.Empty;
-        
+
+        var notFoundMessage = notFoundIds.Count > 0
+            ? $"Users with IDs {string.Join(", ", notFoundIds)} not found"
+            : string.Empty;
+        var cannotActivateMessage = failedActivations.Count > 0
+            ? $"Users with IDs {string.Join(", ", failedActivations.Select(x => x.Item1))} cannot be activated"
+            : string.Empty;
+
         List<string> errors = [];
-        
+
         if (!string.IsNullOrEmpty(notFoundMessage))
         {
             errors.Add(notFoundMessage);
@@ -184,7 +187,7 @@ public class UserService(
         {
             return new ProcessOutput(errors);
         }
-        
+
         errors.Add(cannotActivateMessage);
 
         foreach (var cannotActivate in failedActivations)
@@ -195,7 +198,7 @@ public class UserService(
         return new ProcessOutput(errors);
     }
 
-    public ProcessOutput DeactivateUser(int id)
+    public ProcessOutput Deactivate(int id)
     {
         var user = userRepository.GetById(id);
 
@@ -213,12 +216,12 @@ public class UserService(
 
         return result;
     }
-    
-    public ProcessOutput DeactivateManyUsers(int[] ids)
+
+    public ProcessOutput DeactivateMany(int[] ids)
     {
         List<int> notFoundIds = [];
         List<(int, string[])> failedDeactivations = [];
-        
+
         foreach (var id in ids)
         {
             var user = userRepository.GetById(id);
@@ -226,7 +229,7 @@ public class UserService(
             if (user is null)
             {
                 notFoundIds.Add(id);
-                
+
                 continue;
             }
 
@@ -241,12 +244,16 @@ public class UserService(
                 failedDeactivations.Add((id, result.Errors.ToArray()));
             }
         }
-        
-        var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found" : string.Empty;
-        var cannotDeactivateMessage = failedDeactivations.Count > 0 ? $"Users with IDs {string.Join(", ", failedDeactivations.Select(x => x.Item1))} cannot be deactivated" : string.Empty;
+
+        var notFoundMessage = notFoundIds.Count > 0
+            ? $"Users with IDs {string.Join(", ", notFoundIds)} not found"
+            : string.Empty;
+        var cannotDeactivateMessage = failedDeactivations.Count > 0
+            ? $"Users with IDs {string.Join(", ", failedDeactivations.Select(x => x.Item1))} cannot be deactivated"
+            : string.Empty;
 
         List<string> errors = [];
-        
+
         if (!string.IsNullOrEmpty(notFoundMessage))
         {
             errors.Add(notFoundMessage);
@@ -256,7 +263,7 @@ public class UserService(
         {
             return new ProcessOutput(errors);
         }
-        
+
         errors.Add(cannotDeactivateMessage);
 
         foreach (var cannotDeactivate in failedDeactivations)
@@ -267,7 +274,7 @@ public class UserService(
         return new ProcessOutput(errors);
     }
 
-    public ProcessOutput DeleteUser(int id)
+    public ProcessOutput Delete(int id)
     {
         var user = userRepository.GetById(id);
 
@@ -288,7 +295,7 @@ public class UserService(
         return new ProcessOutput();
     }
 
-    public ProcessOutput DeleteManyUsers(int[] ids)
+    public ProcessOutput DeleteMany(int[] ids)
     {
         List<int> idsToDelete = [];
         List<int> notFoundIds = [];
@@ -301,7 +308,7 @@ public class UserService(
             if (user is null)
             {
                 notFoundIds.Add(id);
-                
+
                 continue;
             }
 
@@ -310,20 +317,24 @@ public class UserService(
             if (!canDelete.Success)
             {
                 failedDeletions.Add((id, canDelete.Errors.ToArray()));
-                
+
                 continue;
             }
-            
+
             idsToDelete.Add(id);
         }
-        
+
         userRepository.MultiDelete(idsToDelete);
-        
-        var notFoundMessage = notFoundIds.Count > 0 ? $"Users with IDs {string.Join(", ", notFoundIds)} not found" : string.Empty;
-        var cannotDeleteMessage = failedDeletions.Count > 0 ? $"Users with IDs {string.Join(", ", failedDeletions.Select(x => x.Item1))} cannot be deleted" : string.Empty;
+
+        var notFoundMessage = notFoundIds.Count > 0
+            ? $"Users with IDs {string.Join(", ", notFoundIds)} not found"
+            : string.Empty;
+        var cannotDeleteMessage = failedDeletions.Count > 0
+            ? $"Users with IDs {string.Join(", ", failedDeletions.Select(x => x.Item1))} cannot be deleted"
+            : string.Empty;
 
         List<string> errors = [];
-        
+
         if (!string.IsNullOrEmpty(notFoundMessage))
         {
             errors.Add(notFoundMessage);
@@ -333,7 +344,7 @@ public class UserService(
         {
             return new ProcessOutput(errors);
         }
-        
+
         errors.Add(cannotDeleteMessage);
 
         foreach (var cannotDelete in failedDeletions)

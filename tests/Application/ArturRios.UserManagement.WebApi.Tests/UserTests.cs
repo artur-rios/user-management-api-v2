@@ -55,7 +55,7 @@ public class UserTests(
         var user = UserMock.New.WithNoId().WithRole(Roles.Regular).Generate().ToDto();
         user.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
 
-        var result = await PostAsync<int>($"{UserRoute}/Create", user);
+        var result = await PostAsync<int>($"{UserRoute}/Create/Regular", user);
 
         Assert.NotNull(result);
         Assert.True(result.Data > 0);
@@ -72,7 +72,7 @@ public class UserTests(
         var user = UserMock.New.WithNoId().WithEmail(string.Empty).WithRole(Roles.Regular).Generate().ToDto();
         user.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
         
-        var result = await PostAsync<int>($"{UserRoute}/Create", user);
+        var result = await PostAsync<int>($"{UserRoute}/Create/Regular", user);
         
         Assert.NotNull(result);
         Assert.Equal(0, result.Data);
@@ -86,7 +86,7 @@ public class UserTests(
         var user = fixture.CreateUsers().First();
         user.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
         
-        var result = await PostAsync<int>($"{UserRoute}/Create", user);
+        var result = await PostAsync<int>($"{UserRoute}/Create/Regular", user);
         
         Assert.NotNull(result);
         Assert.Equal(0, result.Data);
@@ -253,7 +253,7 @@ public class UserTests(
     {
         var user = UserMock.New.WithNoId().WithEmail(string.Empty).WithRole(Roles.Regular).Generate().ToDto();
 
-        var result = await PostAsync<int>($"{UserRoute}/Create", user);
+        var result = await PostAsync<int>($"{UserRoute}/Create/Regular", user);
 
         Assert.NotNull(result);
         Assert.Equal(0, result.Data);
@@ -267,7 +267,7 @@ public class UserTests(
         var user = _testUser.Clone();
         user!.Password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
 
-        var result = await PostAsync<int>($"{UserRoute}/Create", user);
+        var result = await PostAsync<int>($"{UserRoute}/Create/Regular", user);
 
         Assert.NotNull(result);
         Assert.Equal(0, result.Data);

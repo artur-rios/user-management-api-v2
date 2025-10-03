@@ -3,8 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using ArturRios.Common.Data;
 using ArturRios.Common.Output;
 using ArturRios.Common.Util.Condition;
-using ArturRios.Common.Util.Hashing;
-using ArturRios.UserManagement.Domain.Enums;
 
 namespace ArturRios.UserManagement.Domain.Aggregates;
 
@@ -72,14 +70,6 @@ public class User : Entity
     {
         return Condition.Create
             .IfNot(Active).FailsWith("Can't delete active user")
-            .ToProcessOutput();
-    }
-
-    public ProcessOutput CanRegister(int authenticatedRoleId)
-    {
-        return Condition.Create
-            .If(authenticatedRoleId == (int)Roles.Admin || RoleId == (int)Roles.Regular)
-            .FailsWith($"Only admins can register a user with {((Roles)RoleId).ToString()} role")
             .ToProcessOutput();
     }
     

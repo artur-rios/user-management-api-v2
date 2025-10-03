@@ -12,7 +12,7 @@ public class UserDto
 
     public string Password { get; set; } = string.Empty;
 
-    public int RoleId { get; init; } = (int)Roles.Regular;
+    public int RoleId { get; set; }
 
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
 

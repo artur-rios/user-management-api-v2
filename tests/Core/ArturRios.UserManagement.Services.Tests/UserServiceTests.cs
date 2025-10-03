@@ -41,7 +41,6 @@ public class UserServiceTests
     public UserServiceTests()
     {
         var userRepository = new Mock<IUserRepository>();
-        var httpContextAccessor = new Mock<HttpContextAccessor>();
         var userDtoValidator = new UserDtoValidator();
 
         userRepository.Setup(repo => repo.Create(It.IsAny<Domain.Aggregates.User>()))
@@ -87,12 +86,8 @@ public class UserServiceTests
         userRepository.Setup(repo => repo.Update(It.IsAny<Domain.Aggregates.User>()));
 
         userRepository.Setup(repo => repo.Delete(It.IsAny<int>()));
-
-        httpContextAccessor.Object.HttpContext = new DefaultHttpContext();
-        httpContextAccessor.Object.HttpContext!.Items = new Dictionary<object, object?>
-            { { "User", new AuthenticatedUserMock(Roles.Regular).Generate() } };
-
-        _userService = new UserService(userRepository.Object, httpContextAccessor.Object, userDtoValidator);
+        
+        _userService = new UserService(userRepository.Object, userDtoValidator);
     }
 
     [UnitFact]
@@ -100,7 +95,7 @@ public class UserServiceTests
     {
         var dto = UserMock.New.WithRole(Roles.Regular).GenerateDto();
 
-        var result = _userService.CreateUser(dto);
+        var result = _userService.CreateRegular(dto);
 
         Assert.True(result.Data > 0);
         Assert.Equal("User created with success", result.Messages.First());
@@ -112,7 +107,7 @@ public class UserServiceTests
     {
         var dto = UserMock.New.WithEmail("").GenerateDto();
 
-        var result = _userService.CreateUser(dto);
+        var result = _userService.CreateRegular(dto);
 
         Assert.Equal(0, result.Data);
         Assert.Equal("Email should be valid", result.Messages.First());
@@ -124,7 +119,7 @@ public class UserServiceTests
     {
         var dto = UserMock.New.WithEmail(ActiveEmail).GenerateDto();
 
-        var result = _userService.CreateUser(dto);
+        var result = _userService.CreateRegular(dto);
 
         Assert.Equal(0, result.Data);
         Assert.Equal("E-mail already registered", result.Messages.First());
@@ -132,21 +127,9 @@ public class UserServiceTests
     }
 
     [UnitFact]
-    public void ShouldNot_CreateAdminUser_When_AuthenticatedUserIsNotAdmin()
-    {
-        var dto = UserMock.New.WithRole(Roles.Admin).GenerateDto();
-
-        var result = _userService.CreateUser(dto);
-
-        Assert.Equal(0, result.Data);
-        Assert.Equal($"Only admins can register a user with {nameof(Roles.Admin)} role", result.Messages.First());
-        Assert.False(result.Success);
-    }
-
-    [UnitFact]
     public void Should_GetUserById()
     {
-        var result = _userService.GetUserById(ActiveIds.First());
+        var result = _userService.GetById(ActiveIds.First());
 
         Assert.NotNull(result.Data);
         Assert.Equal("User found", result.Messages.First());
@@ -156,7 +139,7 @@ public class UserServiceTests
     [UnitFact]
     public void ShouldNot_GetUserById()
     {
-        var result = _userService.GetUserById(NonexistentIds.First());
+        var result = _userService.GetById(NonexistentIds.First());
 
         Assert.Null(result.Data);
         Assert.Equal("User not found", result.Messages.First());
@@ -167,7 +150,7 @@ public class UserServiceTests
     public void Should_GetUserByFilter()
     {
         var filter = new UserFilter { Email = ActiveEmail };
-        var result = _userService.GetUsersByFilter(filter);
+        var result = _userService.GetByFilter(filter);
 
         Assert.NotEmpty(result.Data!);
         Assert.Single(result.Data!);
@@ -179,7 +162,7 @@ public class UserServiceTests
     public void Should_GetUsersByFilter()
     {
         var filter = new UserFilter { Active = true };
-        var result = _userService.GetUsersByFilter(filter);
+        var result = _userService.GetByFilter(filter);
 
         Assert.NotEmpty(result.Data!);
         Assert.Equal(ActiveUsers.Count, result.Data!.Count);
@@ -191,7 +174,7 @@ public class UserServiceTests
     public void ShouldNot_GetUsers_When_FilterDoesNotMatchAnyUser()
     {
         var filter = new UserFilter { Email = InactiveEmail };
-        var result = _userService.GetUsersByFilter(filter);
+        var result = _userService.GetByFilter(filter);
 
         Assert.Empty(result.Data!);
         Assert.Equal("No users found for the given filter", result.Messages.First());
@@ -206,7 +189,7 @@ public class UserServiceTests
             Ids = ActiveIds
         };
 
-        var result = _userService.GetUsersByMultiFilter(filter);
+        var result = _userService.GetByMultiFilter(filter);
 
         Assert.True(result.Success);
         Assert.NotNull(result.Data);
@@ -222,7 +205,7 @@ public class UserServiceTests
             Ids = NonexistentIds
         };
 
-        var result = _userService.GetUsersByMultiFilter(filter);
+        var result = _userService.GetByMultiFilter(filter);
 
         Assert.True(result.Success);
         CustomAssert.NullOrEmpty(result.Data);
@@ -234,7 +217,7 @@ public class UserServiceTests
     {
         var dto = UserMock.New.WithId(ActiveIds.First()).GenerateDto();
 
-        var result = _userService.UpdateUser(dto);
+        var result = _userService.Update(dto);
 
         Assert.NotNull(result.Data);
         Assert.Equal("User updated with success", result.Messages.First());
@@ -246,7 +229,7 @@ public class UserServiceTests
     {
         var dto = UserMock.New.WithId(InactiveIds.First()).Inactive().GenerateDto();
 
-        var result = _userService.UpdateUser(dto);
+        var result = _userService.Update(dto);
 
         Assert.Null(result.Data);
         Assert.Equal("Can't update inactive user", result.Messages.First());
@@ -258,7 +241,7 @@ public class UserServiceTests
     {
         var dto = UserMock.New.WithId(NonexistentIds.First()).GenerateDto();
 
-        var result = _userService.UpdateUser(dto);
+        var result = _userService.Update(dto);
 
         Assert.Null(result.Data);
         Assert.Equal("User not found", result.Messages.First());
@@ -268,7 +251,7 @@ public class UserServiceTests
     [UnitFact]
     public void Should_ActivateUser()
     {
-        var result = _userService.ActivateUser(InactiveIds.First());
+        var result = _userService.Activate(InactiveIds.First());
 
         Assert.Empty(result.Errors);
         Assert.True(result.Success);
@@ -277,7 +260,7 @@ public class UserServiceTests
     [UnitFact]
     public void ShouldNot_ActivateUser_When_IdIsNotOnDatabase()
     {
-        var result = _userService.ActivateUser(NonexistentIds.First());
+        var result = _userService.Activate(NonexistentIds.First());
 
         Assert.Equal("User not found", result.Errors.First());
         Assert.False(result.Success);
@@ -286,7 +269,7 @@ public class UserServiceTests
     [UnitFact]
     public void ShouldNot_ActivateUser_When_UserIsAlreadyActive()
     {
-        var result = _userService.ActivateUser(ActiveIds.First());
+        var result = _userService.Activate(ActiveIds.First());
 
         Assert.Equal("User already active", result.Errors.First());
         Assert.False(result.Success);
@@ -295,7 +278,7 @@ public class UserServiceTests
     [UnitFact]
     public void Should_ActivateUsers()
     {
-        var result = _userService.ActivateManyUsers(InactiveIds);
+        var result = _userService.ActivateMany(InactiveIds);
 
         Assert.True(result.Success);
         Assert.Empty(result.Errors);
@@ -304,7 +287,7 @@ public class UserServiceTests
     [UnitFact]
     public void Should_Not_ActivateUsers_When_UsersAreAlreadyActive()
     {
-        var result = _userService.ActivateManyUsers(ActiveIds);
+        var result = _userService.ActivateMany(ActiveIds);
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
@@ -326,7 +309,7 @@ public class UserServiceTests
     [UnitFact]
     public void ShouldNot_ActivateUsers_When_IdsAreNotOnDatabase()
     {
-        var result = _userService.ActivateManyUsers(NonexistentIds);
+        var result = _userService.ActivateMany(NonexistentIds);
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
@@ -336,7 +319,7 @@ public class UserServiceTests
     [UnitFact]
     public void Should_DeactivateUser()
     {
-        var result = _userService.DeactivateUser(ActiveIds.First());
+        var result = _userService.Deactivate(ActiveIds.First());
 
         Assert.Empty(result.Errors);
         Assert.True(result.Success);
@@ -345,7 +328,7 @@ public class UserServiceTests
     [UnitFact]
     public void ShouldNot_DeactivateUser_When_IdIsNotOnDatabase()
     {
-        var result = _userService.DeactivateUser(NonexistentIds.First());
+        var result = _userService.Deactivate(NonexistentIds.First());
 
         Assert.Equal("User not found", result.Errors.First());
         Assert.False(result.Success);
@@ -354,7 +337,7 @@ public class UserServiceTests
     [UnitFact]
     public void ShouldNot_DeactivateUser_When_UserIsAlreadyInactive()
     {
-        var result = _userService.DeactivateUser(InactiveIds.First());
+        var result = _userService.Deactivate(InactiveIds.First());
 
         Assert.Equal("User already inactive", result.Errors.First());
         Assert.False(result.Success);
@@ -363,7 +346,7 @@ public class UserServiceTests
     [UnitFact]
     public void Should_DeactivateUsers()
     {
-        var result = _userService.DeactivateManyUsers(ActiveIds);
+        var result = _userService.DeactivateMany(ActiveIds);
 
         Assert.True(result.Success);
         Assert.Empty(result.Errors);
@@ -372,7 +355,7 @@ public class UserServiceTests
     [UnitFact]
     public void Should_NotDeactivateUsers_When_UsersAreAlreadyInactive()
     {
-        var result = _userService.DeactivateManyUsers(InactiveIds);
+        var result = _userService.DeactivateMany(InactiveIds);
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
@@ -395,7 +378,7 @@ public class UserServiceTests
     [UnitFact]
     public void Should_Not_DeactivateUsers_When_IdsAreNotOnDatabase()
     {
-        var result = _userService.DeactivateManyUsers(NonexistentIds);
+        var result = _userService.DeactivateMany(NonexistentIds);
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
@@ -405,7 +388,7 @@ public class UserServiceTests
     [UnitFact]
     public void Should_DeleteUser()
     {
-        var result = _userService.DeleteUser(InactiveIds.First());
+        var result = _userService.Delete(InactiveIds.First());
 
         Assert.Empty(result.Errors);
         Assert.True(result.Success);
@@ -414,7 +397,7 @@ public class UserServiceTests
     [UnitFact]
     public void ShouldNot_DeleteUser_When_UserIsActive()
     {
-        var result = _userService.DeleteUser(ActiveIds.First());
+        var result = _userService.Delete(ActiveIds.First());
 
         Assert.Equal("Can't delete active user", result.Errors.First());
         Assert.False(result.Success);
@@ -423,7 +406,7 @@ public class UserServiceTests
     [UnitFact]
     public void ShouldNot_DeleteUser_When_IdIsNotOnDatabase()
     {
-        var result = _userService.DeleteUser(NonexistentIds.First());
+        var result = _userService.Delete(NonexistentIds.First());
 
         Assert.Equal("User not found", result.Errors.First());
         Assert.False(result.Success);
@@ -432,7 +415,7 @@ public class UserServiceTests
     [UnitFact]
     public void Should_DeleteUsers()
     {
-        var result = _userService.DeleteManyUsers(InactiveIds);
+        var result = _userService.DeleteMany(InactiveIds);
 
         Assert.Empty(result.Errors);
         Assert.True(result.Success);
@@ -441,7 +424,7 @@ public class UserServiceTests
     [UnitFact]
     public void ShouldNot_DeleteUsers_When_UsersAreActive()
     {
-        var result = _userService.DeleteManyUsers(ActiveIds);
+        var result = _userService.DeleteMany(ActiveIds);
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
@@ -464,7 +447,7 @@ public class UserServiceTests
     [UnitFact]
     public void ShouldNot_DeleteUsers_When_IdsAreNotOnDatabase()
     {
-        var result = _userService.DeleteManyUsers(NonexistentIds);
+        var result = _userService.DeleteMany(NonexistentIds);
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
