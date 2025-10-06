@@ -492,3 +492,7 @@ Doxygen/
 
 # Secret files
 *_secret.txt
+
+# VS Code - SQL Tools
+.vscode/settings.json
+*.session.sql
