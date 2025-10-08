@@ -1,0 +1,23 @@
+meta {
+  name: post /User/Create/Admin
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/User/Create/Admin
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": 0,
+    "name": "",
+    "email": "",
+    "password": "",
+    "roleId": 0,
+    "createdAt": "",
+    "active": false
+  }
+}

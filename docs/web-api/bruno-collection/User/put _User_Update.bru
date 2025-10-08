@@ -1,0 +1,23 @@
+meta {
+  name: put /User/Update
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{baseUrl}}/User/Update
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": 0,
+    "name": "",
+    "email": "",
+    "password": "",
+    "roleId": 0,
+    "createdAt": "",
+    "active": false
+  }
+}

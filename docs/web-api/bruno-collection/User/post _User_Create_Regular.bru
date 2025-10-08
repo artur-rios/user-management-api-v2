@@ -1,0 +1,23 @@
+meta {
+  name: post /User/Create/Regular
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/User/Create/Regular
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "id": 0,
+    "name": "",
+    "email": "",
+    "password": "",
+    "roleId": 0,
+    "createdAt": "",
+    "active": false
+  }
+}

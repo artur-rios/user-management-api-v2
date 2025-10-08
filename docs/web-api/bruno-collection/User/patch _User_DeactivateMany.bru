@@ -1,0 +1,17 @@
+meta {
+  name: patch /User/DeactivateMany
+  type: http
+  seq: 10
+}
+
+patch {
+  url: {{baseUrl}}/User/DeactivateMany
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {}
+  ]
+}

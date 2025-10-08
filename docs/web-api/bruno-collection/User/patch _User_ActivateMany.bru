@@ -1,0 +1,17 @@
+meta {
+  name: patch /User/ActivateMany
+  type: http
+  seq: 8
+}
+
+patch {
+  url: {{baseUrl}}/User/ActivateMany
+  body: json
+  auth: none
+}
+
+body:json {
+  [
+    {}
+  ]
+}

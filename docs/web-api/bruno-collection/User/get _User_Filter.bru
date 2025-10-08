@@ -1,0 +1,19 @@
+meta {
+  name: get /User/Filter
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/User/Filter
+  body: none
+  auth: none
+}
+
+params:query {
+  ~Name: 
+  ~Email: 
+  ~RoleId: 
+  ~CreatedAt: 
+  ~Active: 
+}

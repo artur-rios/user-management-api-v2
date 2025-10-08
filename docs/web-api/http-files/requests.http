@@ -1,0 +1,211 @@
+@baseUrl = http://localhost:5000
+@contentType = application/json
+
+###################################
+### Request: POST /Authentication
+###################################
+
+
+POST {{baseUrl}}/Authentication
+Content-Type: {{contentType}}
+
+{
+  "email": "email",
+  "password": "password"
+}
+
+###############################
+### Request: GET /HealthCheck
+###############################
+
+
+GET {{baseUrl}}/HealthCheck
+Content-Type: {{contentType}}
+
+
+######################################
+### Request: POST /User/Create/Admin
+######################################
+
+
+POST {{baseUrl}}/User/Create/Admin
+Content-Type: {{contentType}}
+
+{
+  "id": 0,
+  "name": "name",
+  "email": "email",
+  "password": "password",
+  "roleId": 0,
+  "createdAt": "2025-10-08T15:02:28.9976140+00:00",
+  "active": false
+}
+
+########################################
+### Request: POST /User/Create/Regular
+########################################
+
+
+POST {{baseUrl}}/User/Create/Regular
+Content-Type: {{contentType}}
+
+{
+  "id": 0,
+  "name": "name",
+  "email": "email",
+  "password": "password",
+  "roleId": 0,
+  "createdAt": "2025-10-08T15:02:28.9981190+00:00",
+  "active": false
+}
+
+#############################
+### Request: GET /User/{id}
+#############################
+
+### Path Parameter: GetUser{id}_id
+@GetUser{id}_id = 0
+
+
+GET {{baseUrl}}/User/{{GetUser{id}_id}}
+Content-Type: {{contentType}}
+
+
+###############################
+### Request: GET /User/Filter
+###############################
+
+### Query Parameter: GetUserFilter_Name
+@GetUserFilter_Name = str
+
+### Query Parameter: GetUserFilter_Email
+@GetUserFilter_Email = str
+
+### Query Parameter: GetUserFilter_RoleId
+@GetUserFilter_RoleId = 0
+
+### Query Parameter: GetUserFilter_CreatedAt
+@GetUserFilter_CreatedAt = str
+
+### Query Parameter: GetUserFilter_Active
+@GetUserFilter_Active = str
+
+
+GET {{baseUrl}}/User/Filter?Name={{GetUserFilter_Name}}&Email={{GetUserFilter_Email}}&RoleId={{GetUserFilter_RoleId}}&CreatedAt={{GetUserFilter_CreatedAt}}&Active={{GetUserFilter_Active}}
+Content-Type: {{contentType}}
+
+
+#####################################
+### Request: GET /User/Filter/Multi
+#####################################
+
+### Query Parameter: GetUserFilterMulti_Ids
+@GetUserFilterMulti_Ids = str
+
+### Query Parameter: GetUserFilterMulti_Names
+@GetUserFilterMulti_Names = str
+
+### Query Parameter: GetUserFilterMulti_Emails
+@GetUserFilterMulti_Emails = str
+
+### Query Parameter: GetUserFilterMulti_RoleIds
+@GetUserFilterMulti_RoleIds = str
+
+### Query Parameter: GetUserFilterMulti_CreationDates
+@GetUserFilterMulti_CreationDates = str
+
+
+GET {{baseUrl}}/User/Filter/Multi?Ids={{GetUserFilterMulti_Ids}}&Names={{GetUserFilterMulti_Names}}&Emails={{GetUserFilterMulti_Emails}}&RoleIds={{GetUserFilterMulti_RoleIds}}&CreationDates={{GetUserFilterMulti_CreationDates}}
+Content-Type: {{contentType}}
+
+
+###############################
+### Request: PUT /User/Update
+###############################
+
+
+PUT {{baseUrl}}/User/Update
+Content-Type: {{contentType}}
+
+{
+  "id": 0,
+  "name": "name",
+  "email": "email",
+  "password": "password",
+  "roleId": 0,
+  "createdAt": "2025-10-08T15:02:29.0055154+00:00",
+  "active": false
+}
+
+########################################
+### Request: PATCH /User/{id}/Activate
+########################################
+
+### Path Parameter: PatchUser{id}Activate_id
+@PatchUser{id}Activate_id = 0
+
+
+PATCH {{baseUrl}}/User/{{PatchUser{id}Activate_id}}/Activate
+Content-Type: {{contentType}}
+
+
+#######################################
+### Request: PATCH /User/ActivateMany
+#######################################
+
+
+PATCH {{baseUrl}}/User/ActivateMany
+Content-Type: {{contentType}}
+
+[
+  0
+]
+
+##########################################
+### Request: PATCH /User/{id}/Deactivate
+##########################################
+
+### Path Parameter: PatchUser{id}Deactivate_id
+@PatchUser{id}Deactivate_id = 0
+
+
+PATCH {{baseUrl}}/User/{{PatchUser{id}Deactivate_id}}/Deactivate
+Content-Type: {{contentType}}
+
+
+#########################################
+### Request: PATCH /User/DeactivateMany
+#########################################
+
+
+PATCH {{baseUrl}}/User/DeactivateMany
+Content-Type: {{contentType}}
+
+[
+  0
+]
+
+#######################################
+### Request: DELETE /User/{id}/Delete
+#######################################
+
+### Path Parameter: DeleteUser{id}Delete_id
+@DeleteUser{id}Delete_id = 0
+
+
+DELETE {{baseUrl}}/User/{{DeleteUser{id}Delete_id}}/Delete
+Content-Type: {{contentType}}
+
+
+######################################
+### Request: DELETE /User/DeleteMany
+######################################
+
+
+DELETE {{baseUrl}}/User/DeleteMany
+Content-Type: {{contentType}}
+
+[
+  0
+]
+
