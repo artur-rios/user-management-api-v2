@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using ArturRios.Common.Data;
 using ArturRios.Common.Output;
 using ArturRios.Common.Util.Condition;
+using ArturRios.UserManagement.Domain.Enums;
 
 namespace ArturRios.UserManagement.Domain.Aggregates;
 
@@ -56,7 +57,7 @@ public class User : Entity
 
     public ProcessOutput Activate()
     {
-        var condition = Condition.Create.IfNot(Active).FailsWith("User already active");
+        var condition = Condition.Create.False(Active).FailsWith("User already active");
         
         if (condition.IsSatisfied)
         {
@@ -69,13 +70,13 @@ public class User : Entity
     public ProcessOutput CanDelete()
     {
         return Condition.Create
-            .IfNot(Active).FailsWith("Can't delete active user")
+            .False(Active).FailsWith("Can't delete active user")
             .ToProcessOutput();
     }
     
     public ProcessOutput Deactivate()
     {
-        var condition = Condition.Create.If(Active).FailsWith("User already inactive");
+        var condition = Condition.Create.True(Active).FailsWith("User already inactive");
         
         if (condition.IsSatisfied)
         {
@@ -91,9 +92,25 @@ public class User : Entity
         Salt = salt;
     }
 
+    public ProcessOutput SetRole(int roleId)
+    {
+        var validRole = Enum.IsDefined(typeof(Roles), roleId);
+        var condition = Condition.Create
+                            .True(validRole).FailsWith("Role should be valid")
+                            .True(Active).FailsWith("Can't change role of inactive user")
+                            .True(roleId != RoleId).FailsWith("New role must be different from current role");
+
+        if (condition.IsSatisfied)
+        {
+            RoleId = roleId;
+        }
+
+        return condition.ToProcessOutput();
+    }
+
     public ProcessOutput Update(User updatedUser)
     {
-        var condition = Condition.Create.If(Active).FailsWith("Can't update inactive user");
+        var condition = Condition.Create.True(Active).FailsWith("Can't update inactive user");
         
         if (condition.IsSatisfied)
         {

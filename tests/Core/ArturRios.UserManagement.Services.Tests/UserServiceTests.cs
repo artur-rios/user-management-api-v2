@@ -19,16 +19,16 @@ public class UserServiceTests
 
     private static List<Domain.Aggregates.User> ActiveUsers =>
     [
-        UserMock.New.WithId(1).Active().Generate(),
-        UserMock.New.WithId(2).Active().Generate(),
-        UserMock.New.WithId(3).Active().Generate()
+        UserMock.New.WithId(1).WithRole(Roles.Regular).Active().Generate(),
+        UserMock.New.WithId(2).WithRole(Roles.Regular).Active().Generate(),
+        UserMock.New.WithId(3).WithRole(Roles.Regular).Active().Generate()
     ];
 
     private static List<Domain.Aggregates.User> InactiveUsers =>
     [
-        UserMock.New.WithId(4).Inactive().Generate(),
-        UserMock.New.WithId(5).Inactive().Generate(),
-        UserMock.New.WithId(6).Inactive().Generate()
+        UserMock.New.WithId(4).WithRole(Roles.Regular).Inactive().Generate(),
+        UserMock.New.WithId(5).WithRole(Roles.Regular).Inactive().Generate(),
+        UserMock.New.WithId(6).WithRole(Roles.Regular).Inactive().Generate()
     ];
 
     private static int[] ActiveIds => ActiveUsers.Select(user => user.Id).ToArray();
@@ -86,7 +86,7 @@ public class UserServiceTests
         userRepository.Setup(repo => repo.Update(It.IsAny<Domain.Aggregates.User>()));
 
         userRepository.Setup(repo => repo.Delete(It.IsAny<int>()));
-        
+
         _userService = new UserService(userRepository.Object, userDtoValidator);
     }
 
@@ -210,6 +210,45 @@ public class UserServiceTests
         Assert.True(result.Success);
         CustomAssert.NullOrEmpty(result.Data);
         Assert.Contains("No users found for the given filter", result.Messages);
+    }
+
+    [UnitFact]
+    public void Should_ChangeUserRole()
+    {
+        var result = _userService.ChangeRole(ActiveIds.First(), (int)Roles.Test);
+
+        Assert.True(result.Success);
+        Assert.Empty(result.Errors);
+    }
+
+    [UnitFact]
+    public void ShouldNot_ChangeUserRole_When_IdIsNotOnDatabase()
+    {
+        var result = _userService.ChangeRole(NonexistentIds.First(), (int)Roles.Test);
+
+        Assert.False(result.Success);
+        Assert.NotEmpty(result.Errors);
+        Assert.Equal("User not found", result.Errors.First());
+    }
+
+    [UnitFact]
+    public void ShouldNot_ChangeUserRole_When_RoleIsInvalid()
+    {
+        var result = _userService.ChangeRole(ActiveIds.First(), 999);
+
+        Assert.False(result.Success);
+        Assert.NotEmpty(result.Errors);
+        Assert.Equal("Role should be valid", result.Errors.First());
+    }
+
+    [UnitFact]
+    public void ShouldNot_ChangeUserRole_When_RoleIsSame()
+    {
+        var result = _userService.ChangeRole(ActiveIds.First(), (int)Roles.Regular);
+
+        Assert.False(result.Success);
+        Assert.NotEmpty(result.Errors);
+        Assert.Equal("New role must be different from current role", result.Errors.FirstOrDefault());
     }
 
     [UnitFact]

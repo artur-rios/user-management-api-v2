@@ -32,7 +32,7 @@ public class UserDtoValidator : FluentValidator<UserDto>
         });
         RuleFor(user => user.RoleId).Custom((roleId, context) =>
         {
-            var validRole = Enum.GetValues(typeof(Roles)).Cast<Roles>().Any(role => roleId == (int)role);
+            var validRole = Enum.IsDefined(typeof(Roles), roleId);
             
             if (!validRole)
             {

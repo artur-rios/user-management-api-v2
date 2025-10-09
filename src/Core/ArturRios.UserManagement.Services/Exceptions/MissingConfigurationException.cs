@@ -2,4 +2,4 @@
 
 namespace ArturRios.UserManagement.Services.Exceptions;
 
-public class MissingConfigurationException(string[] messages, string message = "Internal error") : CustomException(messages, message);
+public class MissingConfigurationException(string[] messages) : CustomException(messages);

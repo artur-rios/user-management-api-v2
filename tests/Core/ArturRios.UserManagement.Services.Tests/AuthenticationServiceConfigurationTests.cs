@@ -16,32 +16,32 @@ public class AuthenticationServiceConfigurationTests
     public void Should_CreateInstance()
     {
         IFluentValidator<Credentials> credentialsValidator = new CredentialsValidator();
-        var userRepository = new Mock<IUserRepository>().Object; 
+        var userRepository = new Mock<IUserRepository>().Object;
         var jwtTokenConfiguration = new JwtTokenConfiguration(6000, "test-issuer", "test-audience", "test-secret");
         IFluentValidator<JwtTokenConfiguration> jwtTokenConfigurationValidator = new JwtTokenConfigurationValidator();
         var options = Options.Create(jwtTokenConfiguration);
-        
-        var exception = Record.Exception(() => 
+
+        var exception = Record.Exception(() =>
             new AuthenticationService(credentialsValidator, userRepository, options, jwtTokenConfigurationValidator));
-        
+
         Assert.Null(exception);
     }
-    
+
     [UnitFact]
     public void ShouldNot_CreateInstance()
     {
         IFluentValidator<Credentials> credentialsValidator = new CredentialsValidator();
-        var userRepository = new Mock<IUserRepository>().Object; 
-        var jwtTokenConfiguration = new JwtTokenConfiguration(6000, "test-issuer", "test-audience", "");
+        var userRepository = new Mock<IUserRepository>().Object;
+        var jwtTokenConfiguration = new JwtTokenConfiguration(6000, "test-issuer", "test-audience", string.Empty);
         IFluentValidator<JwtTokenConfiguration> jwtTokenConfigurationValidator = new JwtTokenConfigurationValidator();
         var options = Options.Create(jwtTokenConfiguration);
-        
-        var exception = Record.Exception(() => 
+
+        var exception = Record.Exception(() =>
             new AuthenticationService(credentialsValidator, userRepository, options, jwtTokenConfigurationValidator));
-        
+
         Assert.NotNull(exception);
         Assert.IsType<MissingConfigurationException>(exception);
-        Assert.Equal("Internal error", exception.Message);
+        Assert.Equal("Secret must not be empty", exception.Message);
         Assert.Equal("Secret must not be empty", (exception as MissingConfigurationException)?.Messages.First());
     }
 }

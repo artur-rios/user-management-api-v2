@@ -92,6 +92,25 @@ public class UserService(IUserRepository userRepository, IFluentValidator<UserDt
         return new DataOutput<IList<UserDto>>(users, ["Search completed with success"], true);
     }
 
+    public ProcessOutput ChangeRole(int userId, int newRoleId)
+    {
+        var user = userRepository.GetById(userId);
+
+        if (user is null)
+        {
+            return new ProcessOutput(["User not found"]);
+        }
+
+        var result = user.SetRole(newRoleId);
+
+        if (result.Success)
+        {
+            userRepository.Update(user);
+        }
+
+        return result;
+    }
+
     public DataOutput<UserDto?> Update(UserDto userDto)
     {
         var validationErrors = userValidator.ValidateAndReturnErrors(userDto);

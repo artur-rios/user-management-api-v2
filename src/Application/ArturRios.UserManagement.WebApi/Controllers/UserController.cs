@@ -20,7 +20,7 @@ public class UserController(UserService userService) : BaseController
     {
         return Resolve(userService.CreateAdmin(userDto));
     }
-    
+
     [HttpPost]
     [Route("Create/Regular")]
     [AllowAnonymous]
@@ -28,7 +28,7 @@ public class UserController(UserService userService) : BaseController
     {
         return Resolve(userService.CreateRegular(userDto));
     }
-    
+
     [HttpGet]
     [Route("{id:int}")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
@@ -36,7 +36,7 @@ public class UserController(UserService userService) : BaseController
     {
         return Resolve(userService.GetById(id)!);
     }
-    
+
     [HttpGet]
     [Route("Filter")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
@@ -44,7 +44,7 @@ public class UserController(UserService userService) : BaseController
     {
         return Resolve(userService.GetByFilter(filter)!);
     }
-    
+
     [HttpGet]
     [Route("Filter/Multi")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
@@ -52,7 +52,7 @@ public class UserController(UserService userService) : BaseController
     {
         return Resolve(userService.GetByMultiFilter(filter)!);
     }
-    
+
     [HttpPut]
     [Route("Update")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
@@ -60,7 +60,15 @@ public class UserController(UserService userService) : BaseController
     {
         return Resolve(userService.Update(userDto));
     }
-    
+
+    [HttpPatch]
+    [Route("Update/{id:int}/Role/{newRoleId:int}")]
+    [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
+    public ActionResult<WebApiOutput<string>> ChangeUserRole([FromRoute] int id, [FromRoute] int newRoleId)
+    {
+        return Resolve(userService.ChangeRole(id, newRoleId), $"User with id {id} changed to role {(Roles)newRoleId} successfully");
+    }
+
     [HttpPatch]
     [Route("{id:int}/Activate")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
@@ -68,7 +76,7 @@ public class UserController(UserService userService) : BaseController
     {
         return Resolve(userService.Activate(id), $"User with id {id} activated successfully");
     }
-    
+
     [HttpPatch]
     [Route("ActivateMany")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
@@ -76,7 +84,7 @@ public class UserController(UserService userService) : BaseController
     {
         return Resolve(userService.ActivateMany(ids), "All users activated successfully");
     }
-    
+
     [HttpPatch]
     [Route("{id:int}/Deactivate")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
@@ -84,7 +92,7 @@ public class UserController(UserService userService) : BaseController
     {
         return Resolve(userService.Deactivate(id), $"User with id {id} deactivated successfully");
     }
-    
+
     [HttpPatch]
     [Route("DeactivateMany")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
@@ -92,7 +100,7 @@ public class UserController(UserService userService) : BaseController
     {
         return Resolve(userService.DeactivateMany(ids), "All users deactivated successfully");
     }
-    
+
     [HttpDelete]
     [Route("{id:int}/Delete")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
@@ -100,7 +108,7 @@ public class UserController(UserService userService) : BaseController
     {
         return Resolve(userService.Delete(id), $"User with id {id} deleted successfully");
     }
-    
+
     [HttpDelete]
     [Route("DeleteMany")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
