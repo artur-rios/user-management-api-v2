@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using ArturRios.Common.Configuration.Enums;
-using ArturRios.Common.Extensions;
 using ArturRios.Common.Test;
 using ArturRios.Common.Test.Attributes;
 using ArturRios.Common.Util.Random;
@@ -85,7 +84,7 @@ public class UserTests(
         Assert.Equal(HttpStatusCode.BadRequest, result.GetStatusCode());
         Assert.Null(result.Data);
         Assert.False(result.Success);
-        Assert.Equal("Email should be valid", result.Messages.First());
+        Assert.Equal("Email should be valid", result.Errors.First());
     }
 
     [FunctionalFact]
@@ -104,7 +103,7 @@ public class UserTests(
         Assert.Equal(HttpStatusCode.BadRequest, result.GetStatusCode());
         Assert.Null(result.Data);
         Assert.False(result.Success);
-        Assert.Equal("E-mail already registered", result.Messages.First());
+        Assert.Equal("E-mail already registered", result.Errors.First());
     }
 
     [FunctionalFact]
@@ -115,7 +114,7 @@ public class UserTests(
         Assert.Equal(HttpStatusCode.OK, result.GetStatusCode());
         Assert.NotNull(result.Data);
         Assert.True(result.Success);
-        Assert.Equal("User found", result.Messages.First());
+        Assert.Equal($"User with Id '{_testUser.Id}' found", result.Messages.First());
 
         Assert.Equal(_testUser.Id, result.Data?.Id);
         Assert.Equal(_testUser.Name, result.Data?.Name);
@@ -135,7 +134,7 @@ public class UserTests(
         Assert.Equal(HttpStatusCode.OK, result.GetStatusCode());
         Assert.Null(result.Data);
         Assert.True(result.Success);
-        Assert.Equal("User not found", result.Messages.First());
+        Assert.Equal($"User with Id '{nonExistentUserId}' not found", result.Messages.First());
     }
 
     [FunctionalFact]
@@ -148,7 +147,6 @@ public class UserTests(
         Assert.Equal(HttpStatusCode.OK, result.GetStatusCode());
         Assert.NotNull(result.Data);
         Assert.True(result.Success);
-        Assert.Equal("Search completed with success", result.Messages.First());
 
         var userFound = result.Data.FirstOrDefault();
 
@@ -168,34 +166,150 @@ public class UserTests(
         var result = await Gateway.GetAsync<IList<UserQueryOutput>>($"{UserRoute}/Filter{query}");
 
         Assert.Equal(HttpStatusCode.OK, result.GetStatusCode());
-        Assert.NotNull(result);
+        Assert.NotNull(result.Data);
         Assert.True(result.Success);
-        Assert.Empty(result.Data!);
-        Assert.Equal("No users found for the given filter", result.Messages.First());
+        Assert.Empty(result.Data);
     }
 
     [FunctionalFact]
-    public async Task Should_DeactivateUser()
+    public async Task Should_UpdateUser()
     {
-        var userId = fixture.CreateUsers().First().Id;
+        var user = fixture.CreateUsers().First();
 
-        var result = await Gateway.PatchAsync<DeactivateUserCommandOutput>($"{UserRoute}/{userId}/Deactivate");
+        var command = new UpdateUserCommand { Id = user.Id, Name = "Updated name" };
 
-        Assert.Equal(HttpStatusCode.OK, result.GetStatusCode());
-        Assert.Null(result.Data);
-        Assert.Equal("Process executed with no errors", result.Messages.First());
+        var updateResult = await Gateway.PutAsync<UpdateUserCommandOutput>($"{UserRoute}/Update", command);
+
+        Assert.Equal(HttpStatusCode.OK, updateResult.GetStatusCode());
+        Assert.NotNull(updateResult);
+        Assert.Equal(user.Id, updateResult.Data?.Id);
+        Assert.Equal(user.Name, updateResult.Data?.Name);
+        Assert.Equal("User updated with success", updateResult.Messages.First());
+
+        var returnedUser = fixture.GetUserById(user.Id);
+
+        Assert.NotNull(returnedUser);
+        Assert.Equal(user.Id, returnedUser.Id);
+        Assert.Equal(user.Name, returnedUser.Name);
     }
 
     [FunctionalFact]
-    public async Task Should_NotDeactivateUser()
+    public async Task ShouldNot_UpdateUser_When_InputIsInvalid()
     {
-        var userId = fixture.CreateUsers(false).First().Id;
+        var user = fixture.CreateUsers().First();
+        user.Name = string.Empty;
 
-        var result = await Gateway.PatchAsync<DeactivateUserCommandOutput>($"{UserRoute}/{userId}/Deactivate");
+        var command = new UpdateUserCommand { Id = user.Id, Name = user.Name };
+
+        var result = await Gateway.PutAsync<UpdateUserCommandOutput>($"{UserRoute}/Update", command);
 
         Assert.Equal(HttpStatusCode.BadRequest, result.GetStatusCode());
         Assert.Null(result.Data);
-        Assert.Equal("User already inactive", result.Messages.First());
+        Assert.Equal("Email should be valid", result.Errors.First());
+        Assert.False(result.Success);
+    }
+
+    [FunctionalFact]
+    public async Task ShouldNot_UpdateUser_When_UserIsInactive()
+    {
+        var user = fixture.CreateUsers(false).First();
+
+        var command = new UpdateUserCommand { Id = user.Id, Name = "Updated name" };
+
+        var result = await Gateway.PutAsync<UpdateUserCommandOutput>($"{UserRoute}/Update", command);
+
+        Assert.Equal(HttpStatusCode.BadRequest, result.GetStatusCode());
+        Assert.NotNull(result);
+        Assert.Null(result.Data);
+        Assert.Equal("Can't update inactive user", result.Errors.First());
+        Assert.False(result.Success);
+    }
+
+    [FunctionalFact]
+    public async Task ShouldNot_UpdateUser_When_UserDoesNotExist()
+    {
+        var command = new UpdateUserCommand { Id = fixture.GetUserNextId(), Name = "Updated name" };
+
+        var result = await Gateway.PutAsync<UpdateUserCommandOutput>($"{UserRoute}/Update", command);
+
+        Assert.Equal(HttpStatusCode.BadRequest, result.GetStatusCode());
+        Assert.NotNull(result);
+        Assert.Null(result.Data);
+        Assert.Equal("User not found", result.Errors.First());
+        Assert.False(result.Success);
+    }
+
+    [FunctionalFact]
+    public async Task Should_UpdateUserRole()
+    {
+        var user = fixture.CreateUsers().First();
+
+        var newRoleId = user.RoleId == (int)Roles.Test ? (int)Roles.Admin : (int)Roles.Test;
+
+        var result =
+            await Gateway.PatchAsync<UpdateUserRoleCommandOutput>($"{UserRoute}/Update/{user.Id}/Role/{newRoleId}");
+
+        Assert.Equal(HttpStatusCode.OK, result.GetStatusCode());
+        Assert.NotNull(result.Data);
+        Assert.Equal(newRoleId, result.Data.UpdatedUserRoleId);
+        Assert.Equal($"User role updated to {newRoleId}", result.Messages.First());
+
+        var returnedUser = fixture.GetUserById(user.Id);
+
+        Assert.NotNull(returnedUser);
+        Assert.Equal(newRoleId, returnedUser.RoleId);
+    }
+
+    [FunctionalFact]
+    public async Task ShouldNot_UpdateUserRole_When_RoleIsInvalid()
+    {
+        var user = fixture.CreateUsers().First();
+
+        var result = await Gateway.PatchAsync<UpdateUserRoleCommandOutput>($"{UserRoute}/Update/{user.Id}/Role/999");
+
+        Assert.Equal(HttpStatusCode.BadRequest, result.GetStatusCode());
+        Assert.Null(result.Data);
+        Assert.Equal("Role should be valid", result.Errors.First());
+
+        var returnedUser = fixture.GetUserById(user.Id);
+
+        Assert.NotNull(returnedUser);
+        Assert.Equal(user.RoleId, returnedUser.RoleId);
+    }
+
+    [FunctionalFact]
+    public async Task ShouldNot_UpdateUserRole_When_UserIsInactive()
+    {
+        var user = fixture.CreateUsers(false).First();
+
+        var newRoleId = user.RoleId == (int)Roles.Test ? (int)Roles.Admin : (int)Roles.Test;
+
+        var result =
+            await Gateway.PatchAsync<UpdateUserRoleCommandOutput>($"{UserRoute}/Update/{user.Id}/Role/{newRoleId}");
+
+        Assert.Equal(HttpStatusCode.BadRequest, result.GetStatusCode());
+        Assert.Null(result.Data);
+        Assert.Equal("Can't change role of inactive user", result.Errors.First());
+
+        var returnedUser = fixture.GetUserById(user.Id);
+
+        Assert.NotNull(returnedUser);
+        Assert.Equal(user.RoleId, returnedUser.RoleId);
+    }
+
+    [FunctionalFact]
+    public async Task ShouldNot_UpdateUserRole_When_UserDoesNotExist()
+    {
+        var nonExistentUserId = fixture.GetUserNextId();
+        const int newRoleId = (int)Roles.Admin;
+
+        var result =
+            await Gateway.PatchAsync<UpdateUserRoleCommandOutput>(
+                $"{UserRoute}/Update/{nonExistentUserId}/Role/{newRoleId}");
+
+        Assert.Equal(HttpStatusCode.BadRequest, result.GetStatusCode());
+        Assert.NotNull(result);
+        Assert.Equal("User not found", result.Errors.First());
     }
 
     [FunctionalFact]
@@ -207,7 +321,7 @@ public class UserTests(
 
         Assert.Equal(HttpStatusCode.OK, result.GetStatusCode());
         Assert.Null(result.Data);
-        Assert.Equal("Process executed with no errors", result.Messages.First());
+        Assert.Equal("User activated successfully", result.Messages.First());
     }
 
     [FunctionalFact]
@@ -219,7 +333,7 @@ public class UserTests(
 
         Assert.Equal(HttpStatusCode.BadRequest, result.GetStatusCode());
         Assert.Null(result.Data);
-        Assert.Equal("User already active", result.Messages.First());
+        Assert.Equal("User already active", result.Errors.First());
     }
 
     [FunctionalFact]
@@ -230,6 +344,7 @@ public class UserTests(
 
         var result = await Gateway.PatchAsync<ActivateManyUsersCommandOutput>($"{UserRoute}/ActivateMany", ids);
 
+        Assert.Equal(HttpStatusCode.OK, result.GetStatusCode());
         Assert.NotNull(result.Data);
         Assert.Equal(quantityToActivate, result.Data.ActivatedIds.Count());
         Assert.Empty(result.Data.FailedActivationIds);
@@ -250,14 +365,27 @@ public class UserTests(
     }
 
     [FunctionalFact]
-    public async Task Should_NotDeleteUser()
+    public async Task Should_DeactivateUser()
     {
         var userId = fixture.CreateUsers().First().Id;
 
-        var result = await Gateway.DeleteAsync<string>($"{UserRoute}/{userId}/Delete");
+        var result = await Gateway.PatchAsync<DeactivateUserCommandOutput>($"{UserRoute}/{userId}/Deactivate");
 
+        Assert.Equal(HttpStatusCode.OK, result.GetStatusCode());
         Assert.Null(result.Data);
-        Assert.Equal("Can't delete active user", result.Messages.First());
+        Assert.Equal("User deactivated successfully", result.Messages.First());
+    }
+
+    [FunctionalFact]
+    public async Task Should_NotDeactivateUser()
+    {
+        var userId = fixture.CreateUsers(false).First().Id;
+
+        var result = await Gateway.PatchAsync<DeactivateUserCommandOutput>($"{UserRoute}/{userId}/Deactivate");
+
+        Assert.Equal(HttpStatusCode.BadRequest, result.GetStatusCode());
+        Assert.Null(result.Data);
+        Assert.Equal("User already inactive", result.Errors.First());
     }
 
     [FunctionalFact]
@@ -265,194 +393,22 @@ public class UserTests(
     {
         var userId = fixture.CreateUsers(false).First().Id;
 
-        var result = await Gateway.DeleteAsync<string>($"{UserRoute}/{userId}/Delete");
+        var result = await Gateway.DeleteAsync<DeleteUserCommandOutput>($"{UserRoute}/{userId}/Delete");
 
+        Assert.Equal(HttpStatusCode.OK, result.GetStatusCode());
         Assert.Null(result.Data);
-        Assert.Equal("Process executed with no errors", result.Messages.First());
+        Assert.Equal("User deleted successfully", result.Messages.First());
     }
 
     [FunctionalFact]
-    public async Task Should_ReturnValidationError_And_Not_CreateUser()
+    public async Task Should_NotDeleteUser()
     {
-        var mock = UserMock.New.WithNoId().WithEmail(string.Empty).WithRole(Roles.Regular);
-        var user = mock.Generate();
+        var userId = fixture.CreateUsers().First().Id;
 
-        var command = new CreateUserCommand
-        {
-            Name = user.Name, Email = user.Email, RoleId = user.RoleId, Password = mock.MockPassword
-        };
+        var result = await Gateway.DeleteAsync<DeleteUserCommandOutput>($"{UserRoute}/{userId}/Delete");
 
-        var result = await Gateway.PostAsync<int>($"{UserRoute}/Create/Regular", command);
-
-        Assert.NotNull(result);
-        Assert.Equal(0, result.Data);
-        Assert.False(result.Success);
-        Assert.Equal("Email should be valid", result.Messages.First());
-    }
-
-    [FunctionalFact]
-    public async Task Should_ReturnEmailAlreadyRegisteredError_And_NotCreateUser()
-    {
-        var user = _testUser.Clone();
-        var password = CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength });
-
-        var command = new CreateUserCommand
-        {
-            Name = user!.Name, Email = user.Email, RoleId = user.RoleId, Password = password
-        };
-
-        var result = await Gateway.PostAsync<CreateUserCommandOutput>($"{UserRoute}/Create/Regular", command);
-
+        Assert.Equal(HttpStatusCode.BadRequest, result.GetStatusCode());
         Assert.Null(result.Data);
-        Assert.False(result.Success);
-        Assert.Equal("E-mail already registered", result.Messages.First());
-    }
-
-    [FunctionalFact]
-    public async Task Should_UpdateUser()
-    {
-        var user = fixture.CreateUsers().First();
-
-        var command = new UpdateUserCommand
-        {
-            Id = user.Id,
-            Name = "Updated name"
-        };
-
-        var updateResult = await Gateway.PutAsync<UpdateUserCommandOutput>($"{UserRoute}/Update", command);
-
-        Assert.NotNull(updateResult);
-        Assert.Equal(user.Id, updateResult.Data?.Id);
-        Assert.Equal(user.Name, updateResult.Data?.Name);
-        Assert.Equal("User updated with success", updateResult.Messages.First());
-
-        var returnedUser = fixture.GetUserById(user.Id);
-
-        Assert.NotNull(returnedUser);
-        Assert.Equal(user.Id, returnedUser.Id);
-        Assert.Equal(user.Name, returnedUser.Name);
-    }
-
-    [FunctionalFact]
-    public async Task ShouldNot_UpdateUser_When_InputIsInvalid()
-    {
-        var user = fixture.CreateUsers().First();
-        user.Name = string.Empty;
-
-        var command = new UpdateUserCommand
-        {
-            Id = user.Id,
-            Name = user.Name
-        };
-
-        var result = await Gateway.PutAsync<User>($"{UserRoute}/Update", command);
-
-        Assert.Null(result.Data);
-        Assert.Equal("Email should be valid", result.Messages.First());
-        Assert.False(result.Success);
-    }
-
-    [FunctionalFact]
-    public async Task ShouldNot_UpdateUser_When_UserIsInactive()
-    {
-        var user = fixture.CreateUsers(false).First();
-
-        var command = new UpdateUserCommand
-        {
-            Id = user.Id,
-            Name = "Updated name"
-        };
-
-        var result = await Gateway.PutAsync<User>($"{UserRoute}/Update", command);
-
-        Assert.NotNull(result);
-        Assert.Null(result.Data);
-        Assert.Equal("Can't update inactive user", result.Messages.First());
-        Assert.False(result.Success);
-    }
-
-    [FunctionalFact]
-    public async Task ShouldNot_UpdateUser_When_UserDoesNotExist()
-    {
-        var command = new UpdateUserCommand
-        {
-            Id = fixture.GetUserNextId(),
-            Name = "Updated name"
-        };
-
-        var result = await Gateway.PutAsync<User>($"{UserRoute}/Update", command);
-
-        Assert.NotNull(result);
-        Assert.Null(result.Data);
-        Assert.Equal("User not found", result.Messages.First());
-        Assert.False(result.Success);
-    }
-
-    [FunctionalFact]
-    public async Task Should_ChangeUserRole()
-    {
-        var user = fixture.CreateUsers().First();
-
-        var newRoleId = user.RoleId == (int)Roles.Test ? (int)Roles.Admin : (int)Roles.Test;
-
-        var result = await Gateway.PatchAsync<string>($"{UserRoute}/Update/{user.Id}/Role/{newRoleId}");
-
-        Assert.NotNull(result);
-        Assert.Equal($"User with id {user.Id} changed to role {(Roles)newRoleId} successfully", result.Data);
-        Assert.Equal("Process executed with no errors", result.Messages.First());
-
-        var returnedUser = fixture.GetUserById(user.Id);
-
-        Assert.NotNull(returnedUser);
-        Assert.Equal(newRoleId, returnedUser.RoleId);
-    }
-
-    [FunctionalFact]
-    public async Task ShouldNot_ChangeUserRole_When_RoleIsInvalid()
-    {
-        var user = fixture.CreateUsers().First();
-
-        var result = await Gateway.PatchAsync<string>($"{UserRoute}/Update/{user.Id}/Role/999");
-
-        Assert.NotNull(result);
-        Assert.Equal("Process executed with 1 error", result.Data);
-        Assert.Equal("Role should be valid", result.Messages.First());
-
-        var returnedUser = fixture.GetUserById(user.Id);
-
-        Assert.NotNull(returnedUser);
-        Assert.Equal(user.RoleId, returnedUser.RoleId);
-    }
-
-    [FunctionalFact]
-    public async Task ShouldNot_ChangeUserRole_When_UserIsInactive()
-    {
-        var user = fixture.CreateUsers(false).First();
-
-        var newRoleId = user.RoleId == (int)Roles.Test ? (int)Roles.Admin : (int)Roles.Test;
-
-        var result = await Gateway.PatchAsync<string>($"{UserRoute}/Update/{user.Id}/Role/{newRoleId}");
-
-        Assert.NotNull(result);
-        Assert.Equal("Process executed with 1 error", result.Data);
-        Assert.Equal("Can't change role of inactive user", result.Messages.First());
-
-        var returnedUser = fixture.GetUserById(user.Id);
-
-        Assert.NotNull(returnedUser);
-        Assert.Equal(user.RoleId, returnedUser.RoleId);
-    }
-
-    [FunctionalFact]
-    public async Task ShouldNot_ChangeUserRole_When_UserDoesNotExist()
-    {
-        var nonExistentUserId = fixture.GetUserNextId();
-        const int newRoleId = (int)Roles.Admin;
-
-        var result = await Gateway.PatchAsync<string>($"{UserRoute}/Update/{nonExistentUserId}/Role/{newRoleId}");
-
-        Assert.NotNull(result);
-        Assert.Equal("Process executed with 1 error", result.Data);
-        Assert.Equal("User not found", result.Messages.First());
+        Assert.Equal("Can't delete active user", result.Errors.First());
     }
 }
