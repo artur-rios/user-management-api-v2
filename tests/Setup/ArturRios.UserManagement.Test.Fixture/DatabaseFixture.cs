@@ -1,8 +1,6 @@
 ﻿using ArturRios.UserManagement.Data.Relational.Repositories;
+using ArturRios.UserManagement.Domain.Aggregates;
 using ArturRios.UserManagement.Domain.Enums;
-using ArturRios.UserManagement.Domain.Filters;
-using ArturRios.UserManagement.Dto;
-using ArturRios.UserManagement.Dto.Mapping;
 using ArturRios.UserManagement.Test.Mock;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,43 +13,44 @@ public class DatabaseFixture : IDisposable
     private readonly RelationalDbContextFactory _dbContextFactory;
     private readonly TestRepository _testRepository;
     private readonly UserRepository _userRepository;
+    private readonly UserRangeRepository _userRangeRepository;
 
     private readonly List<int> _createdIds = [];
-    
+    private readonly Dictionary<int, string> _createdPasswords = [];
+
     public DatabaseFixture()
     {
         _dbContextFactory = new RelationalDbContextFactory();
         _testRepository = new TestRepository(_dbContextFactory);
         _userRepository = new UserRepository(_dbContextFactory);
+        _userRangeRepository = new UserRangeRepository(_dbContextFactory);
     }
 
-    public IEnumerable<UserDto> CreateUsers(bool active = true, int quantity = 1)
+    public IEnumerable<User> CreateUsers(bool active = true, int quantity = 1)
     {
-        List<UserDto> createdUsers = [];
-        
+        List<User> createdUsers = [];
+
         using var dbContext = _dbContextFactory.CreateDbContext();
 
         for (var i = 0; i < quantity; i++)
         {
             var userMock = UserMock.New.WithNoId().WithRole(Roles.Test);
-            
+
             if (!active)
             {
                 userMock.Inactive();
             }
-            
+
             var user = userMock.Generate();
-            var userDto = user.ToDto();
-            userDto.Password = userMock.MockPassword;
 
             var createdId = _userRepository.Create(user);
-            
-            userDto.Id = createdId;
+
             _createdIds.Add(createdId);
-            
-            createdUsers.Add(userDto);
+
+            _createdPasswords.Add(createdId, userMock.MockPassword);
+            createdUsers.Add(user);
         }
-        
+
         foreach (var entry in dbContext.ChangeTracker.Entries())
         {
             entry.State = EntityState.Detached;
@@ -60,29 +59,34 @@ public class DatabaseFixture : IDisposable
         return createdUsers;
     }
 
+    public string GetPassword(int id)
+    {
+        return _createdPasswords[id];
+    }
+
     public int GetUserNextId()
     {
         return _testRepository.GetUserNextId();
     }
-    
-    public IEnumerable<UserDto> GetUsersByMultiFilter(UserMultiFilter filter)
+
+    public IEnumerable<User> GetAllUsers()
     {
-        return _userRepository.GetByMultiFilter(filter).Select(user => user.ToDto());
-    }
-    
-    public UserDto? GetUserById(int id)
-    {
-        return _userRepository.GetById(id)?.ToDto();
+        return _userRepository.GetAll();
     }
 
-    public void DeleteUsers(int[] ids)
+    public User? GetUserById(int id)
     {
-        _userRepository.MultiDelete(ids);
+        return _userRepository.GetById(id);
+    }
+
+    public void DeleteUsers(IEnumerable<int> ids)
+    {
+        _userRangeRepository.DeleteRange(ids.ToList());
     }
 
     public void Dispose()
     {
-        _userRepository.MultiDelete(_createdIds);
+        _userRangeRepository.DeleteRange(_createdIds);
         GC.SuppressFinalize(this);
     }
 }

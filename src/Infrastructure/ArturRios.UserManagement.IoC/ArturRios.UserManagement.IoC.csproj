@@ -8,14 +8,14 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Security\ArturRios.Common.Security.csproj" />
-      <ProjectReference Include="..\..\..\common\src\ArturRios.Common.WebApi\ArturRios.Common.WebApi.csproj" />
+      <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Command\ArturRios.UserManagement.Command.csproj" />
       <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Dto\ArturRios.UserManagement.Dto.csproj" />
-      <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Services\ArturRios.UserManagement.Services.csproj" />
+      <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Query\ArturRios.UserManagement.Query.csproj" />
       <ProjectReference Include="..\ArturRios.UserManagement.Data.Relational\ArturRios.UserManagement.Data.Relational.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.9" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.10" />
     </ItemGroup>
 
 </Project>

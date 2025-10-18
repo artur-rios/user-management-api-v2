@@ -1,5 +1,5 @@
-﻿using ArturRios.Common.WebApi;
-using ArturRios.Common.WebApi.Client;
+﻿using ArturRios.Common.Web.Api.Client;
+using ArturRios.Common.Web.Api.Output;
 
 namespace ArturRios.UserManagement.WebApi.Client.Routes;
 

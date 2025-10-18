@@ -1,5 +1,5 @@
 ﻿using ArturRios.Common.Util.Random;
-using ArturRios.Common.WebApi.Security.Records;
+using ArturRios.Common.Web.Security.Records;
 using ArturRios.UserManagement.Domain;
 using Bogus;
 
@@ -16,23 +16,23 @@ public class CredentialsMock
             .RuleFor(x => x.Password, _ => CustomRandom.Text(new RandomStringOptions
                 { Length = Constants.MinimumPasswordLength }));
     }
-    
+
     public static CredentialsMock New => new();
-    
+
     public CredentialsMock WithEmail(string email)
     {
         _faker.RuleFor(x => x.Email, email);
-        
+
         return this;
     }
-    
+
     public CredentialsMock WithPassword(string password)
     {
         _faker.RuleFor(x => x.Password, password);
-        
+
         return this;
     }
-    
+
     public Credentials Generate()
     {
         return _faker.Generate();

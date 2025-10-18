@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\common\src\ArturRios.Common.WebApi\ArturRios.Common.WebApi.csproj" />
+      <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Web\ArturRios.Common.Web.csproj" />
     </ItemGroup>
 
 </Project>

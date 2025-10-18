@@ -11,7 +11,7 @@ public class User : Entity
 {
     [Column(Order = 1)]
     [MaxLength(300)]
-    public string Name { get; private set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
     [Column(Order = 2)]
     [MaxLength(300)]
@@ -35,7 +35,14 @@ public class User : Entity
     public User()
     {
     }
-    
+
+    public User(string email, string name, int roleId)
+    {
+        Email = email;
+        Name = name;
+        RoleId = roleId;
+    }
+
     public User(string email, string name, int roleId, DateTime createdAt, bool active = true)
     {
         Email = email;
@@ -58,12 +65,12 @@ public class User : Entity
     public ProcessOutput Activate()
     {
         var condition = Condition.Create.False(Active).FailsWith("User already active");
-        
+
         if (condition.IsSatisfied)
         {
             Active = true;
         }
-        
+
         return condition.ToProcessOutput();
     }
 
@@ -73,16 +80,16 @@ public class User : Entity
             .False(Active).FailsWith("Can't delete active user")
             .ToProcessOutput();
     }
-    
+
     public ProcessOutput Deactivate()
     {
         var condition = Condition.Create.True(Active).FailsWith("User already inactive");
-        
+
         if (condition.IsSatisfied)
         {
             Active = false;
         }
-        
+
         return condition.ToProcessOutput();
     }
 
@@ -92,32 +99,33 @@ public class User : Entity
         Salt = salt;
     }
 
-    public ProcessOutput SetRole(int roleId)
+    public ProcessOutput Update(string name)
+    {
+        var condition = Condition.Create
+            .True(Active).FailsWith("Can't update inactive user")
+            .False(string.IsNullOrWhiteSpace(name)).FailsWith("Name cannot be empty");
+
+        if (condition.IsSatisfied)
+        {
+            Name = name;
+        }
+
+        return condition.ToProcessOutput();
+    }
+
+    public ProcessOutput UpdateRole(int roleId)
     {
         var validRole = Enum.IsDefined(typeof(Roles), roleId);
         var condition = Condition.Create
-                            .True(validRole).FailsWith("Role should be valid")
-                            .True(Active).FailsWith("Can't change role of inactive user")
-                            .True(roleId != RoleId).FailsWith("New role must be different from current role");
+            .True(validRole).FailsWith("Role should be valid")
+            .True(Active).FailsWith("Can't change role of inactive user")
+            .True(roleId != RoleId).FailsWith("New role must be different from current role");
 
         if (condition.IsSatisfied)
         {
             RoleId = roleId;
         }
 
-        return condition.ToProcessOutput();
-    }
-
-    public ProcessOutput Update(User updatedUser)
-    {
-        var condition = Condition.Create.True(Active).FailsWith("Can't update inactive user");
-        
-        if (condition.IsSatisfied)
-        {
-            Name = updatedUser.Name;
-            Email = updatedUser.Email;
-        }
-        
         return condition.ToProcessOutput();
     }
 }

@@ -1,4 +1,4 @@
-﻿using ArturRios.Common.WebApi.Security.Records;
+﻿using ArturRios.Common.Web.Security.Records;
 using ArturRios.UserManagement.Domain.Enums;
 using Bogus;
 

@@ -21,7 +21,7 @@ public static class RelationalDatabaseProvider
         services.AddSingleton(new BaseDbContextOptions { ConnectionString = connectionString });
 
         services.AddDbContext<RelationalDbContext>(options =>
-            options.UseNpgsql(connectionString), 
+            options.UseNpgsql(connectionString),
             optionsLifetime: ServiceLifetime.Singleton);
 
         services.AddDbContextFactory<RelationalDbContext>();
@@ -31,5 +31,7 @@ public static class RelationalDatabaseProvider
     public static void AddRelationalRepositories(this IServiceCollection services)
     {
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserReadOnlyRepository, UserReadOnlyRepository>();
+        services.AddScoped<IUserRangeRepository, UserRangeRepository>();
     }
 }

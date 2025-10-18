@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Pipelines\ArturRios.Common.Pipelines.csproj" />
+      <ProjectReference Include="..\ArturRios.UserManagement.Domain\ArturRios.UserManagement.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

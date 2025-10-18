@@ -2,8 +2,8 @@ using System.Net;
 using ArturRios.Common.Configuration.Enums;
 using ArturRios.Common.Test;
 using ArturRios.Common.Test.Attributes;
-using ArturRios.Common.WebApi.Security.Records;
-using ArturRios.UserManagement.Dto;
+using ArturRios.Common.Web.Security.Records;
+using ArturRios.UserManagement.Domain.Aggregates;
 using ArturRios.UserManagement.Test.Fixture;
 using ArturRios.UserManagement.Test.Mock;
 
@@ -14,8 +14,8 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
 {
     private const string AuthenticationRoute = "/Authentication";
 
-    private UserDto _testUser = new();
-    
+    private User _testUser = new();
+
     public Task InitializeAsync()
     {
         _testUser = fixture.CreateUsers().First();
@@ -34,11 +34,12 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
     {
         var credentials = CredentialsMock.New
             .WithEmail(_testUser.Email)
-            .WithPassword(_testUser.Password)
+            .WithPassword(fixture.GetPassword(_testUser.Id))
             .Generate();
 
-        var output = await PostAsync<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.OK);
+        var output = await Gateway.PostAsync<Authentication>(AuthenticationRoute, credentials);
 
+        Assert.Equal(HttpStatusCode.OK, output.GetStatusCode());
         Assert.NotNull(output);
         CustomAssert.NotNullOrWhiteSpace(output.Data?.Token);
         Assert.True(output.Data?.Valid);
@@ -53,8 +54,9 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithPassword("wrong-password")
             .Generate();
 
-        var output = await PostAsync<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        var output = await Gateway.PostAsync<Authentication>(AuthenticationRoute, credentials);
 
+        Assert.Equal(HttpStatusCode.BadRequest, output.GetStatusCode());
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
         Assert.False(output.Success);
@@ -65,11 +67,12 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
     {
         var credentials = CredentialsMock.New
             .WithEmail("wrong@mail.com")
-            .WithPassword(_testUser.Password)
+            .WithPassword(fixture.GetPassword(_testUser.Id))
             .Generate();
 
-        var output = await PostAsync<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        var output = await Gateway.PostAsync<Authentication>(AuthenticationRoute, credentials);
 
+        Assert.Equal(HttpStatusCode.BadRequest, output.GetStatusCode());
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
         Assert.False(output.Success);
@@ -83,8 +86,9 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithPassword("wrong-password")
             .Generate();
 
-        var output = await PostAsync<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        var output = await Gateway.PostAsync<Authentication>(AuthenticationRoute, credentials);
 
+        Assert.Equal(HttpStatusCode.BadRequest, output.GetStatusCode());
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
         Assert.False(output.Success);
@@ -99,11 +103,12 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
     {
         var credentials = CredentialsMock.New
             .WithEmail(email!)
-            .WithPassword(_testUser.Password)
+            .WithPassword(fixture.GetPassword(_testUser.Id))
             .Generate();
 
-        var output = await PostAsync<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        var output = await Gateway.PostAsync<Authentication>(AuthenticationRoute, credentials);
 
+        Assert.Equal(HttpStatusCode.BadRequest, output.GetStatusCode());
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
         Assert.False(output.Success);
@@ -120,8 +125,9 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithPassword(password!)
             .Generate();
 
-        var output = await PostAsync<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        var output = await Gateway.PostAsync<Authentication>(AuthenticationRoute, credentials);
 
+        Assert.Equal(HttpStatusCode.BadRequest, output.GetStatusCode());
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
         Assert.False(output.Success);
@@ -139,8 +145,9 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithPassword(password!)
             .Generate();
 
-        var output = await PostAsync<Authentication>(AuthenticationRoute, credentials, HttpStatusCode.BadRequest);
+        var output = await Gateway.PostAsync<Authentication>(AuthenticationRoute, credentials);
 
+        Assert.Equal(HttpStatusCode.BadRequest, output.GetStatusCode());
         Assert.NotNull(output);
         Assert.True(string.IsNullOrEmpty(output.Data?.Token));
         Assert.False(output.Success);

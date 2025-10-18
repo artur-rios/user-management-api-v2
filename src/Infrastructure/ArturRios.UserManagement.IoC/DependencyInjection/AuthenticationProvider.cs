@@ -1,4 +1,5 @@
 ﻿using ArturRios.Common.Security;
+using ArturRios.Common.Validation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -19,5 +20,7 @@ public static class AuthenticationProvider
 
         services.AddSingleton<IOptions<JwtTokenConfiguration>>(provider =>
             new OptionsWrapper<JwtTokenConfiguration>(provider.GetRequiredService<JwtTokenConfiguration>()));
+
+        services.AddScoped<IFluentValidator<JwtTokenConfiguration>, JwtTokenConfigurationValidator>();
     }
 }

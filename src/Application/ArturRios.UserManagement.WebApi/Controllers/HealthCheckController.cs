@@ -1,5 +1,7 @@
-﻿using ArturRios.Common.WebApi;
-using ArturRios.Common.WebApi.Security.Attributes;
+﻿using ArturRios.Common.Web.Api.Base;
+using ArturRios.Common.Web.Api.Output;
+using ArturRios.Common.Web.Http;
+using ArturRios.Common.Web.Security.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArturRios.UserManagement.WebApi.Controllers;
@@ -14,8 +16,11 @@ public class HealthCheckController : BaseController
     [AllowAnonymous]
     public ActionResult<WebApiOutput<string>> HelloWorld()
     {
-        WebApiOutput<string> result = new("Hello world!", ["User management Web API is ON"], true, HttpStatusCodes.Ok);
-            
+        var result = WebApiOutput<string>.New
+            .WithData("Hello world!")
+            .WithMessage("User management Web API is ON")
+            .WithHttpStatusCode(HttpStatusCodes.Ok);
+
         return Resolve(result);
     }
 }

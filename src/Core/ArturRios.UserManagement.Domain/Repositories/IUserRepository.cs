@@ -2,4 +2,4 @@
 
 namespace ArturRios.UserManagement.Domain.Repositories;
 
-public interface IUserRepository : ICrudRepository<Aggregates.User>, IMultiRepository<Aggregates.User>;
+public interface IUserRepository : ICrudRepository<Aggregates.User>;

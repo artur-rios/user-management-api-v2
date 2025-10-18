@@ -9,15 +9,15 @@
 
     <ItemGroup>
         <PackageReference Include="DotNetEnv" Version="3.1.1"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.9" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.10" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Output\ArturRios.Common.Output.csproj"/>
-        <ProjectReference Include="..\..\..\common\src\ArturRios.Common.WebApi\ArturRios.Common.WebApi.csproj"/>
+        <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Pipelines\ArturRios.Common.Pipelines.csproj" />
+        <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Web\ArturRios.Common.Web.csproj" />
         <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Domain\ArturRios.UserManagement.Domain.csproj"/>
         <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Dto\ArturRios.UserManagement.Dto.csproj"/>
-        <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Services\ArturRios.UserManagement.Services.csproj"/>
         <ProjectReference Include="..\..\Infrastructure\ArturRios.UserManagement.Data.Relational\ArturRios.UserManagement.Data.Relational.csproj" />
         <ProjectReference Include="..\..\Infrastructure\ArturRios.UserManagement.IoC\ArturRios.UserManagement.IoC.csproj" />
     </ItemGroup>
@@ -29,6 +29,10 @@
         <Content Include="Settings\appsettings.*">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Security\" />
     </ItemGroup>
 
 </Project>

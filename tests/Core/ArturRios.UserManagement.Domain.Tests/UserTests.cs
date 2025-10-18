@@ -57,7 +57,7 @@ public class UserTests
     {
         var user = UserMock.New.Active().WithRole(Roles.Regular).Generate();
 
-        var result = user.SetRole((int)Roles.Test);
+        var result = user.UpdateRole((int)Roles.Test);
 
         Assert.True(result.Success);
         Assert.Empty(result.Errors);
@@ -69,7 +69,7 @@ public class UserTests
     {
         var user = UserMock.New.Active().WithRole(Roles.Regular).Generate();
 
-        var result = user.SetRole(999);
+        var result = user.UpdateRole(999);
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
@@ -82,7 +82,7 @@ public class UserTests
     {
         var user = UserMock.New.Active().WithRole(Roles.Regular).Generate();
 
-        var result = user.SetRole((int)Roles.Regular);
+        var result = user.UpdateRole((int)Roles.Regular);
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
@@ -94,9 +94,8 @@ public class UserTests
     public void Should_AllowUpdate()
     {
         var user = UserMock.New.Active().Generate();
-        var updatedUser = UserMock.New.Active().Generate();
 
-        var canUpdate = user.Update(updatedUser);
+        var canUpdate = user.Update("New Name");
 
         Assert.True(canUpdate.Success);
         Assert.Empty(canUpdate.Errors);
@@ -106,9 +105,8 @@ public class UserTests
     public void ShouldNot_AllowUpdate_When_UserIsInactive()
     {
         var user = UserMock.New.Inactive().Generate();
-        var updatedUser = UserMock.New.Active().Generate();
 
-        var canUpdate = user.Update(updatedUser);
+        var canUpdate = user.Update("New Name");
 
         Assert.False(canUpdate.Success);
         Assert.NotEmpty(canUpdate.Errors);

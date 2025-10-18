@@ -10,7 +10,7 @@ public class HealthCheckTests : WebApiTest<Program>
 
     public HealthCheckTests(EnvironmentType environment = EnvironmentType.Local) : base(environment)
     {
-        _webApiClient = new WebApiClient(Client);
+        _webApiClient = new WebApiClient(Gateway.Client);
     }
 
     [FunctionalFact]
