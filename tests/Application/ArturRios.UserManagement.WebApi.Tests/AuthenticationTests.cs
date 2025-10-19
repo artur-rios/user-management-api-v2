@@ -1,5 +1,6 @@
 using System.Net;
 using ArturRios.Common.Configuration.Enums;
+using ArturRios.Common.Output;
 using ArturRios.Common.Test;
 using ArturRios.Common.Test.Attributes;
 using ArturRios.Common.Web.Security.Records;
@@ -37,13 +38,13 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithPassword(fixture.GetPassword(_testUser.Id))
             .Generate();
 
-        var output = await Gateway.PostAsync<Authentication>(AuthenticationRoute, credentials);
+        var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
-        Assert.Equal(HttpStatusCode.OK, output.GetStatusCode());
-        Assert.NotNull(output);
-        CustomAssert.NotNullOrWhiteSpace(output.Data?.Token);
-        Assert.True(output.Data?.Valid);
-        Assert.True(output.Success);
+        Assert.Equal(HttpStatusCode.OK, output.StatusCode);
+        Assert.NotNull(output.Body?.Data);
+        CustomAssert.NotNullOrWhiteSpace(output.Body.Data?.Token);
+        Assert.True(output.Body.Data?.Valid);
+        Assert.True(output.Body.Success);
     }
 
     [FunctionalFact]
@@ -54,12 +55,12 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithPassword("wrong-password")
             .Generate();
 
-        var output = await Gateway.PostAsync<Authentication>(AuthenticationRoute, credentials);
+        var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
-        Assert.Equal(HttpStatusCode.BadRequest, output.GetStatusCode());
-        Assert.NotNull(output);
-        Assert.True(string.IsNullOrEmpty(output.Data?.Token));
-        Assert.False(output.Success);
+        Assert.Equal(HttpStatusCode.Unauthorized, output.StatusCode);
+        Assert.NotNull(output.Body?.Data);
+        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.False(output.Body.Success);
     }
 
     [FunctionalFact]
@@ -70,12 +71,12 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithPassword(fixture.GetPassword(_testUser.Id))
             .Generate();
 
-        var output = await Gateway.PostAsync<Authentication>(AuthenticationRoute, credentials);
+        var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
-        Assert.Equal(HttpStatusCode.BadRequest, output.GetStatusCode());
-        Assert.NotNull(output);
-        Assert.True(string.IsNullOrEmpty(output.Data?.Token));
-        Assert.False(output.Success);
+        Assert.Equal(HttpStatusCode.Unauthorized, output.StatusCode);
+        Assert.NotNull(output.Body?.Data);
+        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.False(output.Body.Success);
     }
 
     [FunctionalFact]
@@ -86,70 +87,115 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
             .WithPassword("wrong-password")
             .Generate();
 
-        var output = await Gateway.PostAsync<Authentication>(AuthenticationRoute, credentials);
+        var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
-        Assert.Equal(HttpStatusCode.BadRequest, output.GetStatusCode());
-        Assert.NotNull(output);
-        Assert.True(string.IsNullOrEmpty(output.Data?.Token));
-        Assert.False(output.Success);
+        Assert.Equal(HttpStatusCode.Unauthorized, output.StatusCode);
+        Assert.NotNull(output.Body?.Data);
+        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.False(output.Body.Success);
     }
 
     [FunctionalTheory]
     [InlineData("")]
-    [InlineData(null)]
     [InlineData(" ")]
     [InlineData("invalid-email")]
-    public async Task ShouldNot_AuthenticateUser_WhenEmailIsInvalid(string? email)
+    public async Task ShouldNot_AuthenticateUser_WhenEmailIsInvalid(string email)
     {
         var credentials = CredentialsMock.New
-            .WithEmail(email!)
+            .WithEmail(email)
             .WithPassword(fixture.GetPassword(_testUser.Id))
             .Generate();
 
-        var output = await Gateway.PostAsync<Authentication>(AuthenticationRoute, credentials);
+        var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
-        Assert.Equal(HttpStatusCode.BadRequest, output.GetStatusCode());
-        Assert.NotNull(output);
-        Assert.True(string.IsNullOrEmpty(output.Data?.Token));
-        Assert.False(output.Success);
+        Assert.Equal(HttpStatusCode.Unauthorized, output.StatusCode);
+        Assert.NotNull(output.Body?.Data);
+        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.False(output.Body.Success);
+    }
+
+    [FunctionalFact]
+    public async Task Should_Not_Authenticate_When_EmailIsNull()
+    {
+        var credentials = CredentialsMock.New
+            .WithEmail(null!)
+            .WithPassword(fixture.GetPassword(_testUser.Id))
+            .Generate();
+
+        var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
+
+        Assert.Equal(HttpStatusCode.BadRequest, output.StatusCode);
+        Assert.NotNull(output.Body?.Data);
+        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.False(output.Body.Success);
     }
 
     [FunctionalTheory]
     [InlineData("")]
-    [InlineData(null)]
     [InlineData(" ")]
-    public async Task ShouldNot_AuthenticateUser_When_PasswordIsInvalid(string? password)
+    public async Task ShouldNot_AuthenticateUser_When_PasswordIsInvalid(string password)
     {
         var credentials = CredentialsMock.New
             .WithEmail(_testUser.Email)
-            .WithPassword(password!)
+            .WithPassword(password)
             .Generate();
 
-        var output = await Gateway.PostAsync<Authentication>(AuthenticationRoute, credentials);
+        var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
-        Assert.Equal(HttpStatusCode.BadRequest, output.GetStatusCode());
-        Assert.NotNull(output);
-        Assert.True(string.IsNullOrEmpty(output.Data?.Token));
-        Assert.False(output.Success);
+        Assert.Equal(HttpStatusCode.Unauthorized, output.StatusCode);
+        Assert.NotNull(output.Body?.Data);
+        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.False(output.Body.Success);
+    }
+
+    [FunctionalFact]
+    public async Task Should_Not_Authenticate_When_PasswordIsNull()
+    {
+        var credentials = CredentialsMock.New
+            .WithEmail(_testUser.Email)
+            .WithPassword(null!)
+            .Generate();
+
+        var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
+
+        Assert.Equal(HttpStatusCode.BadRequest, output.StatusCode);
+        Assert.NotNull(output.Body?.Data);
+        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.False(output.Body.Success);
     }
 
     [FunctionalTheory]
     [InlineData("", "")]
-    [InlineData(null, null)]
     [InlineData(" ", "")]
     [InlineData("invalid-email", "")]
-    public async Task Should_Not_AuthenticateUser_When_CredentialsAreInvalid(string? email, string? password)
+    public async Task Should_Not_AuthenticateUser_When_CredentialsAreInvalid(string email, string password)
     {
         var credentials = CredentialsMock.New
-            .WithEmail(email!)
-            .WithPassword(password!)
+            .WithEmail(email)
+            .WithPassword(password)
             .Generate();
 
-        var output = await Gateway.PostAsync<Authentication>(AuthenticationRoute, credentials);
+        var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
-        Assert.Equal(HttpStatusCode.BadRequest, output.GetStatusCode());
-        Assert.NotNull(output);
-        Assert.True(string.IsNullOrEmpty(output.Data?.Token));
-        Assert.False(output.Success);
+        Assert.Equal(HttpStatusCode.Unauthorized, output.StatusCode);
+        Assert.NotNull(output.Body?.Data);
+        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.False(output.Body.Success);
+    }
+
+    [FunctionalFact]
+    public async Task Should_Not_Authenticate_When_CredentialsAreNull()
+    {
+        var credentials = CredentialsMock.New
+            .WithEmail(null!)
+            .WithPassword(null!)
+            .Generate();
+
+        var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
+
+        Assert.Equal(HttpStatusCode.BadRequest, output.StatusCode);
+        Assert.NotNull(output.Body?.Data);
+        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.False(output.Body.Success);
     }
 }

@@ -1,3 +1,4 @@
+using System.Net;
 using ArturRios.Common.Configuration.Enums;
 using ArturRios.Common.Test;
 using ArturRios.Common.Test.Attributes;
@@ -18,8 +19,9 @@ public class HealthCheckTests : WebApiTest<Program>
     {
         var output = await _webApiClient.HealthCheck.HelloWorld();
 
-        Assert.NotNull(output);
-        Assert.Equal("Hello world!", output.Data);
-        Assert.Equal("User management Web API is ON", output.Messages.First());
+        Assert.Equal(HttpStatusCode.OK, output.StatusCode);
+        Assert.NotNull(output.Body?.Data);
+        Assert.Equal("Hello world!", output.Body.Data);
+        Assert.Equal("User management Web API is ON", output.Body.Messages.First());
     }
 }

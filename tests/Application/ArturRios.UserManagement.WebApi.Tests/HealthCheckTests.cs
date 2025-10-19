@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using ArturRios.Common.Configuration.Enums;
+using ArturRios.Common.Output;
 using ArturRios.Common.Test;
 using ArturRios.Common.Test.Attributes;
 
@@ -12,11 +13,11 @@ public class HealthCheckTests(EnvironmentType environment = EnvironmentType.Loca
     [FunctionalFact]
     public async Task Should_DoHealthCheck()
     {
-        var output = await Gateway.GetAsync<string>(HealthCheckRoute);
+        var output = await Gateway.GetAsync<DataOutput<string>>(HealthCheckRoute);
 
-        Assert.Equal(HttpStatusCode.OK, output.GetStatusCode());
-        Assert.NotNull(output);
-        Assert.Equal("Hello world!", output.Data);
-        Assert.Equal("User management Web API is ON", output.Messages.First());
+        Assert.Equal(HttpStatusCode.OK, output.StatusCode);
+        Assert.NotNull(output.Body?.Data);
+        Assert.Equal("Hello world!", output.Body.Data);
+        Assert.Equal("User management Web API is ON", output.Body.Messages.First());
     }
 }

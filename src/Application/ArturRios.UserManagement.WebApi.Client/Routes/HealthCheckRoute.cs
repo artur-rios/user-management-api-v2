@@ -1,14 +1,15 @@
-﻿using ArturRios.Common.Web.Api.Client;
-using ArturRios.Common.Web.Api.Output;
+﻿using ArturRios.Common.Output;
+using ArturRios.Common.Web.Api.Client;
+using ArturRios.Common.Web.Http;
 
 namespace ArturRios.UserManagement.WebApi.Client.Routes;
 
-public class HealthCheckRoute(HttpClient httpClient) : BaseWebApiClientRoute(httpClient)
+public class HealthCheckRoute(HttpGateway gateway) : BaseWebApiClientRoute(gateway)
 {
     public override string BaseUrl => "/HealthCheck";
 
-    public async Task<WebApiOutput<string>?> HelloWorld()
+    public async Task<HttpOutput<DataOutput<string?>?>> HelloWorld()
     {
-        return await GetAsync<string>(BaseUrl);
+        return await Gateway.GetAsync<DataOutput<string?>>(BaseUrl);
     }
 }

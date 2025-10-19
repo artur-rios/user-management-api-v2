@@ -15,8 +15,8 @@ public class WebApiClient : BaseWebApiClient
 
     protected override void SetRoutes()
     {
-        Authentication = new AuthenticationRoute(HttpClient);
-        HealthCheck = new HealthCheckRoute(HttpClient);
-        User = new UserRoute(HttpClient);
+        Authentication = new AuthenticationRoute(Gateway);
+        HealthCheck = new HealthCheckRoute(Gateway);
+        User = new UserRoute(Gateway);
     }
 }

@@ -1,8 +1,12 @@
-﻿using ArturRios.Common.Web.Api.Configuration;
+﻿using ArturRios.Common.Pipelines;
+using ArturRios.Common.Web.Api.Configuration;
 using ArturRios.Common.Web.Middleware;
+using ArturRios.Common.Web.Security.Interfaces;
 using ArturRios.Common.Web.Security.Middleware;
+using ArturRios.Common.Web.Security.Providers;
 using ArturRios.UserManagement.Data.Relational.Configuration;
 using ArturRios.UserManagement.IoC.DependencyInjection;
+using ArturRios.UserManagement.WebApi.Security;
 
 namespace ArturRios.UserManagement.WebApi;
 
@@ -31,6 +35,10 @@ public class Startup(string[] args) : WebApiStartup(args)
 
         Logger.LogInformation("Dependencies added successfully");
 
+        ConfigureSecurity();
+
+        Logger.LogInformation("Security configured successfully");
+
         AddCustomInvalidModelStateResponse();
         UseSwaggerGen(jwtAuthentication: true);
 
@@ -57,6 +65,7 @@ public class Startup(string[] args) : WebApiStartup(args)
 
     public override void AddDependencies()
     {
+        Builder.Services.AddSingleton<Pipeline>();
         Builder.Services.AddCommandValidators();
         Builder.Services.AddCommands();
         Builder.Services.AddQueries();
@@ -82,6 +91,9 @@ public class Startup(string[] args) : WebApiStartup(args)
 
     public override void ConfigureSecurity()
     {
+        Builder.Services.AddJwtTokenConfiguration();
+        Builder.Services.AddScoped<TokenProvider>();
+        Builder.Services.AddScoped<IAuthenticationProvider, AuthenticationProvider>();
         Builder.Services.AddAuthentication("Jwt").AddJwtBearer("Jwt");
         Builder.Services.AddAuthorization();
     }
