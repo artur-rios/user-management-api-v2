@@ -13,7 +13,6 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Web\ArturRios.Common.Web.csproj" />
       <ProjectReference Include="..\..\..\src\Core\ArturRios.UserManagement.Domain\ArturRios.UserManagement.Domain.csproj" />
-      <ProjectReference Include="..\..\..\src\Core\ArturRios.UserManagement.Dto\ArturRios.UserManagement.Dto.csproj" />
     </ItemGroup>
 
 </Project>

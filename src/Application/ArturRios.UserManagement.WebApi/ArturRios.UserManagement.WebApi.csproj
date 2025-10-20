@@ -17,7 +17,6 @@
         <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Pipelines\ArturRios.Common.Pipelines.csproj" />
         <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Web\ArturRios.Common.Web.csproj" />
         <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Domain\ArturRios.UserManagement.Domain.csproj"/>
-        <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Dto\ArturRios.UserManagement.Dto.csproj"/>
         <ProjectReference Include="..\..\Infrastructure\ArturRios.UserManagement.Data.Relational\ArturRios.UserManagement.Data.Relational.csproj" />
         <ProjectReference Include="..\..\Infrastructure\ArturRios.UserManagement.IoC\ArturRios.UserManagement.IoC.csproj" />
     </ItemGroup>

@@ -29,7 +29,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Test\ArturRios.Common.Test.csproj" />
-      <ProjectReference Include="..\..\..\src\Core\ArturRios.UserManagement.Dto\ArturRios.UserManagement.Dto.csproj" />
       <ProjectReference Include="..\..\Setup\ArturRios.UserManagement.Test.Mock\ArturRios.UserManagement.Test.Mock.csproj" />
     </ItemGroup>
 

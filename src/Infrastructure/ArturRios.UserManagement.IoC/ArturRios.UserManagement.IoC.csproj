@@ -9,7 +9,6 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Security\ArturRios.Common.Security.csproj" />
       <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Command\ArturRios.UserManagement.Command.csproj" />
-      <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Dto\ArturRios.UserManagement.Dto.csproj" />
       <ProjectReference Include="..\..\Core\ArturRios.UserManagement.Query\ArturRios.UserManagement.Query.csproj" />
       <ProjectReference Include="..\ArturRios.UserManagement.Data.Relational\ArturRios.UserManagement.Data.Relational.csproj" />
     </ItemGroup>
