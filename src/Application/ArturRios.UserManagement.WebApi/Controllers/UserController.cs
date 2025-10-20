@@ -55,10 +55,10 @@ public class UserController(Pipeline pipeline) : Controller
     [HttpGet]
     [Route("{id:int}")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
-    public ActionResult<PaginatedOutput<UserQueryOutput>> GetUserById([FromRoute] int id)
+    public ActionResult<DataOutput<UserQueryOutput?>> GetUserById([FromRoute] int id)
     {
         var query = new GetUserByIdQuery { Id = id };
-        var output = pipeline.ExecuteQuery<GetUserByIdQuery, UserQueryOutput>(query);
+        var output = pipeline.ExecuteSingleQuery<GetUserByIdQuery, UserQueryOutput>(query);
 
         return ResponseResolver.Resolve(output);
     }

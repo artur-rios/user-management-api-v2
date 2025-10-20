@@ -7,16 +7,15 @@ using ArturRios.UserManagement.Query.Queries;
 namespace ArturRios.UserManagement.Query.Handlers;
 
 public class GetUserByIdQueryHandler(IUserReadOnlyRepository userRepository)
-    : IQueryHandler<GetUserByIdQuery, UserQueryOutput>
+    : ISingleQueryHandler<GetUserByIdQuery, UserQueryOutput>
 {
-    public PaginatedOutput<UserQueryOutput> Handle(GetUserByIdQuery query)
+    public DataOutput<UserQueryOutput?> Handle(GetUserByIdQuery query)
     {
         var user = userRepository.GetById(query.Id);
 
         if (user is null)
         {
-            return PaginatedOutput<UserQueryOutput>.New
-                .WithEmptyData()
+            return DataOutput<UserQueryOutput?>.New
                 .WithMessage($"User with Id '{query.Id}' not found");
         }
 
@@ -30,7 +29,7 @@ public class GetUserByIdQueryHandler(IUserReadOnlyRepository userRepository)
             Active = user.Active
         };
 
-        return PaginatedOutput<UserQueryOutput>.New
+        return DataOutput<UserQueryOutput?>.New
             .WithData(output)
             .WithMessage($"User with Id '{query.Id}' found");
     }

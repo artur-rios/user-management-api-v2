@@ -12,14 +12,14 @@ public class AuthenticationProvider(Pipeline pipeline) : IAuthenticationProvider
     public AuthenticatedUser? GetAuthenticatedUserById(int id)
     {
         var query = new GetUserByIdQuery { Id = id };
-        var output = pipeline.ExecuteQuery<GetUserByIdQuery, UserQueryOutput>(query);
+        var output = pipeline.ExecuteSingleQuery<GetUserByIdQuery, UserQueryOutput>(query);
 
-        if (!output.Success || output.Data.IsEmpty())
+        if (!output.Success || output.Data is null)
         {
             return null;
         }
 
-        var user = output.Data!.First();
+        var user = output.Data;
 
         return new AuthenticatedUser(user.Id, user.RoleId);
 

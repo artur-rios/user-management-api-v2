@@ -39,12 +39,15 @@ public class CreateUserCommandHandler(IFluentValidator<CreateUserCommand> valida
 
         user.SetPassword(hash.Value, hash.Salt);
 
+        userRepository.Create(user);
+
         var data = new CreateUserCommandOutput
         {
             CreatedUserId = user.Id
         };
 
         output.Data = data;
+        output.AddMessage("User created successfully");
 
         return output;
     }

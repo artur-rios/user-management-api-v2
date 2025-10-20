@@ -58,8 +58,8 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
         var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
         Assert.Equal(HttpStatusCode.Unauthorized, output.StatusCode);
-        Assert.NotNull(output.Body?.Data);
-        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.NotNull(output.Body);
+        Assert.Null(output.Body.Data);
         Assert.False(output.Body.Success);
     }
 
@@ -74,8 +74,8 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
         var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
         Assert.Equal(HttpStatusCode.Unauthorized, output.StatusCode);
-        Assert.NotNull(output.Body?.Data);
-        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.NotNull(output.Body);
+        Assert.Null(output.Body.Data);
         Assert.False(output.Body.Success);
     }
 
@@ -90,8 +90,8 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
         var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
         Assert.Equal(HttpStatusCode.Unauthorized, output.StatusCode);
-        Assert.NotNull(output.Body?.Data);
-        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.NotNull(output.Body);
+        Assert.Null(output.Body.Data);
         Assert.False(output.Body.Success);
     }
 
@@ -109,8 +109,8 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
         var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
         Assert.Equal(HttpStatusCode.Unauthorized, output.StatusCode);
-        Assert.NotNull(output.Body?.Data);
-        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.NotNull(output.Body);
+        Assert.Null(output.Body.Data);
         Assert.False(output.Body.Success);
     }
 
@@ -125,8 +125,8 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
         var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
         Assert.Equal(HttpStatusCode.BadRequest, output.StatusCode);
-        Assert.NotNull(output.Body?.Data);
-        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.NotNull(output.Body);
+        Assert.Null(output.Body.Data);
         Assert.False(output.Body.Success);
     }
 
@@ -143,8 +143,8 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
         var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
         Assert.Equal(HttpStatusCode.Unauthorized, output.StatusCode);
-        Assert.NotNull(output.Body?.Data);
-        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.NotNull(output.Body);
+        Assert.Null(output.Body.Data);
         Assert.False(output.Body.Success);
     }
 
@@ -159,8 +159,8 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
         var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
         Assert.Equal(HttpStatusCode.BadRequest, output.StatusCode);
-        Assert.NotNull(output.Body?.Data);
-        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.NotNull(output.Body);
+        Assert.Null(output.Body.Data);
         Assert.False(output.Body.Success);
     }
 
@@ -178,8 +178,8 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
         var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
         Assert.Equal(HttpStatusCode.Unauthorized, output.StatusCode);
-        Assert.NotNull(output.Body?.Data);
-        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.NotNull(output.Body);
+        Assert.Null(output.Body.Data);
         Assert.False(output.Body.Success);
     }
 
@@ -194,8 +194,8 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
         var output = await Gateway.PostAsync<DataOutput<Authentication>>(AuthenticationRoute, credentials);
 
         Assert.Equal(HttpStatusCode.BadRequest, output.StatusCode);
-        Assert.NotNull(output.Body?.Data);
-        Assert.True(string.IsNullOrEmpty(output.Body.Data?.Token));
+        Assert.NotNull(output.Body);
+        Assert.Null(output.Body.Data);
         Assert.False(output.Body.Success);
     }
 }

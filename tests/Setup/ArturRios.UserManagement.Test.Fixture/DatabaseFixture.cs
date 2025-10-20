@@ -10,21 +10,9 @@ namespace ArturRios.UserManagement.Test.Fixture;
 // Reason: this class is meant to be used as a fixture for xunit test and is not explicitly instantiated
 public class DatabaseFixture : IDisposable
 {
-    private readonly RelationalDbContextFactory _dbContextFactory;
-    private readonly TestRepository _testRepository;
-    private readonly UserRepository _userRepository;
-    private readonly UserRangeRepository _userRangeRepository;
-
+    private readonly RelationalDbContextFactory _dbContextFactory = new();
     private readonly List<int> _createdIds = [];
     private readonly Dictionary<int, string> _createdPasswords = [];
-
-    public DatabaseFixture()
-    {
-        _dbContextFactory = new RelationalDbContextFactory();
-        _testRepository = new TestRepository(_dbContextFactory);
-        _userRepository = new UserRepository(_dbContextFactory);
-        _userRangeRepository = new UserRangeRepository(_dbContextFactory);
-    }
 
     public IEnumerable<User> CreateUsers(bool active = true, int quantity = 1)
     {
@@ -43,7 +31,10 @@ public class DatabaseFixture : IDisposable
 
             var user = userMock.Generate();
 
-            var createdId = _userRepository.Create(user);
+            dbContext.Users.Add(user);
+            dbContext.SaveChanges();
+
+            var createdId = user.Id;
 
             _createdIds.Add(createdId);
 
@@ -66,27 +57,46 @@ public class DatabaseFixture : IDisposable
 
     public int GetUserNextId()
     {
-        return _testRepository.GetUserNextId();
+        var maxId = GetUserMaxId();
+
+        return maxId + 1 ?? 0;
     }
 
     public IEnumerable<User> GetAllUsers()
     {
-        return _userRepository.GetAll();
+        using var dbContext = _dbContextFactory.CreateDbContext();
+
+        return dbContext.Users.AsNoTracking().ToList();
     }
 
     public User? GetUserById(int id)
     {
-        return _userRepository.GetById(id);
+        using var dbContext = _dbContextFactory.CreateDbContext();
+
+        return dbContext.Users.AsNoTracking().FirstOrDefault(u => u.Id == id);
     }
 
     public void DeleteUsers(IEnumerable<int> ids)
     {
-        _userRangeRepository.DeleteRange(ids.ToList());
+        using var dbContext = _dbContextFactory.CreateDbContext();
+
+        var entities = dbContext.Users.Where(e => ids.Contains(e.Id)).ToList();
+
+        dbContext.Users.RemoveRange(entities);
+
+        dbContext.SaveChanges();
     }
 
     public void Dispose()
     {
-        _userRangeRepository.DeleteRange(_createdIds);
+        DeleteUsers(_createdIds);
         GC.SuppressFinalize(this);
+    }
+
+    private int? GetUserMaxId()
+    {
+        using var dbContext = _dbContextFactory.CreateDbContext();
+
+        return dbContext.Users.OrderByDescending(u => u.Id).FirstOrDefault()?.Id;
     }
 }

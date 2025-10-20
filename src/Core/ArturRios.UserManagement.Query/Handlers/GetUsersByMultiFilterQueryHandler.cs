@@ -35,7 +35,7 @@ public class GetUsersByMultiFilterQueryHandler(IUserReadOnlyRepository userRepos
             dbQuery = dbQuery.Where(e => query.RoleIds!.Contains(e.RoleId));
         }
 
-        return dbQuery.Select(e => new UserQueryOutput
+        var output = dbQuery.Select(e => new UserQueryOutput
         {
             Id = e.Id,
             Name = e.Name,
@@ -44,5 +44,16 @@ public class GetUsersByMultiFilterQueryHandler(IUserReadOnlyRepository userRepos
             CreatedAt = e.CreatedAt,
             Active = e.Active
         }).Paginate(query.PageNumber, query.PageSize);
+
+        if (output.Data is not null && output.Data.Count > 0)
+        {
+            output.AddMessage($"Returning page {query.PageNumber} of users with page size {query.PageSize}");
+        }
+        else
+        {
+            output.AddMessage("No users found for the specified filters");
+        }
+
+        return output;
     }
 }

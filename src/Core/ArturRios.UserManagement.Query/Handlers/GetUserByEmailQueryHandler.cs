@@ -7,16 +7,15 @@ using ArturRios.UserManagement.Query.Queries;
 namespace ArturRios.UserManagement.Query.Handlers;
 
 public class GetUserByEmailQueryHandler(IUserReadOnlyRepository userRepository)
-    : IQueryHandler<GetUserByEmailQuery, UserQueryOutput>
+    : ISingleQueryHandler<GetUserByEmailQuery, UserQueryOutput>
 {
-    public PaginatedOutput<UserQueryOutput> Handle(GetUserByEmailQuery query)
+    public DataOutput<UserQueryOutput?> Handle(GetUserByEmailQuery query)
     {
         var user = userRepository.GetAll().FirstOrDefault(u => u.Email == query.Email);
 
         if (user is null)
         {
-            return PaginatedOutput<UserQueryOutput>.New
-                .WithEmptyData()
+            return DataOutput<UserQueryOutput?>.New
                 .WithMessage($"User with email '{query.Email}' not found");
         }
 
@@ -30,7 +29,7 @@ public class GetUserByEmailQueryHandler(IUserReadOnlyRepository userRepository)
             Active = user.Active
         };
 
-        return PaginatedOutput<UserQueryOutput>.New
+        return DataOutput<UserQueryOutput?>.New
             .WithData(output)
             .WithMessage($"User with email '{query.Email}' found");
     }

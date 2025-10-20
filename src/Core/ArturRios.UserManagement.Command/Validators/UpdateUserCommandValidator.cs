@@ -8,6 +8,6 @@ public class UpdateUserCommandValidator : FluentValidator<UpdateUserCommand>
 {
     public UpdateUserCommandValidator()
     {
-        RuleFor(command => command.Name).NotEmpty();
+        RuleFor(command => command.Name).NotEmpty().WithMessage("Name should be valid");
     }
 }

@@ -7,15 +7,5 @@ public class TestRepository(IDbContextFactory<RelationalDbContext> dbContextFact
 {
     private readonly RelationalDbContext _dbContext = dbContextFactory.CreateDbContext();
 
-    public int GetUserNextId()
-    {
-        var maxId = GetUserMaxId();
-        
-        return maxId + 1 ?? 0;
-    }
 
-    private int? GetUserMaxId()
-    {
-        return _dbContext.Users.OrderByDescending(u => u.Id).FirstOrDefault()?.Id;
-    }
 }

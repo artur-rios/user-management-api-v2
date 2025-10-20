@@ -10,8 +10,8 @@ public static class QueryProvider
 {
     public static void AddQueries(this IServiceCollection services)
     {
-        services.AddScoped<IQueryHandler<GetUserByEmailQuery, UserQueryOutput>, GetUserByEmailQueryHandler>();
-        services.AddScoped<IQueryHandler<GetUserByIdQuery, UserQueryOutput>, GetUserByIdQueryHandler>();
+        services.AddScoped<ISingleQueryHandler<GetUserByEmailQuery, UserQueryOutput>, GetUserByEmailQueryHandler>();
+        services.AddScoped<ISingleQueryHandler<GetUserByIdQuery, UserQueryOutput>, GetUserByIdQueryHandler>();
         services.AddScoped<IQueryHandler<GetUsersByFilterQuery, UserQueryOutput>, GetUsersByFilterQueryHandler>();
         services.AddScoped<IQueryHandler<GetUsersByMultiFilterQuery, UserQueryOutput>, GetUsersByMultiFilterQueryHandler>();
     }

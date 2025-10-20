@@ -65,7 +65,7 @@ public class Startup(string[] args) : WebApiStartup(args)
 
     public override void AddDependencies()
     {
-        Builder.Services.AddSingleton<Pipeline>();
+        Builder.Services.AddScoped<Pipeline>();
         Builder.Services.AddCommandValidators();
         Builder.Services.AddCommands();
         Builder.Services.AddQueries();

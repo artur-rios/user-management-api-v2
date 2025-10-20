@@ -35,7 +35,7 @@ public class GetUsersByFilterQueryHandler(IUserReadOnlyRepository userRepository
             dbQuery = dbQuery.Where(e => e.Active == query.Active.Value);
         }
 
-        return dbQuery.Select(e => new UserQueryOutput
+        var output = dbQuery.Select(e => new UserQueryOutput
         {
             Id = e.Id,
             Name = e.Name,
@@ -44,5 +44,16 @@ public class GetUsersByFilterQueryHandler(IUserReadOnlyRepository userRepository
             CreatedAt = e.CreatedAt,
             Active = e.Active
         }).Paginate(query.PageNumber, query.PageSize);
+
+        if (output.Data is not null && output.Data.Count > 0)
+        {
+            output.AddMessage($"Returning page {query.PageNumber} of users with page size {query.PageSize}");
+        }
+        else
+        {
+            output.AddMessage("No users found for the specified filters");
+        }
+
+        return output;
     }
 }

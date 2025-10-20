@@ -36,20 +36,24 @@ public class UpdateUserCommandHandler(IFluentValidator<UpdateUserCommand> valida
         if (result.Success)
         {
             userRepository.Update(user);
+
+            var data = new UpdateUserCommandOutput
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                RoleId = user.RoleId,
+                CreatedAt = user.CreatedAt,
+                Active = user.Active
+            };
+
+            output.Data = data;
+            output.AddMessage("User updated with success");
         }
-
-        var data = new UpdateUserCommandOutput
+        else
         {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            RoleId = user.RoleId,
-            CreatedAt = user.CreatedAt,
-            Active = user.Active
-        };
-
-        output.Data = data;
-        output.AddMessage("User updated with success");
+            output.AddErrors(result.Errors);
+        }
 
         return output;
     }
