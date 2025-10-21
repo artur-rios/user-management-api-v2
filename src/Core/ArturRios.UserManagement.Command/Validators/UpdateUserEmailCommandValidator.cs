@@ -9,7 +9,7 @@ public class UpdateUserEmailCommandValidator : FluentValidator<UpdateUserEmailCo
 {
     public UpdateUserEmailCommandValidator()
     {
-        RuleFor(command => command.Id).GreaterThan(0);
+        RuleFor(command => command.UserId).GreaterThan(0);
         RuleFor(user => user.Email).Custom((email, context) =>
         {
             if (!email.IsValidEmail())

@@ -2,6 +2,6 @@
 
 public class UpdateUserEmailCommand : Common.Pipelines.Commands.Command
 {
-    public required int Id { get; set; }
+    public required int UserId { get; set; }
     public required string Email { get; set; }
 }

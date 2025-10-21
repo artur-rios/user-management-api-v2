@@ -4,5 +4,5 @@ namespace ArturRios.UserManagement.Command.Output;
 
 public class UpdateUserEmailCommandOutput : CommandOutput
 {
-    public required string NewEmail { get; set; }
+    public required string UpdatedEmail { get; set; }
 }

@@ -113,6 +113,21 @@ public class User : Entity
         return condition.ToProcessOutput();
     }
 
+    public ProcessOutput UpdateEmail(string email)
+    {
+        var condition = Condition.Create
+            .False(string.IsNullOrWhiteSpace(email)).FailsWith("Email cannot be empty")
+            .False(email == Email).FailsWith("New email must be different from current email")
+            .True(Active).FailsWith("Can't change email of inactive user");
+
+        if (condition.IsSatisfied)
+        {
+            Email = email;
+        }
+
+        return condition.ToProcessOutput();
+    }
+
     public ProcessOutput UpdateRole(int roleId)
     {
         var validRole = Enum.IsDefined(typeof(Roles), roleId);

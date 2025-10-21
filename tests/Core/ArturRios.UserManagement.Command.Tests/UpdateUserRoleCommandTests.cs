@@ -45,6 +45,19 @@ public class UpdateUserRoleCommandTests
     }
 
     [UnitFact]
+    public void Should_Not_UpdateUserRole_When_UserIsInactive()
+    {
+        var command =
+            new UpdateUserRoleCommand { UserId = _dataMock.InactiveIds.First(), NewRoleId = (int)Roles.Test };
+
+        var result = _handler.Handle(command);
+
+        Assert.False(result.Success);
+        Assert.NotEmpty(result.Errors);
+        Assert.Equal("Can't change role of inactive user", result.Errors.First());
+    }
+
+    [UnitFact]
     public void ShouldNot_UpdateUserRole_When_RoleIsInvalid()
     {
         var command = new UpdateUserRoleCommand { UserId = _dataMock.ActiveIds.First(), NewRoleId = 999 };

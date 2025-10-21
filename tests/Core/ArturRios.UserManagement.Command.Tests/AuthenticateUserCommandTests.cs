@@ -80,7 +80,7 @@ public class AuthenticateUserCommandTests
     [UnitFact]
     public void ShouldNot_AuthenticateUser_When_EmailIsIncorrect()
     {
-        var command = new AuthenticateUserCommand { Email = _dataMock.NonexistentEmail, Password = _dataMock.ActivePassword };
+        var command = new AuthenticateUserCommand { Email = DataMock.NonexistentEmail, Password = _dataMock.ActivePassword };
 
         var result = _handler.Handle(command);
 
@@ -92,7 +92,7 @@ public class AuthenticateUserCommandTests
     [UnitFact]
     public void ShouldNot_AuthenticateUser_When_PasswordIsIncorrect()
     {
-        var command = new AuthenticateUserCommand { Email = _dataMock.ActiveEmail, Password = _dataMock.NonexistentPassword };
+        var command = new AuthenticateUserCommand { Email = _dataMock.ActiveEmail, Password = DataMock.NonexistentPassword };
 
         var result = _handler.Handle(command);
 
@@ -104,7 +104,7 @@ public class AuthenticateUserCommandTests
     [UnitFact]
     public void ShouldNot_AuthenticateUser_When_CredentialsAreIncorrect()
     {
-        var command = new AuthenticateUserCommand { Email = _dataMock.NonexistentEmail, Password = _dataMock.NonexistentPassword };
+        var command = new AuthenticateUserCommand { Email = DataMock.NonexistentEmail, Password = DataMock.NonexistentPassword };
 
         var result = _handler.Handle(command);
 

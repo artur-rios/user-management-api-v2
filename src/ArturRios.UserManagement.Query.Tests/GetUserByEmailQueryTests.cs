@@ -32,7 +32,7 @@ public class GetUserByEmailQueryTests
     [UnitFact]
     public void ShouldNot_GetUserByEmail()
     {
-        var query = new GetUserByEmailQuery { Email = _dataMock.NonexistentEmail };
+        var query = new GetUserByEmailQuery { Email = DataMock.NonexistentEmail };
 
         var result = _handler.Handle(query);
 

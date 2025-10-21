@@ -5,12 +5,8 @@ namespace ArturRios.UserManagement.Test.Mock;
 
 public class DataMock
 {
-    private const string TestEmailSuffix = "@mail.com";
-    public readonly string NonexistentEmail = "nonexistent@mail.com";
-    public readonly string NonexistentPassword = "nonexistentpassword";
-
-    private int _activeUserCount = 5;
-    private int _inactiveUserCount = 5;
+    public const string NonexistentEmail = "nonexistent@mail.com";
+    public const string NonexistentPassword = "nonexistentpassword";
 
     public readonly List<User> ActiveUsers = [];
     private readonly List<User> _inactiveUsers = [];
@@ -18,6 +14,10 @@ public class DataMock
     public readonly List<int> ActiveIds = [];
     public readonly List<int> InactiveIds = [];
     public readonly List<int> NonexistentIds = [];
+
+    private const string TestEmailSuffix = "@mail.com";
+    private int _activeUserCount = 5;
+    private int _inactiveUserCount = 5;
 
     private List<int> AllIds => ActiveIds.Concat(InactiveIds).ToList();
     private readonly Dictionary<int, string> _generatedPasswords = new();
