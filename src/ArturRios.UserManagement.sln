@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.UserManagement.Do
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.Common.Test", "..\common\src\ArturRios.Common.Test\ArturRios.Common.Test.csproj", "{97FD220C-96E9-45A6-AA52-41A961F85362}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.UserManagement.Services.Tests", "..\tests\Core\ArturRios.UserManagement.Services.Tests\ArturRios.UserManagement.Services.Tests.csproj", "{9A71A16A-F627-4251-83C6-A8185493673E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.UserManagement.Command.Tests", "..\tests\Core\ArturRios.UserManagement.Command.Tests\ArturRios.UserManagement.Command.Tests.csproj", "{9A71A16A-F627-4251-83C6-A8185493673E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{C1262FBB-7DCB-422A-BB92-013CEBA9FCD1}"
 EndProject
@@ -66,6 +66,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.UserManagement.Query", "Core\ArturRios.UserManagement.Query\ArturRios.UserManagement.Query.csproj", "{5F098D3E-EE40-4DF8-A465-DFB1EA532458}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.UserManagement.Command", "Core\ArturRios.UserManagement.Command\ArturRios.UserManagement.Command.csproj", "{750F0AA8-9D49-45FA-A295-98EB3E2C332A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.UserManagement.Query.Tests", "ArturRios.UserManagement.Query.Tests\ArturRios.UserManagement.Query.Tests.csproj", "{6F39B11D-05B6-4201-8C4C-1B590037551D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArturRios.UserManagement.Test.Util", "ArturRios.UserManagement.Test.Util\ArturRios.UserManagement.Test.Util.csproj", "{6D20C70F-3C86-479D-99F5-6650B779288D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -173,6 +177,14 @@ Global
 		{750F0AA8-9D49-45FA-A295-98EB3E2C332A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{750F0AA8-9D49-45FA-A295-98EB3E2C332A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{750F0AA8-9D49-45FA-A295-98EB3E2C332A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F39B11D-05B6-4201-8C4C-1B590037551D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F39B11D-05B6-4201-8C4C-1B590037551D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F39B11D-05B6-4201-8C4C-1B590037551D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F39B11D-05B6-4201-8C4C-1B590037551D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D20C70F-3C86-479D-99F5-6650B779288D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D20C70F-3C86-479D-99F5-6650B779288D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D20C70F-3C86-479D-99F5-6650B779288D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D20C70F-3C86-479D-99F5-6650B779288D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -206,5 +218,7 @@ Global
 		{6BF060FD-BDF1-43B5-BAD0-B1E49D4A5CE9} = {879F5F95-443B-4E9D-B3AD-FA7F8921470F}
 		{5F098D3E-EE40-4DF8-A465-DFB1EA532458} = {67152A6D-D1CE-495B-8A78-F638A4D791C2}
 		{750F0AA8-9D49-45FA-A295-98EB3E2C332A} = {67152A6D-D1CE-495B-8A78-F638A4D791C2}
+		{6F39B11D-05B6-4201-8C4C-1B590037551D} = {1F2F5D48-9DB5-4C3E-BAFB-F467ED8BADA2}
+		{6D20C70F-3C86-479D-99F5-6650B779288D} = {C1262FBB-7DCB-422A-BB92-013CEBA9FCD1}
 	EndGlobalSection
 EndGlobal

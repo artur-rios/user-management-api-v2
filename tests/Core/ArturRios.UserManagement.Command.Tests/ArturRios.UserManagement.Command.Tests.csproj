@@ -29,6 +29,9 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\common\src\ArturRios.Common.Test\ArturRios.Common.Test.csproj" />
+      <ProjectReference Include="..\..\..\src\ArturRios.UserManagement.Test.Util\ArturRios.UserManagement.Test.Util.csproj" />
+      <ProjectReference Include="..\..\..\src\Core\ArturRios.UserManagement.Command\ArturRios.UserManagement.Command.csproj" />
+      <ProjectReference Include="..\..\Setup\ArturRios.UserManagement.Test.Fixture\ArturRios.UserManagement.Test.Fixture.csproj" />
       <ProjectReference Include="..\..\Setup\ArturRios.UserManagement.Test.Mock\ArturRios.UserManagement.Test.Mock.csproj" />
     </ItemGroup>
 

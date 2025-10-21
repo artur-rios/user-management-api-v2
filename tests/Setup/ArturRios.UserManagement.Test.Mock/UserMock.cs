@@ -52,6 +52,13 @@ public class UserMock
         return this;
     }
 
+    public UserMock WithName(string name)
+    {
+        _userFaker.RuleFor(x => x.Name, name);
+
+        return this;
+    }
+
     public UserMock WithRole(Roles role)
     {
         _userFaker.RuleFor(x => x.RoleId, _ => (int)role);

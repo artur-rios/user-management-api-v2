@@ -68,6 +68,20 @@ public class DeleteManyUsersCommandHandler(
             output.AddError(combinedMessage);
         }
 
+        foreach (var fail in failedDeletions)
+        {
+            var errorMessage = $"User with Id {fail.Item1}: {string.Join(", ", fail.Item2)}";
+
+            output.AddError(errorMessage);
+        }
+
+        foreach (var notFoundId in notFoundIds)
+        {
+            var errorMessage = $"User with Id {notFoundId} not found";
+
+            output.AddError(errorMessage);
+        }
+
         output.Data = new DeleteManyUsersCommandOutput
         {
             DeletedIds = deletedIds,

@@ -8,7 +8,7 @@ public class AuthenticateUserCommandValidator : FluentValidator<AuthenticateUser
 {
     public AuthenticateUserCommandValidator()
     {
-        RuleFor(command => command.Email).NotEmpty();
-        RuleFor(command => command.Password).NotEmpty();
+        RuleFor(command => command.Email).NotEmpty().WithMessage("Email should be valid");
+        RuleFor(command => command.Password).NotEmpty().WithMessage("Password should be valid");
     }
 }
