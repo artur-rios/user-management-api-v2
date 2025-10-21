@@ -20,7 +20,8 @@
 
 ## Detailed Documentation
 
+- [Use Cases](./docs/use-cases.md)
 - [Domain](./docs/domain.md)
-- [Services](./docs/services.md)
+- [Commands](./docs/commands/commands.md)
 
 *Documentation under construction*
