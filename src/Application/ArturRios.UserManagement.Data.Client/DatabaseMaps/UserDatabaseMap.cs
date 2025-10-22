@@ -9,7 +9,7 @@ public static class UserDatabaseMap
     public static void Configure(this EntityTypeBuilder<User> user)
     {
         user.HasKey(u => u.Id);
-        
+
         user.Property(u => u.Name)
             .IsRequired();
 

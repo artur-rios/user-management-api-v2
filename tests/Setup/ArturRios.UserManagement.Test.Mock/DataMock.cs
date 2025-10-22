@@ -8,21 +8,31 @@ public class DataMock
     public const string NonexistentEmail = "nonexistent@mail.com";
     public const string NonexistentPassword = "nonexistentpassword";
 
-    public readonly List<User> ActiveUsers = [];
+    private const string TestEmailSuffix = "@mail.com";
+    private readonly Dictionary<int, string> _generatedPasswords = new();
     private readonly List<User> _inactiveUsers = [];
 
     public readonly List<int> ActiveIds = [];
+
+    public readonly List<User> ActiveUsers = [];
     public readonly List<int> InactiveIds = [];
     public readonly List<int> NonexistentIds = [];
-
-    private const string TestEmailSuffix = "@mail.com";
     private int _activeUserCount = 5;
     private int _inactiveUserCount = 5;
 
     private List<int> AllIds => ActiveIds.Concat(InactiveIds).ToList();
-    private readonly Dictionary<int, string> _generatedPasswords = new();
 
     public static DataMock New => new();
+
+    public List<User> AllUsers => ActiveUsers.Concat(_inactiveUsers).ToList();
+
+    public int ActiveUserId => ActiveUsers.First().Id;
+
+    public string ActiveEmail => ActiveUsers.First().Email;
+
+    public string ActivePassword => _generatedPasswords[ActiveUsers.First().Id];
+
+    public int ActiveRoleId => ActiveUsers.First().RoleId;
 
     public DataMock Build()
     {
@@ -51,16 +61,6 @@ public class DataMock
 
         return this;
     }
-
-    public List<User> AllUsers => ActiveUsers.Concat(_inactiveUsers).ToList();
-
-    public int ActiveUserId => ActiveUsers.First().Id;
-
-    public string ActiveEmail => ActiveUsers.First().Email;
-
-    public string ActivePassword => _generatedPasswords[ActiveUsers.First().Id];
-
-    public int ActiveRoleId => ActiveUsers.First().RoleId;
 
     private void GenerateIds()
     {

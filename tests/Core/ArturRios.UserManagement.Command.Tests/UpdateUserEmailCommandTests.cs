@@ -20,7 +20,7 @@ public class UpdateUserEmailCommandTests
     [UnitFact]
     public void Should_UpdateUserEmail()
     {
-        var command = new UpdateUserEmailCommand { UserId = _dataMock.ActiveUserId, Email = "updated@mail.com"};
+        var command = new UpdateUserEmailCommand { UserId = _dataMock.ActiveUserId, Email = "updated@mail.com" };
 
         var result = _handler.Handle(command);
 
@@ -33,7 +33,7 @@ public class UpdateUserEmailCommandTests
     [UnitFact]
     public void Should_Not_UpdateUserEmail_WhenEmailIsInvalid()
     {
-        var command = new UpdateUserEmailCommand{ UserId = _dataMock.ActiveUserId, Email = string.Empty };
+        var command = new UpdateUserEmailCommand { UserId = _dataMock.ActiveUserId, Email = string.Empty };
 
         var result = _handler.Handle(command);
 
@@ -62,8 +62,7 @@ public class UpdateUserEmailCommandTests
     {
         var command = new UpdateUserEmailCommand
         {
-            UserId = _dataMock.ActiveUserId,
-            Email = _dataMock.ActiveUsers[1].Email
+            UserId = _dataMock.ActiveUserId, Email = _dataMock.ActiveUsers[1].Email
         };
 
         var result = _handler.Handle(command);
@@ -77,11 +76,7 @@ public class UpdateUserEmailCommandTests
     [UnitFact]
     public void Should_Not_UpdateUserEmail_WhenEmailIsSame()
     {
-        var command = new UpdateUserEmailCommand
-        {
-            UserId = _dataMock.ActiveUserId,
-            Email = _dataMock.ActiveEmail
-        };
+        var command = new UpdateUserEmailCommand { UserId = _dataMock.ActiveUserId, Email = _dataMock.ActiveEmail };
 
         var result = _handler.Handle(command);
 

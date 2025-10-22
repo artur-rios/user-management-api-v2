@@ -38,13 +38,15 @@ public class DeleteManyUsersCommandTests
 
         Assert.False(result.Success);
         Assert.NotEmpty(result.Errors);
-        Assert.Equal($"Users with IDs {string.Join(", ", _dataMock.ActiveIds)} cannot be deleted", result.Errors.First());
+        Assert.Equal($"Users with IDs {string.Join(", ", _dataMock.ActiveIds)} cannot be deleted",
+            result.Errors.First());
 
         for (var i = 0; i < _dataMock.ActiveIds.Count; i++)
         {
             if (i == 0)
             {
-                Assert.Equal($"Users with IDs {string.Join(", ", _dataMock.ActiveIds)} cannot be deleted", result.Errors[i]);
+                Assert.Equal($"Users with IDs {string.Join(", ", _dataMock.ActiveIds)} cannot be deleted",
+                    result.Errors[i]);
 
                 continue;
             }

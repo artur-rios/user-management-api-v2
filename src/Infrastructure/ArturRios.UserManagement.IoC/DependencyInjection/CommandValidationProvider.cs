@@ -1,5 +1,4 @@
-﻿using ArturRios.Common.Security;
-using ArturRios.Common.Validation;
+﻿using ArturRios.Common.Validation;
 using ArturRios.UserManagement.Command.Commands;
 using ArturRios.UserManagement.Command.Validators;
 using Microsoft.Extensions.DependencyInjection;

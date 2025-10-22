@@ -9,7 +9,8 @@ using ArturRios.UserManagement.Domain.Repositories;
 
 namespace ArturRios.UserManagement.Command.CommandHandlers;
 
-public class CreateUserCommandHandler(IFluentValidator<CreateUserCommand> validator, IUserRepository userRepository) : ICommandHandler<CreateUserCommand, CreateUserCommandOutput>
+public class CreateUserCommandHandler(IFluentValidator<CreateUserCommand> validator, IUserRepository userRepository)
+    : ICommandHandler<CreateUserCommand, CreateUserCommandOutput>
 {
     public DataOutput<CreateUserCommandOutput?> Handle(CreateUserCommand command)
     {
@@ -41,10 +42,7 @@ public class CreateUserCommandHandler(IFluentValidator<CreateUserCommand> valida
 
         var id = userRepository.Create(user);
 
-        var data = new CreateUserCommandOutput
-        {
-            CreatedUserId = id
-        };
+        var data = new CreateUserCommandOutput { CreatedUserId = id };
 
         output.Data = data;
         output.AddMessage("User created successfully");

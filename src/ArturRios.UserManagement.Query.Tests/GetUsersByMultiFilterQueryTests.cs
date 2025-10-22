@@ -20,10 +20,7 @@ public class GetUsersByMultiFilterQueryTests
     [UnitFact]
     public void Should_GetUsersByMultiFilter()
     {
-        var query = new GetUsersByMultiFilterQuery
-        {
-            Ids = _dataMock.ActiveIds
-        };
+        var query = new GetUsersByMultiFilterQuery { Ids = _dataMock.ActiveIds };
 
         var result = _handler.Handle(query);
 
@@ -36,10 +33,7 @@ public class GetUsersByMultiFilterQueryTests
     [UnitFact]
     public void ShouldNot_GetUsersByMultiFilter()
     {
-        var query = new GetUsersByMultiFilterQuery
-        {
-            Ids = _dataMock.NonexistentIds
-        };
+        var query = new GetUsersByMultiFilterQuery { Ids = _dataMock.NonexistentIds };
 
         var result = _handler.Handle(query);
 

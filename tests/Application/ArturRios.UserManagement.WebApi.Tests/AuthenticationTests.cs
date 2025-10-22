@@ -24,10 +24,7 @@ public class AuthenticationTests(DatabaseFixture fixture, EnvironmentType enviro
         return Task.CompletedTask;
     }
 
-    public Task DisposeAsync()
-    {
-        return Task.CompletedTask;
-    }
+    public Task DisposeAsync() => Task.CompletedTask;
 
 
     [FunctionalFact]

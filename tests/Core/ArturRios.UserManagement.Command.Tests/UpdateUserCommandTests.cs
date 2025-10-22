@@ -77,10 +77,6 @@ public class UpdateUserCommandTests
     {
         var user = userMock.Generate();
 
-        return new UpdateUserCommand
-        {
-            Id = user.Id,
-            Name = user.Name
-        };
+        return new UpdateUserCommand { Id = user.Id, Name = user.Name };
     }
 }

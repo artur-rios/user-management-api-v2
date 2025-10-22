@@ -8,7 +8,7 @@ internal static class UserRelationalMap
     public static void Configure(this EntityTypeBuilder<User> user)
     {
         user.HasKey(u => u.Id);
-        
+
         user.Property(u => u.Name)
             .IsRequired();
 
@@ -29,7 +29,7 @@ internal static class UserRelationalMap
 
         user.Property(u => u.Active)
             .IsRequired();
-        
+
         user.HasOne<Role>()
             .WithMany()
             .HasForeignKey(u => u.RoleId)

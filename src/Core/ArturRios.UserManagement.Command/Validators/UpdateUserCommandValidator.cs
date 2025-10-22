@@ -6,8 +6,6 @@ namespace ArturRios.UserManagement.Command.Validators;
 
 public class UpdateUserCommandValidator : FluentValidator<UpdateUserCommand>
 {
-    public UpdateUserCommandValidator()
-    {
+    public UpdateUserCommandValidator() =>
         RuleFor(command => command.Name).NotEmpty().WithMessage("Name should be valid");
-    }
 }

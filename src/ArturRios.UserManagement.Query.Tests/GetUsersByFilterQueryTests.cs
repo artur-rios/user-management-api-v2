@@ -26,7 +26,8 @@ public class GetUsersByFilterQueryTests
         Assert.NotNull(result.Data);
         Assert.NotEmpty(result.Data);
         Assert.Equal(_dataMock.ActiveUsers.Count, result.Data.Count);
-        Assert.Equal($"Returning page {query.PageNumber} of users with page size {query.PageSize}", result.Messages.First());
+        Assert.Equal($"Returning page {query.PageNumber} of users with page size {query.PageSize}",
+            result.Messages.First());
         Assert.True(result.Success);
     }
 

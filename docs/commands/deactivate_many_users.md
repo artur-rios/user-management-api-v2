@@ -1,6 +1,7 @@
 ﻿# DeactivateManyUsersCommand
 
-Description: Deactivate multiple users by a list of ids. Handler iterates domain `User.Deactivate()` and aggregates results.
+Description: Deactivate multiple users by a list of ids. Handler iterates domain `User.Deactivate()` and aggregates
+results.
 
 ```mermaid
 classDiagram

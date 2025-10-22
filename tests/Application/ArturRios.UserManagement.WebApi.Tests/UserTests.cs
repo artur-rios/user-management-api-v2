@@ -25,11 +25,9 @@ public class UserTests(
     private const string AuthenticationRoute = "/Authentication";
     private const string UserRoute = "/User";
 
-    // private const string NonexistentEmail = "inexists@mail.com";
+    private readonly List<int> _userIdsToDelete = [];
 
     private User _testUser = new();
-
-    private readonly List<int> _userIdsToDelete = [];
 
     public async Task InitializeAsync()
     {
@@ -258,7 +256,7 @@ public class UserTests(
 
         var newRoleId = user.RoleId == (int)Roles.Test ? (int)Roles.Admin : (int)Roles.Test;
 
-        var command = new UpdateUserRoleCommand() { UserId = user.Id, NewRoleId = newRoleId };
+        var command = new UpdateUserRoleCommand { UserId = user.Id, NewRoleId = newRoleId };
 
         var result =
             await Gateway.PatchAsync<DataOutput<UpdateUserRoleCommandOutput>>($"{UserRoute}/Update/Role", command);
@@ -279,7 +277,7 @@ public class UserTests(
     {
         var user = fixture.CreateUsers().First();
 
-        var command = new UpdateUserRoleCommand() { UserId = user.Id, NewRoleId = 999 };
+        var command = new UpdateUserRoleCommand { UserId = user.Id, NewRoleId = 999 };
 
         var result =
             await Gateway.PatchAsync<DataOutput<UpdateUserRoleCommandOutput>>($"{UserRoute}/Update/Role", command);
@@ -303,7 +301,7 @@ public class UserTests(
 
         var newRoleId = user.RoleId == (int)Roles.Test ? (int)Roles.Admin : (int)Roles.Test;
 
-        var command = new UpdateUserRoleCommand() { UserId = user.Id, NewRoleId = newRoleId };
+        var command = new UpdateUserRoleCommand { UserId = user.Id, NewRoleId = newRoleId };
 
         var result =
             await Gateway.PatchAsync<DataOutput<UpdateUserRoleCommandOutput>>($"{UserRoute}/Update/Role", command);
@@ -326,7 +324,7 @@ public class UserTests(
         var nonExistentUserId = fixture.GetUserNextId();
         const int newRoleId = (int)Roles.Admin;
 
-        var command = new UpdateUserRoleCommand() { UserId = nonExistentUserId, NewRoleId = newRoleId };
+        var command = new UpdateUserRoleCommand { UserId = nonExistentUserId, NewRoleId = newRoleId };
 
         var result =
             await Gateway.PatchAsync<DataOutput<UpdateUserRoleCommandOutput>>($"{UserRoute}/Update/Role", command);

@@ -9,7 +9,7 @@ namespace ArturRios.UserManagement.Data.Client.Configuration;
 public class ClientDbContext(ILoggerFactory loggerFactory, BaseDbContextOptions options) : DbContext
 {
     private const string Schema = "user_management";
-    
+
     public DbSet<User> Users { get; init; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -25,7 +25,7 @@ public class ClientDbContext(ILoggerFactory loggerFactory, BaseDbContextOptions 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schema);
-        
+
         modelBuilder.Entity<User>().Configure();
     }
 }

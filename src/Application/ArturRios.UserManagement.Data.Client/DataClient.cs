@@ -7,15 +7,11 @@ namespace ArturRios.UserManagement.Data.Client;
 
 public class DataClient : BaseDataClient
 {
-    public UserRepository UserRepository { get; }
-    
-    public DataClient(EnvironmentType environment) : base(environment)
-    {
+    public DataClient(EnvironmentType environment) : base(environment) =>
         UserRepository = new UserRepository(new ClientDbContextFactory());
-    }
 
-    public DataClient(string connectionString) : base(connectionString)
-    {
+    public DataClient(string connectionString) : base(connectionString) =>
         UserRepository = new UserRepository(new ClientDbContextFactory());
-    }
+
+    public UserRepository UserRepository { get; }
 }

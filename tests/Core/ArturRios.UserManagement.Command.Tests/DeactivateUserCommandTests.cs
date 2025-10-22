@@ -20,10 +20,7 @@ public class DeactivateUserCommandTests
     [UnitFact]
     public void Should_DeactivateUser()
     {
-        var command = new DeactivateUserCommand
-        {
-            UserId = _dataMock.ActiveIds.First()
-        };
+        var command = new DeactivateUserCommand { UserId = _dataMock.ActiveIds.First() };
 
         var result = _handler.Handle(command);
 
@@ -34,10 +31,7 @@ public class DeactivateUserCommandTests
     [UnitFact]
     public void ShouldNot_DeactivateUser_When_IdIsNotOnDatabase()
     {
-        var command = new DeactivateUserCommand
-        {
-            UserId = _dataMock.NonexistentIds.First()
-        };
+        var command = new DeactivateUserCommand { UserId = _dataMock.NonexistentIds.First() };
 
         var result = _handler.Handle(command);
 
@@ -48,10 +42,7 @@ public class DeactivateUserCommandTests
     [UnitFact]
     public void ShouldNot_DeactivateUser_When_UserIsAlreadyInactive()
     {
-        var command = new DeactivateUserCommand
-        {
-            UserId = _dataMock.InactiveIds.First()
-        };
+        var command = new DeactivateUserCommand { UserId = _dataMock.InactiveIds.First() };
 
         var result = _handler.Handle(command);
 

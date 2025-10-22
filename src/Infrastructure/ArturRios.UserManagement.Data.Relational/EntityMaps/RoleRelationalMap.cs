@@ -8,7 +8,7 @@ internal static class RoleRelationalMap
     public static void Configure(this EntityTypeBuilder<Role> role)
     {
         role.HasKey(r => r.Id);
-        
+
         role.Property(r => r.Id)
             .ValueGeneratedNever();
 

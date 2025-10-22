@@ -1,6 +1,7 @@
 ﻿# UpdateUserEmailCommand
 
-Description: Change a user's email. Handler calls `User.UpdateEmail(email)` and ensures uniqueness via repository checks.
+Description: Change a user's email. Handler calls `User.UpdateEmail(email)` and ensures uniqueness via repository
+checks.
 
 ```mermaid
 classDiagram

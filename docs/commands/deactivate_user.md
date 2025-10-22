@@ -1,6 +1,7 @@
 ﻿# DeactivateUserCommand
 
-Description: Deactivate a single user by id. Handler calls domain `User.Deactivate()` and returns an output describing success or errors.
+Description: Deactivate a single user by id. Handler calls domain `User.Deactivate()` and returns an output describing
+success or errors.
 
 ```mermaid
 classDiagram

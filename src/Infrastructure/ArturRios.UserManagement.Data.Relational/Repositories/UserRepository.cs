@@ -8,6 +8,7 @@ namespace ArturRios.UserManagement.Data.Relational.Repositories;
 public class UserRepository(IDbContextFactory<RelationalDbContext> dbContextFactory) : IUserRepository
 {
     private readonly RelationalDbContext _dbContext = dbContextFactory.CreateDbContext();
+
     public int Create(User entity)
     {
         _dbContext.Users.Add(entity);
@@ -17,15 +18,9 @@ public class UserRepository(IDbContextFactory<RelationalDbContext> dbContextFact
         return entity.Id;
     }
 
-    public IQueryable<User> GetAll()
-    {
-        return _dbContext.Users;
-    }
+    public IQueryable<User> GetAll() => _dbContext.Users;
 
-    public User? GetById(int id)
-    {
-        return _dbContext.Users.Find(id);
-    }
+    public User? GetById(int id) => _dbContext.Users.Find(id);
 
     public User Update(User entity)
     {

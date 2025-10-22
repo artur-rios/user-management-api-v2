@@ -7,7 +7,9 @@ using ArturRios.UserManagement.Domain.Repositories;
 
 namespace ArturRios.UserManagement.Command.CommandHandlers;
 
-public class UpdateUserRoleCommandHandler(IFluentValidator<UpdateUserRoleCommand> validator, IUserRepository userRepository) : ICommandHandler<UpdateUserRoleCommand, UpdateUserRoleCommandOutput>
+public class UpdateUserRoleCommandHandler(
+    IFluentValidator<UpdateUserRoleCommand> validator,
+    IUserRepository userRepository) : ICommandHandler<UpdateUserRoleCommand, UpdateUserRoleCommandOutput>
 {
     public DataOutput<UpdateUserRoleCommandOutput?> Handle(UpdateUserRoleCommand command)
     {

@@ -12,4 +12,3 @@ public class DeactivateManyUsersCommandValidator : FluentValidator<DeactivateMan
         RuleForEach(command => command.UserIds).GreaterThan(0);
     }
 }
-

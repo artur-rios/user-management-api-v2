@@ -9,29 +9,6 @@ namespace ArturRios.UserManagement.Domain.Aggregates;
 
 public class User : Entity
 {
-    [Column(Order = 1)]
-    [MaxLength(300)]
-    public string Name { get; set; } = string.Empty;
-
-    [Column(Order = 2)]
-    [MaxLength(300)]
-    public string Email { get; private set; } = string.Empty;
-
-    [Column(Order = 3)]
-    public byte[] Password { get;  private set; } = [];
-
-    [Column(Order = 4)]
-    public byte[] Salt { get;  private set; } = [];
-
-    [Column(Order = 5)]
-    public int RoleId { get;  private set; }
-
-    [Column(Order = 6)]
-    public DateTime CreatedAt { get; } = DateTime.UtcNow;
-
-    [Column(Order = 7)]
-    public bool Active { get; private set; } = true;
-
     public User()
     {
     }
@@ -62,6 +39,20 @@ public class User : Entity
         Active = active;
     }
 
+    [Column(Order = 1)] [MaxLength(300)] public string Name { get; set; } = string.Empty;
+
+    [Column(Order = 2)] [MaxLength(300)] public string Email { get; private set; } = string.Empty;
+
+    [Column(Order = 3)] public byte[] Password { get; private set; } = [];
+
+    [Column(Order = 4)] public byte[] Salt { get; private set; } = [];
+
+    [Column(Order = 5)] public int RoleId { get; private set; }
+
+    [Column(Order = 6)] public DateTime CreatedAt { get; } = DateTime.UtcNow;
+
+    [Column(Order = 7)] public bool Active { get; private set; } = true;
+
     public ProcessOutput Activate()
     {
         var condition = Condition.Create.False(Active).FailsWith("User already active");
@@ -74,12 +65,10 @@ public class User : Entity
         return condition.ToProcessOutput();
     }
 
-    public ProcessOutput CanDelete()
-    {
-        return Condition.Create
+    public ProcessOutput CanDelete() =>
+        Condition.Create
             .False(Active).FailsWith("Can't delete active user")
             .ToProcessOutput();
-    }
 
     public ProcessOutput Deactivate()
     {

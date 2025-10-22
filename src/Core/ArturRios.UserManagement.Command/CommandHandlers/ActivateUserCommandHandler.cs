@@ -7,7 +7,8 @@ using ArturRios.UserManagement.Domain.Repositories;
 
 namespace ArturRios.UserManagement.Command.CommandHandlers;
 
-public class ActivateUserCommandHandler(IFluentValidator<ActivateUserCommand> validator, IUserRepository userRepository) : ICommandHandler<ActivateUserCommand, ActivateUserCommandOutput>
+public class ActivateUserCommandHandler(IFluentValidator<ActivateUserCommand> validator, IUserRepository userRepository)
+    : ICommandHandler<ActivateUserCommand, ActivateUserCommandOutput>
 {
     public DataOutput<ActivateUserCommandOutput?> Handle(ActivateUserCommand command)
     {

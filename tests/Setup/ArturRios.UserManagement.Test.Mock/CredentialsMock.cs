@@ -9,13 +9,11 @@ public class CredentialsMock
 {
     private readonly Faker<Credentials> _faker;
 
-    private CredentialsMock()
-    {
+    private CredentialsMock() =>
         _faker = new Faker<Credentials>()
             .RuleFor(x => x.Email, f => f.Person.Email)
-            .RuleFor(x => x.Password, _ => CustomRandom.Text(new RandomStringOptions
-                { Length = Constants.MinimumPasswordLength }));
-    }
+            .RuleFor(x => x.Password,
+                _ => CustomRandom.Text(new RandomStringOptions { Length = Constants.MinimumPasswordLength }));
 
     public static CredentialsMock New => new();
 
@@ -33,8 +31,5 @@ public class CredentialsMock
         return this;
     }
 
-    public Credentials Generate()
-    {
-        return _faker.Generate();
-    }
+    public Credentials Generate() => _faker.Generate();
 }

@@ -12,16 +12,18 @@ namespace ArturRios.UserManagement.WebApi;
 
 public class Startup(string[] args) : WebApiStartup(args)
 {
-    private static readonly ILogger Logger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<Startup>();
-
     private const int MaxDbConnectionRetries = 5;
     private const int DelayDbConnectionAttemptMilliseconds = 2000;
+
+    private static readonly ILogger Logger = LoggerFactory.Create(builder => builder.AddConsole())
+        .CreateLogger<Startup>();
 
     public override void Build()
     {
         ConfigureLogging();
 
-        Logger.LogInformation("Building web api on {EnvironmentEnvironmentName} environment", Builder.Environment.EnvironmentName);
+        Logger.LogInformation("Building web api on {EnvironmentEnvironmentName} environment",
+            Builder.Environment.EnvironmentName);
 
         LoadConfiguration();
 
@@ -58,10 +60,7 @@ public class Startup(string[] args) : WebApiStartup(args)
         Logger.LogInformation("Ready to run!");
     }
 
-    private void ConfigureLogging()
-    {
-        Builder.Services.AddLogging();
-    }
+    private void ConfigureLogging() => Builder.Services.AddLogging();
 
     public override void AddDependencies()
     {
@@ -134,7 +133,8 @@ public class Startup(string[] args) : WebApiStartup(args)
                     throw;
                 }
 
-                Logger.LogInformation("Waiting {DelayDbConnectionAttemptMilliseconds}ms before next attempt", DelayDbConnectionAttemptMilliseconds);
+                Logger.LogInformation("Waiting {DelayDbConnectionAttemptMilliseconds}ms before next attempt",
+                    DelayDbConnectionAttemptMilliseconds);
 
                 Thread.Sleep(DelayDbConnectionAttemptMilliseconds);
             }

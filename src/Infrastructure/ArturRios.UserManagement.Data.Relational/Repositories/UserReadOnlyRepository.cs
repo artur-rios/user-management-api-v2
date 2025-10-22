@@ -9,13 +9,7 @@ public class UserReadOnlyRepository(IDbContextFactory<RelationalDbContext> dbCon
 {
     private readonly RelationalDbContext _dbContext = dbContextFactory.CreateDbContext();
 
-    public IQueryable<User> GetAll()
-    {
-        return _dbContext.Users.AsNoTracking();
-    }
+    public IQueryable<User> GetAll() => _dbContext.Users.AsNoTracking();
 
-    public User? GetById(int id)
-    {
-        return _dbContext.Users.AsNoTracking().FirstOrDefault(x => x.Id == id);
-    }
+    public User? GetById(int id) => _dbContext.Users.AsNoTracking().FirstOrDefault(x => x.Id == id);
 }

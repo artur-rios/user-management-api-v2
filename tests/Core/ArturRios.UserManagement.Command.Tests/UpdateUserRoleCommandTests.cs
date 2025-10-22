@@ -72,7 +72,8 @@ public class UpdateUserRoleCommandTests
     [UnitFact]
     public void ShouldNot_UpdateUserRole_When_RoleIsSame()
     {
-        var command = new UpdateUserRoleCommand { UserId = _dataMock.ActiveIds.First(), NewRoleId = (int)Roles.Regular };
+        var command =
+            new UpdateUserRoleCommand { UserId = _dataMock.ActiveIds.First(), NewRoleId = (int)Roles.Regular };
 
         var result = _handler.Handle(command);
 

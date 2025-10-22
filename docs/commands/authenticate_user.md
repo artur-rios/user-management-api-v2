@@ -1,6 +1,7 @@
 ﻿# AuthenticateUserCommand
 
-Description: Authenticate a user using email and password. Handler validates credentials and returns an authentication output (user id and optional token).
+Description: Authenticate a user using email and password. Handler validates credentials and returns an authentication
+output (user id and optional token).
 
 ```mermaid
 classDiagram

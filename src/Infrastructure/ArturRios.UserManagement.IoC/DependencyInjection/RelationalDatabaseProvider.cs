@@ -21,7 +21,7 @@ public static class RelationalDatabaseProvider
         services.AddSingleton(new BaseDbContextOptions { ConnectionString = connectionString });
 
         services.AddDbContext<RelationalDbContext>(options =>
-            options.UseNpgsql(connectionString),
+                options.UseNpgsql(connectionString),
             optionsLifetime: ServiceLifetime.Singleton);
 
         services.AddDbContextFactory<RelationalDbContext>();

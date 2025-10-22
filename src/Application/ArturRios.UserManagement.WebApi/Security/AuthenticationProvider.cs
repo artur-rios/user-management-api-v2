@@ -1,5 +1,4 @@
-﻿using ArturRios.Common.Extensions;
-using ArturRios.Common.Pipelines;
+﻿using ArturRios.Common.Pipelines;
 using ArturRios.Common.Web.Security.Interfaces;
 using ArturRios.Common.Web.Security.Records;
 using ArturRios.UserManagement.Query.Output;
@@ -22,6 +21,5 @@ public class AuthenticationProvider(Pipeline pipeline) : IAuthenticationProvider
         var user = output.Data;
 
         return new AuthenticatedUser(user.Id, user.RoleId);
-
     }
 }

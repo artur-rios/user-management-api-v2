@@ -8,8 +8,6 @@ public class HealthCheckRoute(HttpGateway gateway) : BaseWebApiClientRoute(gatew
 {
     public override string BaseUrl => "/HealthCheck";
 
-    public async Task<HttpOutput<DataOutput<string?>?>> HelloWorld()
-    {
-        return await Gateway.GetAsync<DataOutput<string?>>(BaseUrl);
-    }
+    public async Task<HttpOutput<DataOutput<string?>?>> HelloWorld() =>
+        await Gateway.GetAsync<DataOutput<string?>>(BaseUrl);
 }

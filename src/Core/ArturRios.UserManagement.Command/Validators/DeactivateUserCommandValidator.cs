@@ -6,8 +6,5 @@ namespace ArturRios.UserManagement.Command.Validators;
 
 public class DeactivateUserCommandValidator : FluentValidator<DeactivateUserCommand>
 {
-    public DeactivateUserCommandValidator()
-    {
-        RuleFor(command => command.UserId).GreaterThan(0);
-    }
+    public DeactivateUserCommandValidator() => RuleFor(command => command.UserId).GreaterThan(0);
 }

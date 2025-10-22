@@ -11,7 +11,8 @@ public static class JwtTokenProvider
     {
         services.AddSingleton<JwtTokenConfiguration>(_ => new JwtTokenConfiguration(
             Audience: Environment.GetEnvironmentVariable("AUTH_TOKEN_AUDIENCE")!,
-            ExpirationInSeconds: double.TryParse(Environment.GetEnvironmentVariable("AUTH_TOKEN_EXPIRATION_IN_SECONDS"), out var seconds)
+            ExpirationInSeconds: double.TryParse(Environment.GetEnvironmentVariable("AUTH_TOKEN_EXPIRATION_IN_SECONDS"),
+                out var seconds)
                 ? seconds
                 : 3600,
             Issuer: Environment.GetEnvironmentVariable("AUTH_TOKEN_ISSUER")!,

@@ -1,6 +1,7 @@
 ﻿# ActivateManyUsersCommand
 
-Description: Activate multiple users by a list of ids. Handler iterates domain `User.Activate()` for each target and aggregates results.
+Description: Activate multiple users by a list of ids. Handler iterates domain `User.Activate()` for each target and
+aggregates results.
 
 ```mermaid
 classDiagram

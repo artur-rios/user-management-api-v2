@@ -6,8 +6,5 @@ namespace ArturRios.UserManagement.Command.Validators;
 
 public class ActivateUserCommandValidator : FluentValidator<ActivateUserCommand>
 {
-    public ActivateUserCommandValidator()
-    {
-        RuleFor(command => command.UserId).GreaterThan(0);
-    }
+    public ActivateUserCommandValidator() => RuleFor(command => command.UserId).GreaterThan(0);
 }

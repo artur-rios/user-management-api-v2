@@ -34,7 +34,7 @@ public class AuthenticateUserCommandHandler(
             return output;
         }
 
-        var passwordHash = Hash.NewFromBytes(value: user.Password, salt: user.Salt);
+        var passwordHash = Hash.NewFromBytes(user.Password, user.Salt);
 
         if (!passwordHash.TextMatches(command.Password))
         {

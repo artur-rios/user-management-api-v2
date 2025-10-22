@@ -16,9 +16,7 @@ public static class RoleSeeder
                 .Cast<Roles>()
                 .Select(role => new Role
                 {
-                    Id = (int)role,
-                    Name = role.ToString(),
-                    Description = role.GetDescription()!
+                    Id = (int)role, Name = role.ToString(), Description = role.GetDescription()!
                 })
                 .ToList();
 

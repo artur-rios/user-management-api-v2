@@ -1,6 +1,7 @@
 ﻿# ActivateUserCommand
 
-Description: Activate a single user by id. Handler calls domain `User.Activate()` and returns an output describing success or errors.
+Description: Activate a single user by id. Handler calls domain `User.Activate()` and returns an output describing
+success or errors.
 
 ```mermaid
 classDiagram

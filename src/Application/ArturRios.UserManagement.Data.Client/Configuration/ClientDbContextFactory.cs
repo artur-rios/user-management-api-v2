@@ -17,10 +17,6 @@ public class ClientDbContextFactory : IDbContextFactory<ClientDbContext>
 
         var loggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
-        return new ClientDbContext(loggerFactory, new BaseDbContextOptions
-        {
-            ConnectionString = connectionString
-        });
+        return new ClientDbContext(loggerFactory, new BaseDbContextOptions { ConnectionString = connectionString });
     }
 }
-    

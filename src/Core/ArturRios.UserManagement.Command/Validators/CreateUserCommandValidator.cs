@@ -28,7 +28,8 @@ public class CreateUserCommandValidator : FluentValidator<CreateUserCommand>
 
             if (!isValid)
             {
-                context.AddFailure($"Password must contain at least {Constants.MinimumPasswordLength} characters, a number, a lower char and an upper char");
+                context.AddFailure(
+                    $"Password must contain at least {Constants.MinimumPasswordLength} characters, a number, a lower char and an upper char");
             }
         });
         RuleFor(user => user.RoleId).Custom((roleId, context) =>

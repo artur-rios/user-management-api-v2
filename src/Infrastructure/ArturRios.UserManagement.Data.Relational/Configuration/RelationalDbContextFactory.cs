@@ -1,5 +1,6 @@
 ﻿using ArturRios.Common.Configuration.Enums;
 using ArturRios.Common.Data.Configuration;
+using DotNetEnv;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Logging;
 
@@ -20,7 +21,7 @@ public class RelationalDbContextFactory : IDesignTimeDbContextFactory<Relational
         var environmentName = Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? "Local";
         var envFilePath = Path.Combine(basePath, "Environments", $".env.{environmentName.ToLower()}");
 
-        DotNetEnv.Env.Load(File.Exists(envFilePath)
+        Env.Load(File.Exists(envFilePath)
             ? envFilePath
             : Path.Combine(basePath, "Environments", $".env.{nameof(EnvironmentType.Local).ToLower()}"));
 
@@ -33,9 +34,6 @@ public class RelationalDbContextFactory : IDesignTimeDbContextFactory<Relational
 
         var loggerFactory = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
-        return new RelationalDbContext(loggerFactory, new BaseDbContextOptions
-        {
-            ConnectionString = connectionString
-        });
+        return new RelationalDbContext(loggerFactory, new BaseDbContextOptions { ConnectionString = connectionString });
     }
 }

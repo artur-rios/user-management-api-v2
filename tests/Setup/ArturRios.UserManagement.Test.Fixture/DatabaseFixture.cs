@@ -1,5 +1,4 @@
-﻿using ArturRios.UserManagement.Data.Relational.Repositories;
-using ArturRios.UserManagement.Domain.Aggregates;
+﻿using ArturRios.UserManagement.Domain.Aggregates;
 using ArturRios.UserManagement.Domain.Enums;
 using ArturRios.UserManagement.Test.Mock;
 using Microsoft.EntityFrameworkCore;
@@ -10,9 +9,15 @@ namespace ArturRios.UserManagement.Test.Fixture;
 // Reason: this class is meant to be used as a fixture for xunit test and is not explicitly instantiated
 public class DatabaseFixture : IDisposable
 {
-    private readonly RelationalDbContextFactory _dbContextFactory = new();
     private readonly List<int> _createdIds = [];
     private readonly Dictionary<int, string> _createdPasswords = [];
+    private readonly RelationalDbContextFactory _dbContextFactory = new();
+
+    public void Dispose()
+    {
+        DeleteUsers(_createdIds);
+        GC.SuppressFinalize(this);
+    }
 
     public IEnumerable<User> CreateUsers(bool active = true, int quantity = 1)
     {
@@ -50,10 +55,7 @@ public class DatabaseFixture : IDisposable
         return createdUsers;
     }
 
-    public string GetPassword(int id)
-    {
-        return _createdPasswords[id];
-    }
+    public string GetPassword(int id) => _createdPasswords[id];
 
     public int GetUserNextId()
     {
@@ -85,12 +87,6 @@ public class DatabaseFixture : IDisposable
         dbContext.Users.RemoveRange(entities);
 
         dbContext.SaveChanges();
-    }
-
-    public void Dispose()
-    {
-        DeleteUsers(_createdIds);
-        GC.SuppressFinalize(this);
     }
 
     private int? GetUserMaxId()

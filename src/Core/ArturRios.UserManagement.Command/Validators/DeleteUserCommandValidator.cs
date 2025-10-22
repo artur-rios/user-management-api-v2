@@ -6,8 +6,5 @@ namespace ArturRios.UserManagement.Command.Validators;
 
 public class DeleteUserCommandValidator : FluentValidator<DeleteUserCommand>
 {
-    public DeleteUserCommandValidator()
-    {
-        RuleFor(command => command.UserId).GreaterThan(0);
-    }
+    public DeleteUserCommandValidator() => RuleFor(command => command.UserId).GreaterThan(0);
 }

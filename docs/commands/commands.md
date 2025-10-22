@@ -8,7 +8,8 @@ command, its handler, validator and output types
 Overview
 --------
 `ArturRios.UserManagement.Command` implements the write-side (commands) for the user management domain. Commands are
-simple classes that represent an intent (create, update, delete, authenticate, activate/deactivate, etc.). Each command is
+simple classes that represent an intent (create, update, delete, authenticate, activate/deactivate, etc.). Each command
+is
 validated, handled by a command handler, and returns a typed output object that can carry data, messages and errors.
 
 ## High-level flow
@@ -87,11 +88,13 @@ Project structure (core classes included in this document)
 
 Note: This diagram intentionally only includes classes physically present under the top-level `Core` folder (commands,
 handlers, validators, outputs, and domain aggregates). It omits common base classes and external interfaces (for example
-the `Command` and `CommandOutput` base classes, or `IUserRepository`), but shows relations (e.g. "handles", "returns", "uses") between Core classes.
+the `Command` and `CommandOutput` base classes, or `IUserRepository`), but shows relations (e.g. "handles", "returns", "
+uses") between Core classes.
 
 ## Per-command class diagrams
 
-The class diagram has been split into one file per command. Each file contains a focused mermaid class diagram and a brief description. Files are located in `docs/commands/` (relative to this file).
+The class diagram has been split into one file per command. Each file contains a focused mermaid class diagram and a
+brief description. Files are located in `docs/commands/` (relative to this file).
 
 - [CreateUserCommand](create_user.md)
 - [AuthenticateUserCommand](authenticate_user.md)
@@ -105,7 +108,8 @@ The class diagram has been split into one file per command. Each file contains a
 - [UpdateUserEmailCommand](update_user_email.md)
 - [UpdateUserRoleCommand](update_user_role.md)
 
-Each linked file contains a mermaid diagram limited to the classes relevant to that specific command and notes about handler behavior and domain interactions.
+Each linked file contains a mermaid diagram limited to the classes relevant to that specific command and notes about
+handler behavior and domain interactions.
 
 <!-- The large combined diagram was moved into per-command files -->
 

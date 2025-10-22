@@ -1,6 +1,7 @@
 ﻿# DeleteManyUsersCommand
 
-Description: Delete multiple users by a list of ids. Handler checks each `User.CanDelete()` and deletes those that pass, aggregating results.
+Description: Delete multiple users by a list of ids. Handler checks each `User.CanDelete()` and deletes those that pass,
+aggregating results.
 
 ```mermaid
 classDiagram

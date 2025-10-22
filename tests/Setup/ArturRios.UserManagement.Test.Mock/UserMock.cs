@@ -1,6 +1,7 @@
 ﻿using ArturRios.Common.Util.Hashing;
 using ArturRios.Common.Util.Random;
 using ArturRios.UserManagement.Domain;
+using ArturRios.UserManagement.Domain.Aggregates;
 using ArturRios.UserManagement.Domain.Enums;
 using Bogus;
 
@@ -8,9 +9,7 @@ namespace ArturRios.UserManagement.Test.Mock;
 
 public class UserMock
 {
-    public string MockPassword { get; }
-
-    private readonly Faker<Domain.Aggregates.User> _userFaker;
+    private readonly Faker<User> _userFaker;
 
     private UserMock()
     {
@@ -18,7 +17,7 @@ public class UserMock
 
         var mockPasswordHash = Hash.NewFromText(MockPassword);
 
-        _userFaker = new Faker<Domain.Aggregates.User>()
+        _userFaker = new Faker<User>()
             .RuleFor(x => x.Id, f => f.Random.Int(1, 1000))
             .RuleFor(x => x.Name, f => f.Name.FullName())
             .RuleFor(x => x.Email, f => f.Internet.Email())
@@ -28,6 +27,8 @@ public class UserMock
             .RuleFor(x => x.CreatedAt, _ => DateTime.UtcNow)
             .RuleFor(x => x.Active, _ => true);
     }
+
+    public string MockPassword { get; }
 
     public static UserMock New => new();
 
@@ -80,8 +81,5 @@ public class UserMock
         return this;
     }
 
-    public Domain.Aggregates.User Generate()
-    {
-        return _userFaker.Generate();
-    }
+    public User Generate() => _userFaker.Generate();
 }
