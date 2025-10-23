@@ -64,6 +64,16 @@ public class UserController(Pipeline pipeline) : Controller
     }
 
     [HttpGet]
+    [Route("")]
+    [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
+    public ActionResult<DataOutput<UserQueryOutput?>> GetUserByEmail([FromQuery] GetUserByEmailQuery query)
+    {
+        var output = pipeline.ExecuteSingleQuery<GetUserByEmailQuery, UserQueryOutput>(query);
+
+        return ResponseResolver.Resolve(output);
+    }
+
+    [HttpGet]
     [Route("Filter")]
     [RoleRequirement((int)Roles.Admin, (int)Roles.Test)]
     public ActionResult<PaginatedOutput<UserQueryOutput>> GetUsersByFilter(

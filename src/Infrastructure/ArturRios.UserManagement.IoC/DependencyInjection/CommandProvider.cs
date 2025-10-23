@@ -30,7 +30,7 @@ public static class CommandProvider
                 DeleteManyUsersCommandHandler>();
         services.AddScoped<ICommandHandler<DeleteUserCommand, DeleteUserCommandOutput>, DeleteUserCommandHandler>();
         services.AddScoped<ICommandHandler<UpdateUserCommand, UpdateUserCommandOutput>, UpdateUserCommandHandler>();
-        services.AddScoped<ICommandHandler<UpdateUserEmailCommand, UpdateUserEmailCommandOutput>>();
+        services.AddScoped<ICommandHandler<UpdateUserEmailCommand, UpdateUserEmailCommandOutput>, UpdateUserEmailCommandHandler>();
         services
             .AddScoped<ICommandHandler<UpdateUserRoleCommand, UpdateUserRoleCommandOutput>,
                 UpdateUserRoleCommandHandler>();

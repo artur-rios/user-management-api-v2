@@ -24,19 +24,20 @@ public class UpdateUserEmailCommandHandler(
             return output;
         }
 
-        var user = userRepository.GetAll().FirstOrDefault(user => user.Email == command.Email);
+        var userWithEmailToUpdate = userRepository.GetAll().FirstOrDefault(user => user.Email == command.Email);
 
-        if (user is null)
+        if (userWithEmailToUpdate is not null && userWithEmailToUpdate.Id != command.UserId)
         {
-            output.AddError("User not found");
+            output.AddError("Email is already in use");
 
             return output;
         }
 
+        var user = userRepository.GetById(command.UserId);
 
-        if (user.Id != command.UserId)
+        if (user is null)
         {
-            output.AddError("Email is already in use");
+            output.AddError("User not found");
 
             return output;
         }

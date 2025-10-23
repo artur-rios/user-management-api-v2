@@ -146,6 +146,42 @@ public class UserTests(
     }
 
     [FunctionalFact]
+    public async Task Should_GetUserByEmail()
+    {
+        var query = $"?Email={_testUser.Email}";
+
+        var result = await Gateway.GetAsync<DataOutput<UserQueryOutput>>($"{UserRoute}{query}");
+
+        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+        Assert.NotNull(result.Body?.Data);
+        Assert.True(result.Body.Success);
+        Assert.Equal($"User with email '{_testUser.Email}' found", result.Body.Messages.First());
+
+        var user = result.Body.Data;
+
+        Assert.Equal(_testUser.Id, user?.Id);
+        Assert.Equal(_testUser.Name, user?.Name);
+        Assert.Equal(_testUser.Email, user?.Email);
+        Assert.Equal(_testUser.RoleId, user?.RoleId);
+        Assert.True(user?.Active);
+        Assert.Equal(_testUser.CreatedAt.RemoveMilliseconds(), user?.CreatedAt.RemoveMilliseconds());
+    }
+
+    [FunctionalFact]
+    public async Task Should_NotGetUserByEmail_When_EmailIsNotOnDatabase()
+    {
+        const string email = "nonexistent@mail.com";
+
+        var result = await Gateway.GetAsync<DataOutput<UserQueryOutput>>($"{UserRoute}?Email={email}");
+
+        Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+        Assert.NotNull(result.Body);
+        Assert.Null(result.Body.Data);
+        Assert.True(result.Body.Success);
+        Assert.Equal($"User with email '{email}' not found", result.Body.Messages.First());
+    }
+
+    [FunctionalFact]
     public async Task Should_GetUsersByFilter()
     {
         var query = $"?Name={_testUser.Name}";
