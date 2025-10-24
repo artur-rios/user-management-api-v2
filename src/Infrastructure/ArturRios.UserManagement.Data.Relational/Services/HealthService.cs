@@ -1,4 +1,5 @@
 ﻿using ArturRios.UserManagement.Data.Relational.Configuration;
+using ArturRios.UserManagement.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace ArturRios.UserManagement.Data.Relational.Services;
@@ -12,6 +13,7 @@ public class HealthService(IDbContextFactory<RelationalDbContext> dbContextFacto
         var healthStatus = new HealthCheckOutput
         {
             DatabaseConnectionHealthy = await IsDatabaseConnectionHealthyAsync(),
+            RolesCrated = await RolesCreated(),
             InitialAdminUserCreated = await InitialAdminUserCreated(),
             DefaultRegularUserCreated = await DefaultRegularUserCreated(),
             DefaultTestUserCreated = await DefaultTestUserCreated()
@@ -20,6 +22,7 @@ public class HealthService(IDbContextFactory<RelationalDbContext> dbContextFacto
         healthStatus.Healthy = healthStatus is
         {
             DatabaseConnectionHealthy: true,
+            RolesCrated: true,
             InitialAdminUserCreated: true,
             DefaultRegularUserCreated: true,
             DefaultTestUserCreated: true
@@ -31,6 +34,15 @@ public class HealthService(IDbContextFactory<RelationalDbContext> dbContextFacto
     private async Task<bool> IsDatabaseConnectionHealthyAsync()
     {
         return await _dbContext.Database.CanConnectAsync();
+    }
+
+    private async Task<bool> RolesCreated()
+    {
+       var adminRoleExists = await _dbContext.Roles.AnyAsync(r => r.Id == (int)Roles.Admin && r.Name == "Admin");
+       var regularRoleExists = await _dbContext.Roles.AnyAsync(r => r.Id == (int)Roles.Regular && r.Name == "Regular");
+       var testRoleExists = await _dbContext.Roles.AnyAsync(r => r.Id == (int)Roles.Test && r.Name == "Test");
+
+       return adminRoleExists && regularRoleExists && testRoleExists;
     }
 
     private async Task<bool> InitialAdminUserCreated()
