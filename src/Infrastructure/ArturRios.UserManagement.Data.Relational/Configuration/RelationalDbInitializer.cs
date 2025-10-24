@@ -8,7 +8,7 @@ public class RelationalDbInitializer(RelationalDbContext context)
     {
         await context.Database.EnsureCreatedAsync();
 
-        await RoleSeeder.CreateRoles(context);
-        await UserSeeder.CreateInitialUsers(context);
+        await RoleSeeder.EnsureRolesCreated(context);
+        await UserSeeder.EnsureInitialUsersCreated(context);
     }
 }

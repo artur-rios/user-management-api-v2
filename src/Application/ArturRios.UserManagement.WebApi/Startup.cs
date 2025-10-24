@@ -70,6 +70,7 @@ public class Startup(string[] args) : WebApiStartup(args)
         Builder.Services.AddQueries();
         Builder.Services.AddRelationalContext();
         Builder.Services.AddRelationalRepositories();
+        Builder.Services.AddStatusService();
         Builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     }
 

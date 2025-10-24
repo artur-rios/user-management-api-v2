@@ -1,6 +1,7 @@
 ﻿using ArturRios.Common.Data.Configuration;
 using ArturRios.UserManagement.Data.Relational.Configuration;
 using ArturRios.UserManagement.Data.Relational.Repositories;
+using ArturRios.UserManagement.Data.Relational.Services;
 using ArturRios.UserManagement.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,5 +34,10 @@ public static class RelationalDatabaseProvider
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserReadOnlyRepository, UserReadOnlyRepository>();
         services.AddScoped<IUserRangeRepository, UserRangeRepository>();
+    }
+
+    public static void AddStatusService(this IServiceCollection services)
+    {
+        services.AddScoped<HealthService>();
     }
 }

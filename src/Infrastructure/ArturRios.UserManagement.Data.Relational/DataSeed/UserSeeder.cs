@@ -7,7 +7,7 @@ namespace ArturRios.UserManagement.Data.Relational.DataSeed;
 
 public static class UserSeeder
 {
-    public static async Task CreateInitialUsers(RelationalDbContext context)
+    public static async Task EnsureInitialUsersCreated(RelationalDbContext context)
     {
         if (!UserWithRoleExists(context, Roles.Admin))
         {

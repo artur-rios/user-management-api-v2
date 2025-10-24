@@ -39,19 +39,19 @@ public class User : Entity
         Active = active;
     }
 
-    [Column(Order = 1)] [MaxLength(300)] public string Name { get; set; } = string.Empty;
+    [Column(Order = 2)] [MaxLength(300)] public string Name { get; set; } = string.Empty;
 
-    [Column(Order = 2)] [MaxLength(300)] public string Email { get; private set; } = string.Empty;
+    [Column(Order = 3)] [MaxLength(300)] public string Email { get; private set; } = string.Empty;
 
-    [Column(Order = 3)] public byte[] Password { get; private set; } = [];
+    [Column(Order = 4)] public byte[] Password { get; private set; } = [];
 
-    [Column(Order = 4)] public byte[] Salt { get; private set; } = [];
+    [Column(Order = 5)] public byte[] Salt { get; private set; } = [];
 
-    [Column(Order = 5)] public int RoleId { get; private set; }
+    [Column(Order = 6)] public int RoleId { get; private set; }
 
-    [Column(Order = 6)] public DateTime CreatedAt { get; } = DateTime.UtcNow;
+    [Column(Order = 7)] public DateTime CreatedAt { get; } = DateTime.UtcNow;
 
-    [Column(Order = 7)] public bool Active { get; private set; } = true;
+    [Column(Order = 8)] public bool Active { get; private set; } = true;
 
     public ProcessOutput Activate()
     {
